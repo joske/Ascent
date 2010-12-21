@@ -33,6 +33,7 @@ public class MainActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        setTitle("Latest Ascents");
         InternalDB db = new InternalDB(this);
         TextView countView = (TextView) this.findViewById(R.id.countView);
         List<Ascent> ascents = db.getAscents();

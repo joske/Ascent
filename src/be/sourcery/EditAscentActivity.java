@@ -47,6 +47,7 @@ public class EditAscentActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_ascent);
+        setTitle("Edit Ascent");
         Bundle b = this.getIntent().getExtras();
         long ascentId = b.getLong("ascentId");
         db = new InternalDB(this);

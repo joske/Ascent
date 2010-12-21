@@ -24,6 +24,7 @@ public class CragListActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.crag_list);
+        setTitle("Crags");
         InternalDB db = new InternalDB(this);
         List<Crag> crags = db.getCrags();
         adapter = new CragsAdapter(getApplicationContext(), R.layout.crag_item, (ArrayList)crags);

@@ -50,6 +50,7 @@ public class AddRouteActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_ascent);
+        setTitle("Add Route");
         db = new InternalDB(this);
         Spinner s = (Spinner) findViewById(R.id.cragspinner);
         Cursor cursor = db.getCragsCursor();

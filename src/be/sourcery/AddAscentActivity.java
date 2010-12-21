@@ -9,6 +9,7 @@ public class AddAscentActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_ascent);
+        setTitle("Add Ascent");
     }
 
 }

@@ -15,6 +15,7 @@ public class AddCragActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_crag);
+        setTitle("Add Crag");
         db = new InternalDB(this);
         // Capture our button from layout
         Button button = (Button)findViewById(R.id.ok);
