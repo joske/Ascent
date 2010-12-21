@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="titleTest">Ascent</string>
+    <string name="app_name">Ascent</string>
+    <string name="crag_prompt">Crag</string>
+    <string name="style_prompt">Style</string>
+    <string name="commentLabel">Comment</string>
+    
+    <string-array name="styles">
+        <item>Onsight</item>
+        <item>Flash</item>
+        <item>Redpoint</item>
+        <item>Toprope</item>
+    </string-array>
+    
+</resources>

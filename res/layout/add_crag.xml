@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+
+    <TextView android:id="@+id/craglabel" 
+              android:layout_width="fill_parent" 
+              android:layout_height="wrap_content" 
+              android:text="Crag" />
+    <EditText android:id="@+id/crag" 
+              android:layout_width="fill_parent" 
+              android:layout_height="wrap_content" 
+              android:background="@android:drawable/editbox_background"
+              android:layout_below="@id/craglabel" />
+    <TextView android:id="@+id/countrylabel" 
+              android:layout_width="fill_parent" 
+              android:layout_height="wrap_content" 
+              android:text="Country" />
+    <EditText android:id="@+id/country" 
+              android:layout_width="fill_parent" 
+              android:layout_height="wrap_content" 
+              android:background="@android:drawable/editbox_background"
+              android:layout_below="@id/countrylabel" />
+    <Button android:text="Add"
+        android:id="@+id/ok"
+        android:layout_width="fill_parent"
+        android:textSize="18px"
+        android:layout_height="55px">
+    </Button>
+    
+</LinearLayout>
