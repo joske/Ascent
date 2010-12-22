@@ -18,6 +18,7 @@
     <TextView android:id="@+id/route" 
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content" 
+              android:textSize="12pt"
               android:text="" />
 	<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	    android:orientation="horizontal"
