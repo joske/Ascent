@@ -52,8 +52,8 @@ public class CragListActivity extends Activity {
                 Crag crag = adapter.getItem(position);
                 editCrag(crag);
             }
-
         });
+        db.close();
     }
 
     private void editCrag(Crag crag) {

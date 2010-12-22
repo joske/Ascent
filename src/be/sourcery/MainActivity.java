@@ -64,6 +64,7 @@ public class MainActivity extends Activity {
                 editAscent(ascent);
             }
         });
+        db.close();
     }
 
     public void editAscent(Ascent ascent) {

@@ -48,6 +48,10 @@ public class InternalDB {
         this.database = openHelper.getWritableDatabase();
     }
 
+    public void close() {
+        database.close();
+    }
+
     public Crag addCrag(String name, String country) {
         String stmt = "insert into crag (name, country) values (?, ?);";
         SQLiteStatement insert = database.compileStatement(stmt);

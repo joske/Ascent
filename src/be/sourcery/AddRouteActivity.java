@@ -71,6 +71,7 @@ public class AddRouteActivity extends BaseActivity {
         db = new InternalDB(this);
         Spinner s = (Spinner) findViewById(R.id.cragspinner);
         Cursor cursor = db.getCragsCursor();
+        startManagingCursor(cursor);
         CursorAdapter ca = new SimpleCursorAdapter(this, R.layout.cragspinner, cursor, new String[] { "name" }, new int[] { R.id.spinnerRow});
         s.setAdapter(ca);
         Spinner ss = (Spinner) findViewById(R.id.stylespinner);
@@ -159,6 +160,11 @@ public class AddRouteActivity extends BaseActivity {
                         year, month, day);
         }
         return null;
+    }
+
+    public void onDestroy() {
+        super.onDestroy();
+        db.close();
     }
 
     private void updateDisplay() {

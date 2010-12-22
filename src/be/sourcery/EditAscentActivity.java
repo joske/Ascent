@@ -172,4 +172,9 @@ public class EditAscentActivity extends BaseActivity {
                 .append(year).append(" "));
     }
 
+    public void onDestroy() {
+        super.onDestroy();
+        db.close();
+    }
+
 }
