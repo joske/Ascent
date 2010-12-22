@@ -30,9 +30,12 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import be.sourcery.db.InternalDB;
@@ -49,8 +52,17 @@ public class MainActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         setContentView(R.layout.main);
-        setTitle("Latest Ascents");
+        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.top);
+        TextView title = (TextView) this.findViewById(R.id.titleText);
+        title.setText("Latest Ascent");
+        ImageView plus = (ImageView)this.findViewById(R.id.plusButton);
+        plus.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+                addRoute();
+            }
+        });
         InternalDB db = new InternalDB(this);
         TextView countView = (TextView) this.findViewById(R.id.countView);
         List<Ascent> ascents = db.getAscents();
