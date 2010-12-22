@@ -23,6 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
@@ -39,7 +40,7 @@ import android.widget.Toast;
 import be.sourcery.db.InternalDB;
 
 
-public class EditAscentActivity extends BaseActivity {
+public class EditAscentActivity extends Activity {
 
     private InternalDB db;
     DateFormat fmt = new SimpleDateFormat("dd-MM-yyyy");
@@ -105,7 +106,8 @@ public class EditAscentActivity extends BaseActivity {
         Button cancel = (Button)findViewById(R.id.cancel);
         cancel.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                switchToMain();
+                setResult(RESULT_CANCELED);
+                finish();
             }
         });
         Button button = (Button)findViewById(R.id.ok);
@@ -145,7 +147,8 @@ public class EditAscentActivity extends BaseActivity {
                 if (text != null) {
                     Toast.makeText(EditAscentActivity.this, text, Toast.LENGTH_SHORT).show();
                 }
-                switchToMain();
+                setResult(RESULT_OK);
+                finish();
             }
         });
 

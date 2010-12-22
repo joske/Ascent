@@ -17,6 +17,7 @@ package be.sourcery;
  *  along with Ascent.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,7 +26,7 @@ import android.widget.EditText;
 import be.sourcery.db.InternalDB;
 
 
-public class AddCragActivity extends BaseActivity {
+public class AddCragActivity extends Activity {
 
     InternalDB db = null;
 
@@ -44,7 +45,8 @@ public class AddCragActivity extends BaseActivity {
                 EditText countryView = (EditText)findViewById(R.id.country);
                 String country = countryView.getText().toString();
                 db.addCrag(name, country);
-                switchToMain();
+                setResult(RESULT_OK);
+                finish();
             }
         });
     }

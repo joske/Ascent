@@ -23,6 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.database.Cursor;
@@ -45,7 +46,7 @@ import android.widget.Toast;
 import be.sourcery.db.InternalDB;
 
 
-public class AddRouteActivity extends BaseActivity {
+public class AddRouteActivity extends Activity {
 
     InternalDB db = null;
     private int year;
@@ -170,7 +171,8 @@ public class AddRouteActivity extends BaseActivity {
                 if (text != null) {
                     Toast.makeText(AddRouteActivity.this, text, Toast.LENGTH_SHORT).show();
                 }
-                switchToMain();
+                setResult(RESULT_OK);
+                finish();
             }
         });
         Button dateButton = (Button)findViewById(R.id.pickDate);
