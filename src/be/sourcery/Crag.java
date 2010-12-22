@@ -59,4 +59,8 @@ public class Crag {
         return id;
     }
 
+    public String toString() {
+        return name + "/" + country;
+    }
+
 }

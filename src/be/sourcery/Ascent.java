@@ -19,8 +19,6 @@ package be.sourcery;
 
 import java.util.Date;
 
-import android.os.Parcel;
-
 
 public class Ascent {
 
@@ -122,14 +120,8 @@ public class Ascent {
         this.stars = stars;
     }
 
-    public int describeContents() {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
-    public void writeToParcel(Parcel dest, int flags) {
-        // TODO Auto-generated method stub
-
+    public String toString() {
+        return route + " on " + date;
     }
 
 }

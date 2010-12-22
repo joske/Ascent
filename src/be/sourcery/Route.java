@@ -76,4 +76,8 @@ public class Route {
         this.grade = grade;
     }
 
+    public String toString() {
+        return name + " " + grade + " (" + crag + ")";
+    }
+
 }
