@@ -45,7 +45,7 @@ import be.sourcery.db.InternalDB;
 public class MainActivity extends Activity {
 
     private static final int MENU_ADD_CRAG = 0;
-    private static final int MENU_ADD_ROUTE = 1;
+    private static final int MENU_PROJECTS = 1;
     private static final int MENU_CRAGS = 2;
     private DateFormat fmt = new SimpleDateFormat("dd MMM yyyy");
     private CursorAdapter adapter;
@@ -74,7 +74,7 @@ public class MainActivity extends Activity {
         countView.setText(ascents.size() + " ascents in DB");
         cursor = db.getAscentsCursor();
         startManagingCursor(cursor);
-        adapter = new SimpleCursorAdapter(getApplicationContext(), R.layout.list_item, cursor,
+        adapter = new SimpleCursorAdapter(getApplicationContext(), R.layout.ascent_list_item, cursor,
                 new String[] {"date", "style", "route_grade", "date", "route_name"},
                 new int[] {R.id.dateCell, R.id.styleCell, R.id.gradeCell, R.id.dateCell, R.id.nameCell});
         listView = (ListView)this.findViewById(R.id.list);
@@ -99,7 +99,7 @@ public class MainActivity extends Activity {
 
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.add(0, MENU_ADD_CRAG, 0, "Add Crag");
-        menu.add(0, MENU_ADD_ROUTE, 0, "Add Route");
+        menu.add(0, MENU_PROJECTS, 0, "Projects");
         menu.add(0, MENU_CRAGS, 0, "Crags");
         return true;
     }
@@ -135,8 +135,8 @@ public class MainActivity extends Activity {
             case MENU_ADD_CRAG:
                 addCrag();
                 return true;
-            case MENU_ADD_ROUTE:
-                addRoute();
+            case MENU_PROJECTS:
+                projectsList();
                 return true;
         }
         return false;
@@ -164,6 +164,11 @@ public class MainActivity extends Activity {
 
     private void cragsList() {
         Intent myIntent = new Intent(this, CragListActivity.class);
+        startActivityForResult(myIntent, 0);
+    }
+
+    private void projectsList() {
+        Intent myIntent = new Intent(this, ProjectListActivity.class);
         startActivityForResult(myIntent, 0);
     }
 

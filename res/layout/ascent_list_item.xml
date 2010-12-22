@@ -20,4 +20,9 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 </TextView>
+<TextView android:id="@+id/emptyCell"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:text="                                                                                ">
+</TextView>
 </LinearLayout>

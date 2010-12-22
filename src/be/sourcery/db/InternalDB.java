@@ -202,6 +202,36 @@ public class InternalDB {
         return c;
     }
 
+    public Cursor getProjectsCursor() {
+        List<Project> list = new ArrayList<Project>();
+        Cursor cursor = database.query("project_routes", new String[] { "_id", "route_name", "route_grade", "crag_name", "attempts"},
+                null, null, null, null, "_id desc");
+        return cursor;
+    }
+
+    public List<Project> getProjects() {
+        List<Project> list = new ArrayList<Project>();
+        Cursor cursor = database.query("projects", new String[] { "_id", "route_id", "attempts", },
+                null, null, null, null, "_id desc");
+        if (cursor.moveToFirst()) {
+            do {
+                long id = cursor.getLong(0);
+                long route_id = cursor.getLong(1);
+                int attempts = cursor.getInt(2);
+                Project p = new Project();
+                Route r = getRoute(route_id);
+                p.setId(id);
+                p.setRoute(r);
+                p.setAttempts(attempts);
+                list.add(p);
+            } while (cursor.moveToNext());
+        }
+        if (cursor != null && !cursor.isClosed()) {
+            cursor.close();
+        }
+        return list;
+    }
+
     public Cursor getAscentsCursor() {
         Cursor cursor = database.query("ascent_routes",
                 new String[] { "_id", "route_id", "route_name", "route_grade", "attempts", "style", "date" },
@@ -340,6 +370,7 @@ public class InternalDB {
             db.execSQL("create table ascents (_id integer primary key autoincrement, route_id int, date text, attempts int, style_id int, comment string, stars int);");
             db.execSQL("create table projects (_id integer primary key autoincrement, route_id int, attempts int);");
             db.execSQL("create view ascent_routes as select a._id as _id, r._id as route_id, r.name as route_name, r.grade as route_grade, a.attempts as attempts, s.short_name as style, a.date as date from ascents a inner join routes r on a.route_id = r._id inner join styles s on a.style_id = s._id;");
+            db.execSQL("create view project_routes as select p._id as _id, r.name as route_name, r.grade as route_grade, c.name as crag_name, p.attempts as attempts from projects p inner join routes r on p.route_id = r._id inner join crag c on r.crag_id = c._id;");
         }
 
         @Override
@@ -348,6 +379,5 @@ public class InternalDB {
 
         }
     }
-
 
 }
