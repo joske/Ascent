@@ -19,24 +19,26 @@ package be.sourcery;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import be.sourcery.db.InternalDB;
 
@@ -46,7 +48,10 @@ public class MainActivity extends Activity {
     private static final int MENU_ADD_ROUTE = 1;
     private static final int MENU_CRAGS = 2;
     private DateFormat fmt = new SimpleDateFormat("dd MMM yyyy");
-    private AscentAdapter adapter;
+    private CursorAdapter adapter;
+    private InternalDB db;
+    private ListView listView;
+    private Cursor cursor;
 
     /** Called when the activity is first created. */
     @Override
@@ -63,20 +68,25 @@ public class MainActivity extends Activity {
                 addRoute();
             }
         });
-        InternalDB db = new InternalDB(this);
+        db = new InternalDB(this);
         TextView countView = (TextView) this.findViewById(R.id.countView);
         List<Ascent> ascents = db.getAscents();
         countView.setText(ascents.size() + " ascents in DB");
-        adapter = new AscentAdapter(getApplicationContext(), R.layout.list_item, (ArrayList)ascents);
-        ListView listView = (ListView)this.findViewById(R.id.list);
+        cursor = db.getAscentsCursor();
+        startManagingCursor(cursor);
+        adapter = new SimpleCursorAdapter(getApplicationContext(), R.layout.list_item, cursor,
+                new String[] {"date", "style", "route_grade", "date", "route_name"},
+                new int[] {R.id.dateCell, R.id.styleCell, R.id.gradeCell, R.id.dateCell, R.id.nameCell});
+        listView = (ListView)this.findViewById(R.id.list);
         listView.setAdapter(adapter);
+        registerForContextMenu(listView);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> arg0, View view, int position, long row) {
-                Ascent ascent = adapter.getItem(position);
+                long id = adapter.getItemId(position);
+                Ascent ascent = db.getAscent(id);
                 editAscent(ascent);
             }
         });
-        db.close();
     }
 
     public void editAscent(Ascent ascent) {
@@ -94,6 +104,29 @@ public class MainActivity extends Activity {
         return true;
     }
 
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.context_menu, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+        switch (item.getItemId()) {
+            case R.id.delete:
+                Ascent ascent = db.getAscent(info.id);
+                db.deleteAscent(ascent);
+                cursor.requery();
+                adapter.notifyDataSetChanged();
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
+    }
+
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case MENU_CRAGS:
@@ -107,6 +140,11 @@ public class MainActivity extends Activity {
                 return true;
         }
         return false;
+    }
+
+    public void onDestroy() {
+        super.onDestroy();
+        db.close();
     }
 
     private void addAscent() {
@@ -127,46 +165,6 @@ public class MainActivity extends Activity {
     private void cragsList() {
         Intent myIntent = new Intent(this, CragListActivity.class);
         startActivityForResult(myIntent, 0);
-    }
-
-    private class AscentAdapter extends ArrayAdapter<Ascent> {
-
-        private final ArrayList<Ascent> ascents;
-
-        public AscentAdapter(Context context, int textViewResourceId, ArrayList<Ascent> ascents) {
-            super(context, textViewResourceId, ascents);
-            this.ascents = ascents;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            View v = convertView;
-            if (v == null) {
-                LayoutInflater vi = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                v = vi.inflate(R.layout.list_item, null);
-            }
-
-            Ascent ascent = ascents.get(position);
-            int style = ascent.getStyle();
-            String s = "RP";
-            if (style == Ascent.STYLE_FLASH) {
-                s = "FL";
-            } else if (style == Ascent.STYLE_ONSIGHT) {
-                s = "OS";
-            } else if (style == Ascent.STYLE_TOPROPE) {
-                s = "TP";
-            }
-            TextView styleCell = (TextView) v.findViewById(R.id.styleCell);
-            styleCell.setText(s);
-            TextView gradeCell = (TextView) v.findViewById(R.id.gradeCell);
-            gradeCell.setText(ascent.getRoute().getGrade());
-            TextView nameCell = (TextView) v.findViewById(R.id.nameCell);
-            nameCell.setText(ascent.getRoute().getName());
-            TextView dateCell = (TextView) v.findViewById(R.id.dateCell);
-            dateCell.setText(fmt.format(ascent.getDate()));
-            return v;
-        }
-
     }
 
 }

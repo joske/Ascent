@@ -5,6 +5,7 @@
     <string name="crag_prompt">Crag</string>
     <string name="style_prompt">Style</string>
     <string name="commentLabel">Comment</string>
+    <string name="deleteAscent">Delete Ascent</string>
     
     <string-array name="styles">
         <item>Onsight</item>

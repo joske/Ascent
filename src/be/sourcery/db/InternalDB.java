@@ -202,6 +202,14 @@ public class InternalDB {
         return c;
     }
 
+    public Cursor getAscentsCursor() {
+        Cursor cursor = database.query("ascent_routes",
+                new String[] { "_id", "route_id", "route_name", "route_grade", "attempts", "style", "date" },
+                null, null, null, null, "date desc");
+        return cursor;
+    }
+
+
     public List<Ascent> getAscents() {
         List<Ascent> list = new ArrayList<Ascent>();
         Cursor cursor = database.query("ascents", new String[] { "_id", "route_id", "attempts", "style_id", "date" },
@@ -303,6 +311,13 @@ public class InternalDB {
         return null;
     }
 
+    public void deleteAscent(Ascent ascent) {
+        String stmt = "delete from ascents where _id = ?;";
+        SQLiteStatement update = database.compileStatement(stmt);
+        update.bindLong(1, ascent.getId());
+        update.execute();
+    }
+
     class OpenHelper extends SQLiteOpenHelper {
 
         private static final int DATABASE_VERSION = 2;
@@ -316,14 +331,15 @@ public class InternalDB {
         @Override
         public void onCreate(SQLiteDatabase db) {
             db.execSQL("create table crag (_id integer primary key autoincrement, name text, country text);");
-            db.execSQL("create table styles (_id integer primary key, name text);");
-            db.execSQL("insert into styles values (1, 'Onsight');");
-            db.execSQL("insert into styles values (2, 'Flash');");
-            db.execSQL("insert into styles values (3, 'Redpoint');");
-            db.execSQL("insert into styles values (4, 'Toprope');");
+            db.execSQL("create table styles (_id integer primary key, name text, short_name text);");
+            db.execSQL("insert into styles values (1, 'Onsight', 'OS');");
+            db.execSQL("insert into styles values (2, 'Flash', 'FL');");
+            db.execSQL("insert into styles values (3, 'Redpoint', 'RP');");
+            db.execSQL("insert into styles values (4, 'Toprope', 'TP');");
             db.execSQL("create table routes (_id integer primary key autoincrement, name text, grade text, crag_id text);");
             db.execSQL("create table ascents (_id integer primary key autoincrement, route_id int, date text, attempts int, style_id int, comment string, stars int);");
             db.execSQL("create table projects (_id integer primary key autoincrement, route_id int, attempts int);");
+            db.execSQL("create view ascent_routes as select a._id as _id, r._id as route_id, r.name as route_name, r.grade as route_grade, a.attempts as attempts, s.short_name as style, a.date as date from ascents a inner join routes r on a.route_id = r._id inner join styles s on a.style_id = s._id;");
         }
 
         @Override
