@@ -31,10 +31,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.CursorAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.RatingBar;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
@@ -79,6 +81,40 @@ public class AddRouteActivity extends BaseActivity {
                 this, R.array.styles, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         ss.setAdapter(adapter);
+        RadioGroup group = (RadioGroup) findViewById(R.id.group);
+        group.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                RadioButton addProject = (RadioButton) findViewById(R.id.addproject);
+                EditText attemptsView = (EditText)findViewById(R.id.attempts);
+                Spinner ss = (Spinner) findViewById(R.id.stylespinner);
+                TextView dateDisplay = (TextView)findViewById(R.id.dateDisplay);
+                RatingBar starsView = (RatingBar)findViewById(R.id.stars);
+                EditText commentView = (EditText)findViewById(R.id.comment);
+                if (addProject.isChecked()) {
+                    ss.setEnabled(false);
+                    attemptsView.setEnabled(false);
+                    dateDisplay.setEnabled(false);
+                    starsView.setEnabled(false);
+                    commentView.setEnabled(false);
+                    ss.setFocusable(false);
+                    attemptsView.setFocusable(false);
+                    dateDisplay.setFocusable(false);
+                    starsView.setFocusable(false);
+                    commentView.setFocusable(false);
+                } else {
+                    ss.setEnabled(true);
+                    attemptsView.setEnabled(true);
+                    dateDisplay.setEnabled(true);
+                    starsView.setEnabled(true);
+                    commentView.setEnabled(true);
+                    ss.setFocusable(true);
+                    attemptsView.setFocusable(true);
+                    dateDisplay.setFocusable(true);
+                    starsView.setFocusable(true);
+                    commentView.setFocusable(true);
+                }
+            }
+        });
         Button button = (Button)findViewById(R.id.ok);
         button.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
@@ -94,14 +130,15 @@ public class AddRouteActivity extends BaseActivity {
                 if (r != null) {
                     text = "Route added";
                 }
-                CheckBox addProject = (CheckBox) findViewById(R.id.addproject);
+
+                RadioButton addProject = (RadioButton) findViewById(R.id.addproject);
                 if (addProject.isChecked()) {
                     Project project = db.addProject(r, 0);
                     if (project != null) {
                         text = "Project added";
                     }
                 }
-                CheckBox addAscent = (CheckBox) findViewById(R.id.addascent);
+                RadioButton addAscent = (RadioButton) findViewById(R.id.addascent);
                 if (addAscent.isChecked()) {
                     Spinner ss = (Spinner) findViewById(R.id.stylespinner);
                     int pos = ss.getSelectedItemPosition();

@@ -45,32 +45,48 @@
         android:drawSelectorOnTop="true"
         android:prompt="@string/crag_prompt"
     />
-    <CheckBox
-        android:id="@+id/addproject"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"    	 
-        android:text="Add As Project" />
-    <CheckBox
-        android:id="@+id/addascent"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"    	 
-        android:text="Add Ascent" />
-
+    <RadioGroup
+		android:id="@+id/group"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		android:orientation="vertical">
+		<RadioButton
+			android:id="@+id/addproject"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="Add as Project"
+			android:checked="false"
+			android:layout_weight="0"
+		>
+		</RadioButton>
+		<RadioButton
+			android:id="@+id/addascent"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="Add Ascent"
+			android:checked="true"
+			android:layout_weight="0"
+		>
+		</RadioButton>
+	</RadioGroup>
+	
 	<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	    android:orientation="horizontal"
 	    android:layout_width="fill_parent"
 	    android:layout_height="fill_parent"
 	    >
-    <TextView android:id="@+id/dateDisplay"
-	        android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""/>
-
-    <Button android:id="@+id/pickDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:text="Pick Date"/>
+	    <TextView android:id="@+id/dateDisplay"
+		        android:layout_width="wrap_content"
+	            android:layout_height="fill_parent"
+	            android:gravity="center_vertical"
+	            android:textSize="14pt"
+	            android:text=""/>
+	    <Button android:id="@+id/pickDate"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignParentRight="true"
+	            android:text="Pick Date"/>
     </RelativeLayout>
     
     <Spinner 
