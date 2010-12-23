@@ -44,6 +44,8 @@ public class CragListActivity extends Activity {
         setTitle("Crags");
         InternalDB db = new InternalDB(this);
         List<Crag> crags = db.getCrags();
+        TextView countView = (TextView) this.findViewById(R.id.countView);
+        countView.setText(crags.size() + " crags in DB");
         adapter = new CragsAdapter(getApplicationContext(), R.layout.crag_item, (ArrayList)crags);
         ListView listView = (ListView)this.findViewById(R.id.list);
         listView.setAdapter(adapter);

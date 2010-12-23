@@ -61,7 +61,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.main);
         getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.top);
         TextView title = (TextView) this.findViewById(R.id.titleText);
-        title.setText("Latest Ascent");
+        title.setText("Latest Ascents");
         ImageView plus = (ImageView)this.findViewById(R.id.plusButton);
         plus.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
