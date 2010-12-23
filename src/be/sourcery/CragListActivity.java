@@ -17,77 +17,52 @@ package be.sourcery;
  *  along with Ascent.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.Activity;
-import android.content.Context;
+import android.database.Cursor;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.widget.CursorAdapter;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import be.sourcery.db.InternalDB;
 
 
 public class CragListActivity extends Activity {
 
-    private CragsAdapter adapter;
+    private CursorAdapter adapter;
+    private InternalDB db;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.crag_list);
         setTitle("Crags");
-        InternalDB db = new InternalDB(this);
-        List<Crag> crags = db.getCrags();
+        db = new InternalDB(this);
+        Cursor cursor = db.getCragsCrusor();
+        startManagingCursor(cursor);
         TextView countView = (TextView) this.findViewById(R.id.countView);
-        countView.setText(crags.size() + " crags in DB");
-        adapter = new CragsAdapter(getApplicationContext(), R.layout.crag_item, (ArrayList)crags);
+        countView.setText(cursor.getCount() + " crags in DB");
+        adapter = new SimpleCursorAdapter(getApplicationContext(), R.layout.crag_item, cursor,
+                new String[] {"name", "country"},
+                new int[] {R.id.nameCell, R.id.countryCell});
         ListView listView = (ListView)this.findViewById(R.id.list);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> arg0, View view, int position, long row) {
-                Crag crag = adapter.getItem(position);
+                long id = adapter.getItemId(position);
+                Crag crag = db.getCrag(id);
                 editCrag(crag);
             }
         });
+    }
+    public void onDestroy() {
+        super.onDestroy();
         db.close();
     }
 
     private void editCrag(Crag crag) {
     }
-
-    private class CragsAdapter extends ArrayAdapter<Crag> {
-
-        private final ArrayList<Crag> crags;
-
-        public CragsAdapter(Context context, int textViewResourceId, ArrayList<Crag> crags) {
-            super(context, textViewResourceId, crags);
-            this.crags = crags;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            View v = convertView;
-            if (v == null) {
-                LayoutInflater vi = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                v = vi.inflate(R.layout.crag_item, null);
-            }
-
-            Crag crag = crags.get(position);
-            TextView nameCell = (TextView) v.findViewById(R.id.nameCell);
-            nameCell.setText(crag.getName());
-            TextView countryCell = (TextView) v.findViewById(R.id.countryCell);
-            countryCell.setText(crag.getCountry());
-            return v;
-        }
-
-    }
-
-
 
 }

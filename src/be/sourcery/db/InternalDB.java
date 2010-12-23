@@ -107,6 +107,13 @@ public class InternalDB {
         return new Project(id, route, attempts);
     }
 
+    public Cursor getCragsCrusor() {
+        List<Crag> list = new ArrayList<Crag>();
+        Cursor cursor = database.query("crag", new String[] { "_id", "name", "country" },
+                null, null, null, null, "name desc");
+        return cursor;
+    }
+
     public List<Crag> getCrags() {
         List<Crag> list = new ArrayList<Crag>();
         Cursor cursor = database.query("crag", new String[] { "_id", "name", "country" },
