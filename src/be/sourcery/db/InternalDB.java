@@ -154,6 +154,22 @@ public class InternalDB {
         return c;
     }
 
+    public Crag getCrag(String searchName) {
+        Crag c = null;
+        Cursor cursor = database.query("crag", new String[] { "_id", "name", "country" },
+                "name like " + searchName, null, null, null, "_id desc");
+        if (cursor.moveToFirst()) {
+            long id = cursor.getLong(0);
+            String name = cursor.getString(1);
+            String country = cursor.getString(2);
+            c = new Crag(id, name, country);
+        }
+        if (cursor != null && !cursor.isClosed()) {
+            cursor.close();
+        }
+        return c;
+    }
+
     public List<Route> getRoutes() {
         List<Route> list = new ArrayList<Route>();
         Cursor cursor = database.query("routes", new String[] { "_id", "name", "grade", "crag_id" },

@@ -44,7 +44,7 @@ import be.sourcery.db.InternalDB;
 
 public class MainActivity extends Activity {
 
-    private static final int MENU_ADD_CRAG = 0;
+    private static final int MENU_IMPORT = 0;
     private static final int MENU_PROJECTS = 1;
     private static final int MENU_CRAGS = 2;
     private DateFormat fmt = new SimpleDateFormat("dd MMM yyyy");
@@ -65,7 +65,7 @@ public class MainActivity extends Activity {
         ImageView plus = (ImageView)this.findViewById(R.id.plusButton);
         plus.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                addRoute();
+                addAscent();
             }
         });
         db = new InternalDB(this);
@@ -98,9 +98,9 @@ public class MainActivity extends Activity {
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
-        menu.add(0, MENU_ADD_CRAG, 0, "Add Crag");
-        menu.add(0, MENU_PROJECTS, 0, "Projects");
+        menu.add(0, MENU_IMPORT, 0, "Import Data");
         menu.add(0, MENU_CRAGS, 0, "Crags");
+        menu.add(0, MENU_PROJECTS, 0, "Projects");
         return true;
     }
 
@@ -132,8 +132,8 @@ public class MainActivity extends Activity {
             case MENU_CRAGS:
                 cragsList();
                 return true;
-            case MENU_ADD_CRAG:
-                addCrag();
+            case MENU_IMPORT:
+                importData();
                 return true;
             case MENU_PROJECTS:
                 projectsList();
@@ -142,14 +142,14 @@ public class MainActivity extends Activity {
         return false;
     }
 
+    private void importData() {
+        Intent myIntent = new Intent(this, ImportDataActivity.class);
+        startActivityForResult(myIntent, 0);
+    }
+
     public void onDestroy() {
         super.onDestroy();
         db.close();
-    }
-
-    private void addAscent() {
-        Intent myIntent = new Intent(this, AddAscentActivity.class);
-        startActivityForResult(myIntent, 0);
     }
 
     private void addCrag() {
@@ -157,8 +157,8 @@ public class MainActivity extends Activity {
         startActivityForResult(myIntent, 0);
     }
 
-    private void addRoute() {
-        Intent myIntent = new Intent(this, AddRouteActivity.class);
+    private void addAscent() {
+        Intent myIntent = new Intent(this, AddAscentActivity.class);
         startActivityForResult(myIntent, 0);
     }
 

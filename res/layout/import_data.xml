@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+
+    <TextView android:id="@+id/importTitle" 
+              android:layout_width="fill_parent" 
+              android:layout_height="wrap_content" 
+		      android:textSize="18px"
+              android:text=""/>
+              
+    <Button android:text="Import"
+        android:id="@+id/ok"
+        android:layout_width="wrap_content"
+        android:textSize="12px"
+        android:layout_height="55px">
+    </Button>
+    
+</LinearLayout>

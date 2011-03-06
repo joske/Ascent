@@ -18,11 +18,15 @@ package be.sourcery;
  */
 
 import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.CursorAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
@@ -37,7 +41,17 @@ public class CragListActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         setContentView(R.layout.crag_list);
+        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.top);
+        TextView title = (TextView) this.findViewById(R.id.titleText);
+        title.setText("Crags");
+        ImageView plus = (ImageView)this.findViewById(R.id.plusButton);
+        plus.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+                addCrag();
+            }
+        });
         setTitle("Crags");
         db = new InternalDB(this);
         Cursor cursor = db.getCragsCrusor();
@@ -65,4 +79,8 @@ public class CragListActivity extends Activity {
     private void editCrag(Crag crag) {
     }
 
+    private void addCrag() {
+        Intent myIntent = new Intent(this, AddCragActivity.class);
+        startActivityForResult(myIntent, 0);
+    }
 }
