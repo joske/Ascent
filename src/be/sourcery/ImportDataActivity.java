@@ -2,7 +2,8 @@ package be.sourcery;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -60,7 +61,7 @@ public class ImportDataActivity extends Activity {
             // routeName;routeGrade;cragName;cragCountry;style;attempts;date;comment;stars
             File sdcard = Environment.getExternalStorageDirectory();
             File importFile = new File(sdcard, "ascent.csv");
-            BufferedReader r = new BufferedReader(new FileReader(importFile));
+            BufferedReader r = new BufferedReader(new InputStreamReader(new FileInputStream(importFile), "ISO-8859-1"));
             int count = 0;
             while (r.ready()) {
                 String line = r.readLine();
