@@ -22,7 +22,7 @@ import be.sourcery.db.InternalDB;
 public class ImportDataActivity extends Activity {
 
     InternalDB db = null;
-    DateFormat fmt = new SimpleDateFormat("dd-MM-yyyy");
+    DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
