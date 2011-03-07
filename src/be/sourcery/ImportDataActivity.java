@@ -106,5 +106,9 @@ public class ImportDataActivity extends Activity {
 
     }
 
+    public void onDestroy() {
+        super.onDestroy();
+        db.close();
+    }
 
 }

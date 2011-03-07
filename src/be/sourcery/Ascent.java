@@ -26,6 +26,8 @@ public class Ascent {
     public static final int STYLE_FLASH = 2;
     public static final int STYLE_REDPOINT = 3;
     public static final int STYLE_TOPROPE = 4;
+    public static final int STYLE_REPEAT = 5;
+    public static final int STYLE_MULTIPITCH = 6;
 
     private long id;
     private Route route;

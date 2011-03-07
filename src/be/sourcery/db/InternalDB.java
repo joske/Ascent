@@ -157,7 +157,7 @@ public class InternalDB {
     public Crag getCrag(String searchName) {
         Crag c = null;
         Cursor cursor = database.query("crag", new String[] { "_id", "name", "country" },
-                "name like " + searchName, null, null, null, "_id desc");
+                "name like '" + searchName + "%'", null, null, null, "_id desc");
         if (cursor.moveToFirst()) {
             long id = cursor.getLong(0);
             String name = cursor.getString(1);
@@ -389,6 +389,8 @@ public class InternalDB {
             db.execSQL("insert into styles values (2, 'Flash', 'FL');");
             db.execSQL("insert into styles values (3, 'Redpoint', 'RP');");
             db.execSQL("insert into styles values (4, 'Toprope', 'TP');");
+            db.execSQL("insert into styles values (5, 'Repeat', 'Rep');");
+            db.execSQL("insert into styles values (6, 'Multipitch', 'MP');");
             db.execSQL("create table routes (_id integer primary key autoincrement, name text, grade text, crag_id text);");
             db.execSQL("create table ascents (_id integer primary key autoincrement, route_id int, date text, attempts int, style_id int, comment string, stars int);");
             db.execSQL("create table projects (_id integer primary key autoincrement, route_id int, attempts int);");
