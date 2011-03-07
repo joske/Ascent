@@ -43,7 +43,7 @@ import be.sourcery.db.InternalDB;
 public class EditAscentActivity extends Activity {
 
     private InternalDB db;
-    DateFormat fmt = new SimpleDateFormat("dd-MM-yyyy");
+    DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
     static final int DATE_DIALOG_ID = 0;
     private int year;
     private int month;
@@ -170,9 +170,9 @@ public class EditAscentActivity extends Activity {
         dateDisplay.setText(
                 new StringBuilder()
                 // Month is 0 based so add 1
-                .append(day).append("-")
+                .append(year).append("-")
                 .append(month + 1).append("-")
-                .append(year).append(" "));
+                .append(day));
     }
 
     public void onDestroy() {

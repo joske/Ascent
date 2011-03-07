@@ -52,7 +52,7 @@ public class AddAscentActivity extends Activity {
     private int year;
     private int month;
     private int day;
-    DateFormat fmt = new SimpleDateFormat("dd-MM-yyyy");
+    DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
     private DatePickerDialog.OnDateSetListener dateSetListener =
         new DatePickerDialog.OnDateSetListener() {
 
@@ -211,9 +211,9 @@ public class AddAscentActivity extends Activity {
         dateDisplay.setText(
                 new StringBuilder()
                 // Month is 0 based so add 1
-                .append(day).append("-")
+                .append(year).append("-")
                 .append(month + 1).append("-")
-                .append(year).append(" "));
+                .append(day));
     }
 
 }

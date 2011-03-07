@@ -17,8 +17,6 @@ package be.sourcery;
  *  along with Ascent.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 import android.app.Activity;
@@ -47,7 +45,6 @@ public class MainActivity extends Activity {
     private static final int MENU_IMPORT = 0;
     private static final int MENU_PROJECTS = 1;
     private static final int MENU_CRAGS = 2;
-    private DateFormat fmt = new SimpleDateFormat("dd MMM yyyy");
     private CursorAdapter adapter;
     private InternalDB db;
     private ListView listView;
