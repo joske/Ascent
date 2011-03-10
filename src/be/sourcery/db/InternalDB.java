@@ -110,14 +110,14 @@ public class InternalDB {
     public Cursor getCragsCrusor() {
         List<Crag> list = new ArrayList<Crag>();
         Cursor cursor = database.query("crag", new String[] { "_id", "name", "country" },
-                null, null, null, null, "name desc");
+                null, null, null, null, "name asc");
         return cursor;
     }
 
     public List<Crag> getCrags() {
         List<Crag> list = new ArrayList<Crag>();
         Cursor cursor = database.query("crag", new String[] { "_id", "name", "country" },
-                null, null, null, null, "name desc");
+                null, null, null, null, "name asc");
         if (cursor.moveToFirst()) {
             do {
                 long id = cursor.getLong(0);
@@ -135,7 +135,7 @@ public class InternalDB {
 
     public Cursor getCragsCursor() {
         Cursor cursor = database.query("crag", new String[] { "_id", "name" },
-                null, null, null, null, "name desc");
+                null, null, null, null, "name asc");
         return cursor;
     }
 
@@ -297,38 +297,12 @@ public class InternalDB {
         return list;
     }
 
-    public List<Ascent> getAscents(Crag crag) {
+    public Cursor getAscentsCursor(Crag crag) {
         List<Ascent> list = new ArrayList<Ascent>();
-        Cursor cursor = database.query("ascents", new String[] { "_id", "route_id", "attempts", "style_id", "date" },
-                "crag_id = " + crag.getId(), null, null, null, "_id desc");
-        if (cursor.moveToFirst()) {
-            do {
-                long id = cursor.getLong(0);
-                long route_id = cursor.getLong(1);
-                int attempts = cursor.getInt(2);
-                int style = cursor.getInt(3);
-                String date = cursor.getString(4);
-                Ascent a = new Ascent();
-                Route r = getRoute(route_id);
-                a.setId(id);
-                a.setRoute(r);
-                a.setStyle(style);
-                a.setAttempts(attempts);
-                try {
-                    if (date != null) {
-                        a.setDate(fmt.parse(date));
-                    }
-                } catch (ParseException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-                list.add(a);
-            } while (cursor.moveToNext());
-        }
-        if (cursor != null && !cursor.isClosed()) {
-            cursor.close();
-        }
-        return list;
+        Cursor cursor = database.query("ascent_routes",
+                new String[] { "_id", "route_id", "route_name", "route_grade", "attempts", "style", "date" },
+                "crag_id = " + crag.getId(), null, null, null, "date desc");
+        return cursor;
     }
 
     public Ascent getAscent(long ascentId) {
@@ -391,10 +365,10 @@ public class InternalDB {
             db.execSQL("insert into styles values (4, 'Toprope', 'TP');");
             db.execSQL("insert into styles values (5, 'Repeat', 'Rep');");
             db.execSQL("insert into styles values (6, 'Multipitch', 'MP');");
-            db.execSQL("create table routes (_id integer primary key autoincrement, name text, grade text, crag_id text);");
+            db.execSQL("create table routes (_id integer primary key autoincrement, name text, grade text, crag_id integer);");
             db.execSQL("create table ascents (_id integer primary key autoincrement, route_id int, date text, attempts int, style_id int, comment string, stars int);");
             db.execSQL("create table projects (_id integer primary key autoincrement, route_id int, attempts int);");
-            db.execSQL("create view ascent_routes as select a._id as _id, r._id as route_id, r.name as route_name, r.grade as route_grade, a.attempts as attempts, s.short_name as style, a.date as date from ascents a inner join routes r on a.route_id = r._id inner join styles s on a.style_id = s._id;");
+            db.execSQL("create view ascent_routes as select a._id as _id, r._id as route_id, r.name as route_name, r.grade as route_grade, a.attempts as attempts, s.short_name as style, a.date as date, r.crag_id as crag_id from ascents a inner join routes r on a.route_id = r._id inner join styles s on a.style_id = s._id;");
             db.execSQL("create view project_routes as select p._id as _id, r.name as route_name, r.grade as route_grade, c.name as crag_name, p.attempts as attempts from projects p inner join routes r on p.route_id = r._id inner join crag c on r.crag_id = c._id;");
         }
 

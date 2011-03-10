@@ -67,7 +67,7 @@ public class CragListActivity extends Activity {
             public void onItemClick(AdapterView<?> arg0, View view, int position, long row) {
                 long id = adapter.getItemId(position);
                 Crag crag = db.getCrag(id);
-                editCrag(crag);
+                showAscents(crag);
             }
         });
     }
@@ -76,7 +76,12 @@ public class CragListActivity extends Activity {
         db.close();
     }
 
-    private void editCrag(Crag crag) {
+    private void showAscents(Crag crag) {
+        Intent myIntent = new Intent(this, CragAscentsActivity.class);
+        Bundle b = new Bundle();
+        b.putLong("cragId", crag.getId());
+        myIntent.putExtras(b);
+        startActivity(myIntent);
     }
 
     private void addCrag() {

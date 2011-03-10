@@ -20,6 +20,7 @@
 
 <activity android:name="ImportDataActivity"></activity>
 <activity android:name="ProjectListActivity"></activity>
+<activity android:name="CragAscentsActivity"></activity>
 </application>
 
 
