@@ -86,7 +86,7 @@ public class MainActivity extends Activity {
         });
     }
 
-    public void editAscent(Ascent ascent) {
+    private void editAscent(Ascent ascent) {
         Intent myIntent = new Intent(this, EditAscentActivity.class);
         Bundle b = new Bundle();
         b.putLong("ascentId", ascent.getId());
