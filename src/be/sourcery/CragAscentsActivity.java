@@ -1,8 +1,11 @@
 package be.sourcery;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -39,12 +42,28 @@ public class CragAscentsActivity extends Activity {
         listView = (ListView)this.findViewById(R.id.list);
         listView.setAdapter(adapter);
         registerForContextMenu(listView);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> arg0, View view, int position, long row) {
+                long id = adapter.getItemId(position);
+                Ascent ascent = db.getAscent(id);
+                editAscent(ascent);
+            }
+        });
     }
 
     public void onDestroy() {
         super.onDestroy();
         db.close();
     }
+
+    private void editAscent(Ascent ascent) {
+        Intent myIntent = new Intent(this, EditAscentActivity.class);
+        Bundle b = new Bundle();
+        b.putLong("ascentId", ascent.getId());
+        myIntent.putExtras(b);
+        startActivity(myIntent);
+    }
+
 
 
 }
