@@ -22,6 +22,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
@@ -29,6 +30,7 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -45,17 +47,13 @@ public class EditAscentActivity extends Activity {
     private InternalDB db;
     DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
     static final int DATE_DIALOG_ID = 0;
-    private int year;
-    private int month;
-    private int day;
+    private GregorianCalendar cal = new GregorianCalendar();
     private DatePickerDialog.OnDateSetListener dateSetListener =
         new DatePickerDialog.OnDateSetListener() {
 
         public void onDateSet(DatePicker view, int year,
                               int monthOfYear, int dayOfMonth) {
-            EditAscentActivity.this.year = year;
-            month = monthOfYear;
-            day = dayOfMonth;
+            cal.set(year, monthOfYear, dayOfMonth);
             updateDisplay();
         }
     };
@@ -66,6 +64,7 @@ public class EditAscentActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_ascent);
         setTitle("Edit Ascent");
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         Bundle b = this.getIntent().getExtras();
         long ascentId = b.getLong("ascentId");
         db = new InternalDB(this);
@@ -77,11 +76,7 @@ public class EditAscentActivity extends Activity {
         Date date = ascent.getDate();
         String dateString = fmt.format(date);
         dateDisplay.setText(dateString);
-        Calendar c = Calendar.getInstance();
-        c.setTime(date);
-        year = c.get(Calendar.YEAR);
-        month = c.get(Calendar.MONTH);
-        day = c.get(Calendar.DAY_OF_MONTH);
+        cal.setTime(date);
         ss = (Spinner) findViewById(R.id.stylespinner2);
         ArrayAdapter adapter = ArrayAdapter.createFromResource(
                 this, R.array.styles, android.R.layout.simple_spinner_item);
@@ -160,19 +155,15 @@ public class EditAscentActivity extends Activity {
             case DATE_DIALOG_ID:
                 return new DatePickerDialog(this,
                         dateSetListener,
-                        year, month, day);
+                        cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
         }
         return null;
     }
 
     private void updateDisplay() {
         TextView dateDisplay = (TextView)findViewById(R.id.dateDisplay);
-        dateDisplay.setText(
-                new StringBuilder()
-                // Month is 0 based so add 1
-                .append(year).append("-")
-                .append(month + 1).append("-")
-                .append(day));
+        String dateString = fmt.format(cal.getTime());
+        dateDisplay.setText(dateString);
     }
 
     public void onDestroy() {
