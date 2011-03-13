@@ -18,7 +18,7 @@
 <activity android:name="EditAscentActivity"></activity>
 <activity android:name="CragListActivity"></activity>
 
-<activity android:name="ImportDataActivity"></activity>
+<activity android:name="ImportDataActivity" android:configChanges="orientation"></activity>
 <activity android:name="ProjectListActivity"></activity>
 <activity android:name="CragAscentsActivity"></activity>
 </application>

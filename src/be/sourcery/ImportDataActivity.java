@@ -9,6 +9,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
@@ -21,22 +23,27 @@ import be.sourcery.db.InternalDB;
 
 public class ImportDataActivity extends Activity {
 
-    InternalDB db = null;
+    private static final int ID_DIALOG_PROGRESS = 1;
     DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.import_data);
         setTitle("Import Data");
-        db = new InternalDB(this);
         // Capture our button from layout
         TextView text = (TextView)findViewById(R.id.importTitle);
         Button button = (Button)findViewById(R.id.ok);
         // Register the onClick listener with the implementation above
         button.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                importData();
-                finish();
+                showDialog(ID_DIALOG_PROGRESS);
+                new Thread(new Runnable(){
+                    public void run() {
+                        importData();
+                        dismissDialog(ID_DIALOG_PROGRESS);
+                        finish();
+                    }
+                }).start();
             }
         });
         String state = Environment.getExternalStorageState();
@@ -56,6 +63,7 @@ public class ImportDataActivity extends Activity {
     }
 
     protected void importData() {
+        InternalDB db = new InternalDB(this);
         try {
             // structure:
             // routeName;routeGrade;cragName;cragCountry;style;attempts;date;comment;stars
@@ -103,13 +111,23 @@ public class ImportDataActivity extends Activity {
             setResult(RESULT_OK);
         } catch (Exception e) {
             setResult(RESULT_CANCELED);
+        } finally {
+            db.close();
         }
 
     }
 
-    public void onDestroy() {
-        super.onDestroy();
-        db.close();
+    @Override
+    protected Dialog onCreateDialog(int id) {
+        if (id == ID_DIALOG_PROGRESS) {
+            ProgressDialog loadingDialog = new ProgressDialog(this);
+            loadingDialog.setMessage("Loading. Please wait...");
+            loadingDialog.setIndeterminate(true);
+            loadingDialog.setCancelable(false);
+            return loadingDialog;
+        }
+        return super.onCreateDialog(id);
     }
+
 
 }
