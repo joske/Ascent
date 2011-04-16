@@ -17,7 +17,7 @@ package be.sourcery;
  *  along with Ascent.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import android.app.Activity;
+import greendroid.app.GDActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -26,14 +26,14 @@ import android.widget.EditText;
 import be.sourcery.db.InternalDB;
 
 
-public class AddCragActivity extends Activity {
+public class AddCragActivity extends GDActivity {
 
     InternalDB db = null;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.add_crag);
-        setTitle("Add Crag");
+        setActionBarContentView(R.layout.add_crag);
+        setTitle(R.string.addCrag);
         db = new InternalDB(this);
         // Capture our button from layout
         Button button = (Button)findViewById(R.id.ok);

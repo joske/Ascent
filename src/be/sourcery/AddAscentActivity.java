@@ -17,13 +17,14 @@ package be.sourcery;
  *  along with Ascent.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import greendroid.app.GDActivity;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.database.Cursor;
@@ -46,7 +47,7 @@ import android.widget.Toast;
 import be.sourcery.db.InternalDB;
 
 
-public class AddAscentActivity extends Activity {
+public class AddAscentActivity extends GDActivity {
 
     InternalDB db = null;
     private int year;
@@ -69,14 +70,15 @@ public class AddAscentActivity extends Activity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.add_ascent);
-        setTitle("Add Route");
+        setActionBarContentView(R.layout.add_ascent);
+        setTitle(R.string.addAscent);
         db = new InternalDB(this);
         Spinner s = (Spinner) findViewById(R.id.cragspinner);
         Cursor cursor = db.getCragsCursor();
         startManagingCursor(cursor);
         CursorAdapter ca = new SimpleCursorAdapter(this, R.layout.cragspinner, cursor, new String[] { "name" }, new int[] { R.id.spinnerRow});
         s.setAdapter(ca);
+        s.setEnabled(true);
         Spinner ss = (Spinner) findViewById(R.id.stylespinner);
         ArrayAdapter adapter = ArrayAdapter.createFromResource(
                 this, R.array.styles, android.R.layout.simple_spinner_item);

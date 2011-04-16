@@ -6,6 +6,24 @@
     <string name="style_prompt">Style</string>
     <string name="commentLabel">Comment</string>
     <string name="deleteAscent">Delete Ascent</string>
+    <string name="qaAscent">Ascent</string>
+    <string name="qaCrag">Crag</string>
+    <string name="latestAscents">Latest Ascents</string>
+    <string name="addAscent">Add Ascent</string>
+    <string name="editAscent">Edit Ascent</string>
+    <string name="addCrag">Add Crag</string>
+    <string name="crags">Crags</string>
+    <string name="projects">Projects</string>
+    <string name="importData">Import Data</string>
+    <string name="exportData">Export Data</string>
+    <string name="notMounted">SD card not present or not mounted</string>
+    <string name="exportToFile">Exporting to /sdcard/ascent-export.csv</string>
+    <string name="importFileFound">Found import file /sdcard/ascent.csv</string>
+    <string name="importFileNotFound">Could not find import file /sdcard/ascent.csv</string>
+    <string name="importingData">Importing Data. Please wait...</string>
+    <string name="exportingData">Exporting Data. Please wait...</string>
+    <string name="importButton">Import</string>
+    <string name="exportButton">Export</string>
     
     <string-array name="styles">
         <item>Onsight</item>

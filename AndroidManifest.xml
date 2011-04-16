@@ -1,27 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="be.sourcery"
-      android:versionCode="1"
-      android:versionName="1.0">
-    <application android:icon="@drawable/icon" android:label="@string/app_name">
-        <activity android:name=".MainActivity"
-                  android:label="@string/app_name">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+	package="be.sourcery" android:versionCode="1" android:versionName="1.0">
+	<application android:icon="@drawable/icon" android:label="@string/app_name"
+		android:name=".AscentApplication" android:theme="@style/Theme.Ascent">
+		
+		<activity android:name=".MainActivity" android:label="@string/app_name">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+		</activity>
 
-    <activity android:name="AddAscentActivity"></activity>
-<activity android:name="AddCragActivity"></activity>
+		<activity android:name="AddAscentActivity"></activity>
+		<activity android:name="AddCragActivity"></activity>
 
-<activity android:name="EditAscentActivity"></activity>
-<activity android:name="CragListActivity"></activity>
+		<activity android:name="EditAscentActivity"></activity>
+		<activity android:name="CragListActivity"></activity>
 
-<activity android:name="ImportDataActivity" android:configChanges="orientation"></activity>
-<activity android:name="ProjectListActivity"></activity>
-<activity android:name="CragAscentsActivity"></activity>
-</application>
+		<activity android:name="ImportDataActivity"
+			android:configChanges="orientation"></activity>
+		<activity android:name="ExportDataActivity"
+			android:configChanges="orientation"></activity>
+		<activity android:name="ProjectListActivity"></activity>
+		<activity android:name="CragAscentsActivity"></activity>
+	</application>
 
 
 </manifest> 

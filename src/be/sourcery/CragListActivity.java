@@ -17,23 +17,22 @@ package be.sourcery;
  *  along with Ascent.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import android.app.Activity;
+import greendroid.app.GDActivity;
+import greendroid.widget.ActionBarItem;
+import greendroid.widget.ActionBarItem.Type;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.CursorAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import be.sourcery.db.InternalDB;
 
 
-public class CragListActivity extends Activity {
+public class CragListActivity extends GDActivity {
 
     private CursorAdapter adapter;
     private InternalDB db;
@@ -41,18 +40,9 @@ public class CragListActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
-        setContentView(R.layout.crag_list);
-        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.top);
-        TextView title = (TextView) this.findViewById(R.id.titleText);
-        title.setText("Crags");
-        ImageView plus = (ImageView)this.findViewById(R.id.plusButton);
-        plus.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                addCrag();
-            }
-        });
-        setTitle("Crags");
+        setActionBarContentView(R.layout.crag_list);
+        setTitle(R.string.crags);
+        addActionBarItem(Type.Add);
         db = new InternalDB(this);
         Cursor cursor = db.getCragsCrusor();
         startManagingCursor(cursor);
@@ -71,9 +61,25 @@ public class CragListActivity extends Activity {
             }
         });
     }
+
     public void onDestroy() {
         super.onDestroy();
         db.close();
+    }
+
+    @Override
+    public boolean onHandleActionBarItemClick(ActionBarItem item, int position) {
+
+        switch (position) {
+            case 0:
+                addCrag();
+                break;
+
+            default:
+                return super.onHandleActionBarItemClick(item, position);
+        }
+
+        return true;
     }
 
     private void showAscents(Crag crag) {

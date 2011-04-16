@@ -17,6 +17,8 @@ package be.sourcery;
  *  along with Ascent.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import greendroid.app.GDActivity;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -24,7 +26,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
@@ -42,7 +43,7 @@ import android.widget.Toast;
 import be.sourcery.db.InternalDB;
 
 
-public class EditAscentActivity extends Activity {
+public class EditAscentActivity extends GDActivity {
 
     private InternalDB db;
     DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
@@ -62,8 +63,8 @@ public class EditAscentActivity extends Activity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.edit_ascent);
-        setTitle("Edit Ascent");
+        setActionBarContentView(R.layout.edit_ascent);
+        setTitle(R.string.editAscent);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         Bundle b = this.getIntent().getExtras();
         long ascentId = b.getLong("ascentId");

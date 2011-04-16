@@ -1,5 +1,7 @@
 package be.sourcery;
 
+import greendroid.app.GDActivity;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -8,7 +10,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
@@ -21,15 +22,15 @@ import android.widget.Toast;
 import be.sourcery.db.InternalDB;
 
 
-public class ImportDataActivity extends Activity {
+public class ImportDataActivity extends GDActivity {
 
     private static final int ID_DIALOG_PROGRESS = 1;
     DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.import_data);
-        setTitle("Import Data");
+        setActionBarContentView(R.layout.import_data);
+        setTitle(R.string.importData);
         // Capture our button from layout
         TextView text = (TextView)findViewById(R.id.importTitle);
         Button button = (Button)findViewById(R.id.ok);
@@ -53,10 +54,10 @@ public class ImportDataActivity extends Activity {
             File importFile = new File(sdcard, "ascent.csv");
             if (importFile.exists()) {
                 // file exists, enable button
-                text.setText("Found import file /sdcard/ascent.csv");
+                text.setText(R.string.importFileFound);
                 button.setEnabled(true);
             } else {
-                text.setText("Could not find import file /sdcard/ascent.csv");
+                text.setText(R.string.importFileNotFound);
                 button.setEnabled(false);
             }
         }
@@ -121,7 +122,7 @@ public class ImportDataActivity extends Activity {
     protected Dialog onCreateDialog(int id) {
         if (id == ID_DIALOG_PROGRESS) {
             ProgressDialog loadingDialog = new ProgressDialog(this);
-            loadingDialog.setMessage("Loading. Please wait...");
+            loadingDialog.setMessage(getString(R.string.importingData));
             loadingDialog.setIndeterminate(true);
             loadingDialog.setCancelable(false);
             return loadingDialog;

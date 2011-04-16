@@ -1,6 +1,6 @@
 package be.sourcery;
 
-import android.app.Activity;
+import greendroid.app.GDActivity;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
@@ -12,15 +12,15 @@ import android.widget.TextView;
 import be.sourcery.db.InternalDB;
 
 
-public class ProjectListActivity extends Activity {
+public class ProjectListActivity extends GDActivity {
 
     private CursorAdapter adapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.project_list);
-        setTitle("Projects");
+        setActionBarContentView(R.layout.project_list);
+        setTitle(R.string.projects);
         InternalDB db = new InternalDB(this);
         TextView countView = (TextView) this.findViewById(R.id.countView);
         Cursor cursor = db.getProjectsCursor();

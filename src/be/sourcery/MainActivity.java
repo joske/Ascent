@@ -17,9 +17,13 @@ package be.sourcery;
  *  along with Ascent.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import greendroid.app.GDActivity;
+import greendroid.widget.ActionBarItem;
+import greendroid.widget.ActionBarItem.Type;
+import greendroid.widget.QuickActionBar;
+
 import java.util.List;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -29,43 +33,38 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.CursorAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import be.sourcery.db.InternalDB;
 
-public class MainActivity extends Activity {
+public class MainActivity extends GDActivity {
 
-    private static final int MENU_IMPORT = 0;
-    private static final int MENU_PROJECTS = 1;
-    private static final int MENU_CRAGS = 2;
+    private static final int MENU_PROJECTS = 0;
+    private static final int MENU_CRAGS = 1;
+    private static final int MENU_IMPORT = 2;
+    private static final int MENU_EXPORT = 3;
     private CursorAdapter adapter;
     private InternalDB db;
     private ListView listView;
     private Cursor cursor;
+    private QuickActionBar mBar;
 
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
-        setContentView(R.layout.main);
-        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.top);
-        TextView title = (TextView) this.findViewById(R.id.titleText);
-        title.setText("Latest Ascents");
-        ImageView plus = (ImageView)this.findViewById(R.id.plusButton);
-        plus.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                addAscent();
-            }
-        });
+        setActionBarContentView(R.layout.main);
+        setTitle(R.string.latestAscents);
+        addActionBarItem(Type.Add);
         db = new InternalDB(this);
+        prepareList();
+    }
+
+    private void prepareList() {
         TextView countView = (TextView) this.findViewById(R.id.countView);
         List<Ascent> ascents = db.getAscents();
         countView.setText(ascents.size() + " ascents in DB");
@@ -95,9 +94,10 @@ public class MainActivity extends Activity {
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
-        menu.add(0, MENU_IMPORT, 0, "Import Data");
         menu.add(0, MENU_CRAGS, 0, "Crags");
         menu.add(0, MENU_PROJECTS, 0, "Projects");
+        menu.add(0, MENU_IMPORT, 0, "Import Data");
+        menu.add(0, MENU_EXPORT, 0, "Export Data");
         return true;
     }
 
@@ -132,6 +132,9 @@ public class MainActivity extends Activity {
             case MENU_IMPORT:
                 importData();
                 return true;
+            case MENU_EXPORT:
+                exportData();
+                return true;
             case MENU_PROJECTS:
                 projectsList();
                 return true;
@@ -141,6 +144,11 @@ public class MainActivity extends Activity {
 
     private void importData() {
         Intent myIntent = new Intent(this, ImportDataActivity.class);
+        startActivityForResult(myIntent, 0);
+    }
+
+    private void exportData() {
+        Intent myIntent = new Intent(this, ExportDataActivity.class);
         startActivityForResult(myIntent, 0);
     }
 
@@ -167,6 +175,25 @@ public class MainActivity extends Activity {
     private void projectsList() {
         Intent myIntent = new Intent(this, ProjectListActivity.class);
         startActivityForResult(myIntent, 0);
+    }
+
+    public void onShowBar(View v) {
+        mBar.show(v);
+    }
+
+    @Override
+    public boolean onHandleActionBarItemClick(ActionBarItem item, int position) {
+
+        switch (position) {
+            case 0:
+                addAscent();
+                break;
+
+            default:
+                return super.onHandleActionBarItemClick(item, position);
+        }
+
+        return true;
     }
 
 }

@@ -11,7 +11,7 @@
 		      android:textSize="18px"
               android:text=""/>
               
-    <Button android:text="Import"
+    <Button android:text="@string/importButton"
         android:id="@+id/ok"
         android:layout_width="wrap_content"
         android:textSize="12px"
