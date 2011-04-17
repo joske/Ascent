@@ -31,6 +31,8 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CursorAdapter;
@@ -80,6 +82,23 @@ public class AddAscentActivity extends GDActivity {
         s.setAdapter(ca);
         s.setEnabled(true);
         Spinner ss = (Spinner) findViewById(R.id.stylespinner);
+        ss.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+            public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long rowId) {
+                EditText attemptsView = (EditText)findViewById(R.id.attempts);
+                if (rowId == 2) {
+                    // redpoint
+                    attemptsView.setText("");
+                    attemptsView.setEnabled(true);
+                } else {
+                    attemptsView.setText("1");
+                    attemptsView.setEnabled(false);
+                }
+            }
+
+            public void onNothingSelected(AdapterView<?> arg0) {
+            }
+        });
         ArrayAdapter adapter = ArrayAdapter.createFromResource(
                 this, R.array.styles, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
