@@ -12,13 +12,13 @@ import java.util.Date;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 import be.sourcery.db.InternalDB;
 
 
@@ -108,8 +108,9 @@ public class ImportDataActivity extends GDActivity {
                     }
                 }
             }
-            Toast.makeText(this, "Imported " + count + " ascents", Toast.LENGTH_SHORT).show();
-            setResult(RESULT_OK);
+            Intent intent = this.getIntent();
+            intent.putExtra("count", count);
+            setResult(RESULT_OK, intent);
         } catch (Exception e) {
             setResult(RESULT_CANCELED);
         } finally {

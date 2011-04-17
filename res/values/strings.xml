@@ -24,6 +24,10 @@
     <string name="exportingData">Exporting Data. Please wait...</string>
     <string name="importButton">Import</string>
     <string name="exportButton">Export</string>
+    <string name="overwrite">File Exists</string>
+    <string name="overwriteText">Export file /sdcard/ascent-export.csv exists, overwrite?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
     
     <string-array name="styles">
         <item>Onsight</item>

@@ -24,6 +24,7 @@ import greendroid.widget.QuickActionBar;
 
 import java.util.List;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -39,6 +40,7 @@ import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 import be.sourcery.db.InternalDB;
 
 public class MainActivity extends GDActivity {
@@ -47,6 +49,10 @@ public class MainActivity extends GDActivity {
     private static final int MENU_CRAGS = 1;
     private static final int MENU_IMPORT = 2;
     private static final int MENU_EXPORT = 3;
+
+    private static final int EXPORT_DATA_REQUEST = 1;
+    private static final int IMPORT_DATA_REQUEST = 2;
+
     private CursorAdapter adapter;
     private InternalDB db;
     private ListView listView;
@@ -124,6 +130,31 @@ public class MainActivity extends GDActivity {
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch(requestCode) {
+            case (EXPORT_DATA_REQUEST) : {
+                if (resultCode == Activity.RESULT_OK) {
+                    int count = data.getIntExtra("count", 0);
+                    Toast.makeText(this, "Exported " + count + " ascents", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, "Failed exporting ascents", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            }
+            case (IMPORT_DATA_REQUEST) : {
+                if (resultCode == Activity.RESULT_OK) {
+                    int count = data.getIntExtra("count", 0);
+                    Toast.makeText(this, "Imported " + count + " ascents", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, "Failed importing ascents", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            }
+        }
+    }
+
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case MENU_CRAGS:
@@ -144,12 +175,12 @@ public class MainActivity extends GDActivity {
 
     private void importData() {
         Intent myIntent = new Intent(this, ImportDataActivity.class);
-        startActivityForResult(myIntent, 0);
+        startActivityForResult(myIntent, IMPORT_DATA_REQUEST);
     }
 
     private void exportData() {
         Intent myIntent = new Intent(this, ExportDataActivity.class);
-        startActivityForResult(myIntent, 0);
+        startActivityForResult(myIntent, EXPORT_DATA_REQUEST);
     }
 
     public void onDestroy() {
