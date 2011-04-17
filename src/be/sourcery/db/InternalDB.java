@@ -265,7 +265,7 @@ public class InternalDB {
 
     public List<Ascent> getAscents() {
         List<Ascent> list = new ArrayList<Ascent>();
-        Cursor cursor = database.query("ascents", new String[] { "_id", "route_id", "attempts", "style_id", "date" },
+        Cursor cursor = database.query("ascents", new String[] { "_id", "route_id", "attempts", "style_id", "date", "comment", "stars" },
                 null, null, null, null, "date desc");
         if (cursor.moveToFirst()) {
             do {
@@ -274,12 +274,16 @@ public class InternalDB {
                 int attempts = cursor.getInt(2);
                 int style = cursor.getInt(3);
                 String date = cursor.getString(4);
+                String comment = cursor.getString(5);
+                int stars = cursor.getInt(6);
                 Ascent a = new Ascent();
                 Route r = getRoute(route_id);
                 a.setId(id);
                 a.setRoute(r);
                 a.setStyle(style);
                 a.setAttempts(attempts);
+                a.setComment(comment);
+                a.setStars(stars);
                 try {
                     if (date != null) {
                         a.setDate(fmt.parse(date));

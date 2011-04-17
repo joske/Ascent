@@ -100,7 +100,7 @@ public class ExportDataActivity extends GDActivity {
                 line.append(ascent.getAttempts()).append(";");
                 line.append(fmt.format(ascent.getDate())).append(";");
                 line.append(ascent.getComment()).append(";");
-                line.append(ascent.getStars()).append("\n");
+                line.append(ascent.getStars()).append("\r\n");
                 bw.write(line.toString());
             }
             bw.close();
