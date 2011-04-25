@@ -74,6 +74,11 @@ public class AddAscentActivity extends GDActivity {
         super.onCreate(savedInstanceState);
         setActionBarContentView(R.layout.add_ascent);
         setTitle(R.string.addAscent);
+        Bundle b = this.getIntent().getExtras();
+        long cragId = -1;
+        if (b != null) {
+            cragId = b.getLong("cragId");
+        }
         db = new InternalDB(this);
         Spinner s = (Spinner) findViewById(R.id.cragspinner);
         Cursor cursor = db.getCragsCursor();
@@ -81,6 +86,10 @@ public class AddAscentActivity extends GDActivity {
         CursorAdapter ca = new SimpleCursorAdapter(this, R.layout.cragspinner, cursor, new String[] { "name" }, new int[] { R.id.spinnerRow});
         s.setAdapter(ca);
         s.setEnabled(true);
+        int selection = getSelection(cragId, cursor);
+        if (cragId != -1) {
+            s.setSelection(selection);
+        }
         Spinner ss = (Spinner) findViewById(R.id.stylespinner);
         ss.setOnItemSelectedListener(new OnItemSelectedListener() {
 
@@ -209,6 +218,17 @@ public class AddAscentActivity extends GDActivity {
 
         // display the current date
         updateDisplay();
+    }
+
+    private int getSelection(long cragId, Cursor cursor) {
+        for (cursor.moveToFirst(); cursor.moveToNext(); ) {
+            if (cursor.getLong(0) == cragId) {
+                int position = cursor.getPosition();
+                cursor.moveToFirst();
+                return position;
+            }
+        }
+        return 0;
     }
 
     @Override
