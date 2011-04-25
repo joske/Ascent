@@ -14,6 +14,7 @@
 		<activity android:name="AddAscentActivity"></activity>
 		<activity android:name="AddCragActivity"></activity>
 
+		<activity android:name="RepeatAscentActivity"></activity>
 		<activity android:name="EditAscentActivity"></activity>
 		<activity android:name="CragListActivity"></activity>
 

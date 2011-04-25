@@ -6,6 +6,7 @@
     <string name="style_prompt">Style</string>
     <string name="commentLabel">Comment</string>
     <string name="deleteAscent">Delete Ascent</string>
+    <string name="repeatAscent">Repeat Ascent</string>
     <string name="qaAscent">Ascent</string>
     <string name="qaCrag">Crag</string>
     <string name="latestAscents">Latest Ascents</string>

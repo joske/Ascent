@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+    <ScrollView
+		android:id="@+id/scrollview"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_weight="1"
+	>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+    <TextView android:id="@+id/route" 
+              android:layout_width="fill_parent" 
+              android:layout_height="wrap_content" 
+              android:textSize="12pt"
+              android:text="" />
+	<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:orientation="horizontal"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:paddingTop="10dip"
+	    android:paddingBottom="10dip"
+	    >
+    <TextView android:id="@+id/dateDisplay"
+	        android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text=""/>
+
+    <Button android:id="@+id/pickDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:text="Pick Date"/>
+    </RelativeLayout>
+    <TextView android:id="@+id/commentlabel" 
+              android:layout_width="fill_parent" 
+              android:layout_height="wrap_content" 
+              android:text="@string/commentLabel" />
+    <EditText android:id="@+id/comment" 
+              android:layout_width="fill_parent" 
+              android:layout_height="100dip"
+              android:background="@android:drawable/editbox_background"/>
+        
+		<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:orientation="horizontal"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    >
+              
+    <Button android:text="Add"
+        android:id="@+id/ok"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14px">
+    </Button>
+    <Button android:text="Cancel"
+        android:id="@+id/cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/ok"
+        android:textSize="14px">
+    </Button>
+    </RelativeLayout>
+    </LinearLayout>
+    </ScrollView>
+</LinearLayout>

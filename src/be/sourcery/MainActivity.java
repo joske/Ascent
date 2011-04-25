@@ -20,10 +20,6 @@ package be.sourcery;
 import greendroid.app.GDActivity;
 import greendroid.widget.ActionBarItem;
 import greendroid.widget.ActionBarItem.Type;
-import greendroid.widget.QuickActionBar;
-
-import java.util.List;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -52,12 +48,12 @@ public class MainActivity extends GDActivity {
 
     private static final int EXPORT_DATA_REQUEST = 1;
     private static final int IMPORT_DATA_REQUEST = 2;
+    private static final int REPEAT_REQUEST = 3;
 
     private CursorAdapter adapter;
     private InternalDB db;
     private ListView listView;
     private Cursor cursor;
-    private QuickActionBar mBar;
 
     /** Called when the activity is first created. */
     @Override
@@ -71,10 +67,9 @@ public class MainActivity extends GDActivity {
     }
 
     private void prepareList() {
-        TextView countView = (TextView) this.findViewById(R.id.countView);
-        List<Ascent> ascents = db.getAscents();
-        countView.setText(ascents.size() + " ascents in DB");
         cursor = db.getAscentsCursor();
+        TextView countView = (TextView) this.findViewById(R.id.countView);
+        countView.setText(cursor.getCount() + " ascents in DB");
         startManagingCursor(cursor);
         adapter = new SimpleCursorAdapter(getApplicationContext(), R.layout.ascent_list_item, cursor,
                 new String[] {"date", "style", "route_grade", "date", "route_name"},
@@ -89,14 +84,6 @@ public class MainActivity extends GDActivity {
                 editAscent(ascent);
             }
         });
-    }
-
-    private void editAscent(Ascent ascent) {
-        Intent myIntent = new Intent(this, EditAscentActivity.class);
-        Bundle b = new Bundle();
-        b.putLong("ascentId", ascent.getId());
-        myIntent.putExtras(b);
-        startActivity(myIntent);
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -118,16 +105,38 @@ public class MainActivity extends GDActivity {
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+        Ascent ascent = db.getAscent(info.id);
         switch (item.getItemId()) {
             case R.id.delete:
-                Ascent ascent = db.getAscent(info.id);
                 db.deleteAscent(ascent);
+                cursor.requery();
+                TextView countView = (TextView) this.findViewById(R.id.countView);
+                countView.setText(cursor.getCount() + " ascents in DB");
+                adapter.notifyDataSetChanged();
+                return true;
+            case R.id.repeat:
+                repeatAscent(ascent);
                 cursor.requery();
                 adapter.notifyDataSetChanged();
                 return true;
             default:
                 return super.onContextItemSelected(item);
         }
+    }
+
+    @Override
+    public boolean onHandleActionBarItemClick(ActionBarItem item, int position) {
+
+        switch (position) {
+            case 0:
+                addAscent();
+                break;
+
+            default:
+                return super.onHandleActionBarItemClick(item, position);
+        }
+
+        return true;
     }
 
     @Override
@@ -155,6 +164,18 @@ public class MainActivity extends GDActivity {
         }
     }
 
+    public void onDestroy() {
+        super.onDestroy();
+        db.close();
+    }
+
+    public void onResume() {
+        super.onResume();
+        cursor.requery();
+        TextView countView = (TextView) this.findViewById(R.id.countView);
+        countView.setText(cursor.getCount() + " ascents in DB");
+    }
+
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case MENU_CRAGS:
@@ -173,6 +194,14 @@ public class MainActivity extends GDActivity {
         return false;
     }
 
+    private void editAscent(Ascent ascent) {
+        Intent myIntent = new Intent(this, EditAscentActivity.class);
+        Bundle b = new Bundle();
+        b.putLong("ascentId", ascent.getId());
+        myIntent.putExtras(b);
+        startActivity(myIntent);
+    }
+
     private void importData() {
         Intent myIntent = new Intent(this, ImportDataActivity.class);
         startActivityForResult(myIntent, IMPORT_DATA_REQUEST);
@@ -183,9 +212,12 @@ public class MainActivity extends GDActivity {
         startActivityForResult(myIntent, EXPORT_DATA_REQUEST);
     }
 
-    public void onDestroy() {
-        super.onDestroy();
-        db.close();
+    private void repeatAscent(Ascent ascent) {
+        Intent myIntent = new Intent(this, RepeatAscentActivity.class);
+        Bundle b = new Bundle();
+        b.putLong("ascentId", ascent.getId());
+        myIntent.putExtras(b);
+        startActivityForResult(myIntent, REPEAT_REQUEST);
     }
 
     private void addCrag() {
@@ -206,25 +238,6 @@ public class MainActivity extends GDActivity {
     private void projectsList() {
         Intent myIntent = new Intent(this, ProjectListActivity.class);
         startActivityForResult(myIntent, 0);
-    }
-
-    public void onShowBar(View v) {
-        mBar.show(v);
-    }
-
-    @Override
-    public boolean onHandleActionBarItemClick(ActionBarItem item, int position) {
-
-        switch (position) {
-            case 0:
-                addAscent();
-                break;
-
-            default:
-                return super.onHandleActionBarItemClick(item, position);
-        }
-
-        return true;
     }
 
 }
