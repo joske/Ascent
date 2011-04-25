@@ -36,6 +36,7 @@ public class CragListActivity extends GDActivity {
 
     private CursorAdapter adapter;
     private InternalDB db;
+    private Cursor cursor;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,7 +45,7 @@ public class CragListActivity extends GDActivity {
         setTitle(R.string.crags);
         addActionBarItem(Type.Add);
         db = new InternalDB(this);
-        Cursor cursor = db.getCragsCrusor();
+        cursor = db.getCragsCrusor();
         startManagingCursor(cursor);
         TextView countView = (TextView) this.findViewById(R.id.countView);
         countView.setText(cursor.getCount() + " crags in DB");
@@ -65,6 +66,13 @@ public class CragListActivity extends GDActivity {
     public void onDestroy() {
         super.onDestroy();
         db.close();
+    }
+
+    public void onResume() {
+        super.onResume();
+        cursor.requery();
+        TextView countView = (TextView) this.findViewById(R.id.countView);
+        countView.setText(cursor.getCount() + " crags in DB");
     }
 
     @Override
