@@ -166,7 +166,6 @@ public class EditAscentActivity extends GDActivity {
                 finish();
             }
         });
-
     }
 
     @Override
