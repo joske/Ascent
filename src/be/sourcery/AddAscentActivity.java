@@ -97,7 +97,6 @@ public class AddAscentActivity extends GDActivity {
                 EditText attemptsView = (EditText)findViewById(R.id.attempts);
                 if (rowId == 2) {
                     // redpoint
-                    attemptsView.setText("");
                     attemptsView.setEnabled(true);
                 } else {
                     attemptsView.setText("1");
