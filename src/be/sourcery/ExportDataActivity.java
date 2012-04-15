@@ -16,7 +16,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -35,7 +34,6 @@ public class ExportDataActivity extends MyActivity {
         setContentView(R.layout.import_data);
         setTitle(R.string.exportData);
         setupActionBar();
-        Log.w("Ascent", "ExportDataActivity");
         // Capture our button from layout
         TextView text = (TextView)findViewById(R.id.importTitle);
         Button button = (Button)findViewById(R.id.ok);
@@ -43,11 +41,8 @@ public class ExportDataActivity extends MyActivity {
         // Register the onClick listener with the implementation above
         button.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                Log.w("Ascent", "export clicked");
                 File sdcard = Environment.getExternalStorageDirectory();
-                Log.w("Ascent", "storagedir=" + sdcard.getAbsolutePath());
                 File exportFile = new File(sdcard, "ascent-export.csv");
-                Log.w("Ascent", "exortfile=" + exportFile.getAbsolutePath());
                 if (exportFile.exists()) {
                     // show confirm dialog
                     new AlertDialog.Builder(ExportDataActivity.this)
@@ -68,7 +63,6 @@ public class ExportDataActivity extends MyActivity {
             }
         });
         String state = Environment.getExternalStorageState();
-        Log.w("Ascent", "state=" + state);
         if (Environment.MEDIA_MOUNTED.equals(state)) {
             text.setText(R.string.exportToFile);
             File sdcard = Environment.getExternalStorageDirectory();
