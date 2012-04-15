@@ -17,9 +17,6 @@ package be.sourcery;
  *  along with Ascent.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import greendroid.app.GDActivity;
-import greendroid.widget.ActionBarItem;
-import greendroid.widget.ActionBarItem.Type;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -39,7 +36,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import be.sourcery.db.InternalDB;
 
-public class MainActivity extends GDActivity {
+public class MainActivity extends Activity {
 
     private static final int MENU_PROJECTS = 0;
     private static final int MENU_CRAGS = 1;
@@ -59,9 +56,8 @@ public class MainActivity extends GDActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setActionBarContentView(R.layout.main);
+        setContentView(R.layout.main);
         setTitle(R.string.latestAscents);
-        addActionBarItem(Type.Add);
         db = new InternalDB(this);
         prepareList();
     }
@@ -87,10 +83,8 @@ public class MainActivity extends GDActivity {
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
-        menu.add(0, MENU_CRAGS, 0, "Crags");
-        menu.add(0, MENU_PROJECTS, 0, "Projects");
-        menu.add(0, MENU_IMPORT, 0, "Import Data");
-        menu.add(0, MENU_EXPORT, 0, "Export Data");
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_actionbar, menu);
         return true;
     }
 
@@ -122,21 +116,6 @@ public class MainActivity extends GDActivity {
             default:
                 return super.onContextItemSelected(item);
         }
-    }
-
-    @Override
-    public boolean onHandleActionBarItemClick(ActionBarItem item, int position) {
-
-        switch (position) {
-            case 0:
-                addAscent();
-                break;
-
-            default:
-                return super.onHandleActionBarItemClick(item, position);
-        }
-
-        return true;
     }
 
     @Override
@@ -178,17 +157,17 @@ public class MainActivity extends GDActivity {
 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case MENU_CRAGS:
+            case R.id.menu_crags:
                 cragsList();
                 return true;
-            case MENU_IMPORT:
+            case R.id.menu_import:
                 importData();
                 return true;
-            case MENU_EXPORT:
+            case R.id.menu_export:
                 exportData();
                 return true;
-            case MENU_PROJECTS:
-                projectsList();
+            case R.id.menu_add:
+                addAscent();
                 return true;
         }
         return false;

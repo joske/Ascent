@@ -1,14 +1,8 @@
 package be.sourcery;
 
-import greendroid.app.GDApplication;
+import android.app.Application;
 
 
-public class AscentApplication extends GDApplication {
-
-    @Override
-    public Class<?> getHomeActivityClass() {
-        return MainActivity.class;
-    }
-
+public class AscentApplication extends Application {
 
 }

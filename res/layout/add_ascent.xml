@@ -22,6 +22,7 @@
     <EditText android:id="@+id/routename" 
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content" 
+              android:textColor="@android:color/black"
               android:background="@android:drawable/editbox_background"
               android:layout_below="@id/namelabel" />
     <TextView android:id="@+id/gradelabel" 
@@ -31,6 +32,7 @@
     <EditText android:id="@+id/grade" 
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content" 
+              android:textColor="@android:color/black"
               android:background="@android:drawable/editbox_background"
               android:layout_below="@id/gradelabel" />
 
@@ -104,6 +106,7 @@
     <EditText android:id="@+id/attempts" 
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content" 
+              android:textColor="@android:color/black"
               android:background="@android:drawable/editbox_background"
               android:layout_below="@id/attemptlabel" />
               
@@ -120,6 +123,7 @@
     <EditText android:id="@+id/comment" 
               android:layout_width="fill_parent" 
               android:layout_height="100dip" 
+              android:textColor="@android:color/black"
               android:background="@android:drawable/editbox_background"/>
         
               

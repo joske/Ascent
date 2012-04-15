@@ -1,13 +1,13 @@
 package be.sourcery;
 
-import greendroid.app.GDActivity;
-import greendroid.widget.ActionBarItem;
-import greendroid.widget.ActionBarItem.Type;
+import android.app.ActionBar;
+import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,7 +21,7 @@ import android.widget.TextView;
 import be.sourcery.db.InternalDB;
 
 
-public class CragAscentsActivity extends GDActivity {
+public class CragAscentsActivity extends Activity {
 
     private CursorAdapter adapter;
     private InternalDB db;
@@ -33,13 +33,14 @@ public class CragAscentsActivity extends GDActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.main);
+        ActionBar actionBar = getActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
         Bundle b = this.getIntent().getExtras();
         long cragId = b.getLong("cragId");
         db = new InternalDB(this);
         crag = db.getCrag(cragId);
-        setActionBarContentView(R.layout.main);
         setTitle("Latest Ascents for " + crag.getName());
-        addActionBarItem(Type.Add);
         ImageView plus = (ImageView)this.findViewById(R.id.plusButton);
         cursor = db.getAscentsCursor(crag);
         TextView countView = (TextView) this.findViewById(R.id.countView);
@@ -58,6 +59,29 @@ public class CragAscentsActivity extends GDActivity {
                 editAscent(ascent);
             }
         });
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.crags_actionbar, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // app icon in action bar clicked; go home
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                return true;
+            case R.id.menu_add:
+                addAscent();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -86,21 +110,6 @@ public class CragAscentsActivity extends GDActivity {
             default:
                 return super.onContextItemSelected(item);
         }
-    }
-
-    @Override
-    public boolean onHandleActionBarItemClick(ActionBarItem item, int position) {
-
-        switch (position) {
-            case 0:
-                addAscent();
-                break;
-
-            default:
-                return super.onHandleActionBarItemClick(item, position);
-        }
-
-        return true;
     }
 
     public void onDestroy() {

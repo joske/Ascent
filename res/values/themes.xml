@@ -18,14 +18,4 @@
 -->
 
 <resources>
-
-	<style name="Theme.Ascent" parent="@style/Theme.GreenDroid.NoTitleBar">
-	
-		<item name="gdActionBarTitleColor">@android:color/white</item>
-		<item name="gdActionBarBackground">@drawable/action_bar_background</item>
-		<item name="gdActionBarDividerDrawable">@drawable/action_bar_divider</item>
-		<item name="gdActionBarDividerWidth">2px</item>
-		<item name="gdActionBarApplicationDrawable">@drawable/icon</item>
-	</style>
-
 </resources>

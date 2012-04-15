@@ -17,18 +17,20 @@ package be.sourcery;
  *  along with Ascent.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import greendroid.app.GDActivity;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import android.app.ActionBar;
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -49,7 +51,7 @@ import android.widget.Toast;
 import be.sourcery.db.InternalDB;
 
 
-public class AddAscentActivity extends GDActivity {
+public class AddAscentActivity extends Activity {
 
     InternalDB db = null;
     private int year;
@@ -72,8 +74,10 @@ public class AddAscentActivity extends GDActivity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setActionBarContentView(R.layout.add_ascent);
+        setContentView(R.layout.add_ascent);
         setTitle(R.string.addAscent);
+        ActionBar actionBar = getActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
         Bundle b = this.getIntent().getExtras();
         long cragId = -1;
         if (b != null) {
@@ -254,6 +258,20 @@ public class AddAscentActivity extends GDActivity {
                 .append(year).append("-")
                 .append(month + 1).append("-")
                 .append(day));
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // app icon in action bar clicked; go home
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 }

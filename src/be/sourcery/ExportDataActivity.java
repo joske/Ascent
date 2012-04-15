@@ -1,7 +1,5 @@
 package be.sourcery;
 
-import greendroid.app.GDActivity;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -11,6 +9,8 @@ import java.text.SimpleDateFormat;
 import java.util.Iterator;
 import java.util.List;
 
+import android.app.ActionBar;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -18,6 +18,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -25,15 +27,18 @@ import android.widget.TextView;
 import be.sourcery.db.InternalDB;
 
 
-public class ExportDataActivity extends GDActivity {
+public class ExportDataActivity extends Activity {
 
     private static final int ID_DIALOG_PROGRESS = 1;
     DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setActionBarContentView(R.layout.import_data);
+        setContentView(R.layout.import_data);
         setTitle(R.string.exportData);
+        ActionBar actionBar = getActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        Log.w("Ascent", "ExportDataActivity");
         // Capture our button from layout
         TextView text = (TextView)findViewById(R.id.importTitle);
         Button button = (Button)findViewById(R.id.ok);
@@ -41,9 +46,12 @@ public class ExportDataActivity extends GDActivity {
         // Register the onClick listener with the implementation above
         button.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
+                Log.w("Ascent", "export clicked");
                 File sdcard = Environment.getExternalStorageDirectory();
-                File importFile = new File(sdcard, "ascent-export.csv");
-                if (importFile.exists()) {
+                Log.w("Ascent", "storagedir=" + sdcard.getAbsolutePath());
+                File exportFile = new File(sdcard, "ascent-export.csv");
+                Log.w("Ascent", "exortfile=" + exportFile.getAbsolutePath());
+                if (exportFile.exists()) {
                     // show confirm dialog
                     new AlertDialog.Builder(ExportDataActivity.this)
                     .setIcon(android.R.drawable.ic_dialog_alert)
@@ -51,24 +59,19 @@ public class ExportDataActivity extends GDActivity {
                     .setMessage(R.string.overwriteText)
                     .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            showDialog(ID_DIALOG_PROGRESS);
-                            new Thread(new Runnable(){
-                                public void run() {
-                                    exportData();
-                                    dismissDialog(ID_DIALOG_PROGRESS);
-                                    finish();
-                                }
-                            }).start();
+                            exportProgress();
                         }
 
                     })
                     .setNegativeButton(R.string.no, null)
                     .show();
+                } else {
+                    exportProgress();
                 }
             }
         });
         String state = Environment.getExternalStorageState();
-
+        Log.w("Ascent", "state=" + state);
         if (Environment.MEDIA_MOUNTED.equals(state)) {
             text.setText(R.string.exportToFile);
             File sdcard = Environment.getExternalStorageDirectory();
@@ -126,5 +129,28 @@ public class ExportDataActivity extends GDActivity {
         return super.onCreateDialog(id);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // app icon in action bar clicked; go home
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
+    private void exportProgress() {
+        showDialog(ID_DIALOG_PROGRESS);
+        new Thread(new Runnable(){
+            public void run() {
+                exportData();
+                dismissDialog(ID_DIALOG_PROGRESS);
+                finish();
+            }
+        }).start();
+    }
 }
