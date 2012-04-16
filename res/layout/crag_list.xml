@@ -6,10 +6,10 @@
     >
     <TextView 
     	android:id="@+id/countView"
-    	android:textSize="12px" 
+    	android:textSize="12dp" 
    		android:layout_width="wrap_content" 
    		android:layout_height="wrap_content"
-   		android:paddingBottom="20px">   		
+   		android:paddingBottom="20dp">   		
     </TextView>
 	<ListView android:id="@+id/list" 
 		android:layout_width="wrap_content" 

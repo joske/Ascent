@@ -1,138 +1,147 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    >
-    <ScrollView
-		android:id="@+id/scrollview"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/scrollview"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:layout_weight="1" >
+
+	<LinearLayout
+		xmlns:android="http://schemas.android.com/apk/res/android"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:layout_weight="1"
-	>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    >
-    <TextView android:id="@+id/namelabel" 
-              android:layout_width="fill_parent" 
-              android:layout_height="wrap_content" 
-              android:text="Name" />
-    <EditText android:id="@+id/routename" 
-              android:layout_width="fill_parent" 
-              android:layout_height="wrap_content" 
-              android:textColor="@android:color/black"
-              android:background="@android:drawable/editbox_background"
-              android:layout_below="@id/namelabel" />
-    <TextView android:id="@+id/gradelabel" 
-              android:layout_width="fill_parent" 
-              android:layout_height="wrap_content" 
-              android:text="Grade" />
-    <EditText android:id="@+id/grade" 
-              android:layout_width="fill_parent" 
-              android:layout_height="wrap_content" 
-              android:textColor="@android:color/black"
-              android:background="@android:drawable/editbox_background"
-              android:layout_below="@id/gradelabel" />
+		android:orientation="vertical" >
 
-    <TextView android:id="@+id/craglabel" 
-              android:layout_width="fill_parent" 
-              android:layout_height="wrap_content" 
-              android:text="Crag" />
-    <Spinner 
-        android:id="@+id/cragspinner"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:drawSelectorOnTop="true"
-        android:prompt="@string/crag_prompt"
-    />
-    <RadioGroup
-		android:id="@+id/group"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		xmlns:android="http://schemas.android.com/apk/res/android"
-		android:orientation="vertical">
-		<RadioButton
-			android:id="@+id/addproject"
+		<TextView
+			android:id="@+id/namelabel"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/name" />
+
+		<EditText
+			android:id="@+id/routename"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:inputType="text" />
+
+		<TextView
+			android:id="@+id/gradelabel"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/grade" />
+
+		<EditText
+			android:id="@+id/grade"
+			android:inputType="text"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"/>
+
+		<TextView
+			android:id="@+id/craglabel"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/crag" />
+
+		<Spinner
+			android:id="@+id/cragspinner"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:drawSelectorOnTop="true"
+			android:prompt="@string/crag" />
+
+		<RadioGroup
+			xmlns:android="http://schemas.android.com/apk/res/android"
+			android:id="@+id/group"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="Add as Project"
-			android:checked="false"
-			android:layout_weight="0"
-		>
-		</RadioButton>
-		<RadioButton
-			android:id="@+id/addascent"
+			android:orientation="vertical" >
+
+			<RadioButton
+				android:id="@+id/addproject"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_weight="0"
+				android:checked="false"
+				android:text="@string/addAsProject" >
+			</RadioButton>
+
+			<RadioButton
+				android:id="@+id/addascent"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_weight="0"
+				android:checked="true"
+				android:text="@string/addAscent" >
+			</RadioButton>
+		</RadioGroup>
+
+		<RelativeLayout
+			xmlns:android="http://schemas.android.com/apk/res/android"
+			android:layout_width="fill_parent"
+			android:layout_height="fill_parent"
+			android:orientation="horizontal" >
+
+			<TextView
+				android:id="@+id/dateDisplay"
+				android:layout_width="wrap_content"
+				android:layout_height="fill_parent"
+				android:gravity="center_vertical"
+				android:text=""
+				android:textSize="14pt" />
+
+			<Button
+				android:id="@+id/pickDate"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentRight="true"
+				android:text="@string/pickDate" />
+		</RelativeLayout>
+
+		<Spinner
+			android:id="@+id/stylespinner"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:drawSelectorOnTop="true"
+			android:prompt="@string/style_prompt" />
+
+		<TextView
+			android:id="@+id/attemptlabel"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/attempts" />
+
+		<EditText
+			android:id="@+id/attempts"
+			android:inputType="number"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"/>
+
+		<RatingBar
+			android:id="@+id/stars"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="Add Ascent"
-			android:checked="true"
-			android:layout_weight="0"
-		>
-		</RadioButton>
-	</RadioGroup>
-	
-	<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	    android:orientation="horizontal"
-	    android:layout_width="fill_parent"
-	    android:layout_height="fill_parent"
-	    >
-	    <TextView android:id="@+id/dateDisplay"
-		        android:layout_width="wrap_content"
-	            android:layout_height="fill_parent"
-	            android:gravity="center_vertical"
-	            android:textSize="14pt"
-	            android:text=""/>
-	    <Button android:id="@+id/pickDate"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_alignParentRight="true"
-	            android:text="Pick Date"/>
-    </RelativeLayout>
-    
-    <Spinner 
-        android:id="@+id/stylespinner"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:drawSelectorOnTop="true"
-        android:prompt="@string/style_prompt"
-    />
-        
-    <TextView android:id="@+id/attemptlabel" 
-              android:layout_width="fill_parent" 
-              android:layout_height="wrap_content" 
-              android:text="Attempts" />
-    <EditText android:id="@+id/attempts" 
-              android:layout_width="fill_parent" 
-              android:layout_height="wrap_content" 
-              android:textColor="@android:color/black"
-              android:background="@android:drawable/editbox_background"
-              android:layout_below="@id/attemptlabel" />
-              
-	<RatingBar android:id="@+id/stars"
-              android:layout_width="wrap_content" 
-              android:layout_height="wrap_content" 
-              android:stepSize="1.0"
-     		  android:numStars="3">
-    </RatingBar>        
-    <TextView android:id="@+id/commentlabel" 
-              android:layout_width="fill_parent" 
-              android:layout_height="wrap_content" 
-              android:text="@string/commentLabel" />
-    <EditText android:id="@+id/comment" 
-              android:layout_width="fill_parent" 
-              android:layout_height="100dip" 
-              android:textColor="@android:color/black"
-              android:background="@android:drawable/editbox_background"/>
-        
-              
-    <Button android:text="Add"
-        android:id="@+id/ok"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textSize="14px">
-    </Button>
-    </LinearLayout>
-    </ScrollView>
-</LinearLayout>
+			android:numStars="3"
+			android:stepSize="1.0" >
+		</RatingBar>
+
+		<TextView
+			android:id="@+id/commentlabel"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/commentLabel" />
+
+		<EditText
+			android:id="@+id/comment"
+			android:layout_width="fill_parent"
+			android:layout_height="100dip"
+			android:inputType="text" />
+
+		<Button
+			android:id="@+id/ok"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/add"
+			android:textSize="14dp" >
+		</Button>
+	</LinearLayout>
+
+</ScrollView>

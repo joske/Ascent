@@ -14,7 +14,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.CursorAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
@@ -41,7 +40,6 @@ public class CragAscentsActivity extends Activity {
         db = new InternalDB(this);
         crag = db.getCrag(cragId);
         setTitle("Latest Ascents for " + crag.getName());
-        ImageView plus = (ImageView)this.findViewById(R.id.plusButton);
         cursor = db.getAscentsCursor(crag);
         TextView countView = (TextView) this.findViewById(R.id.countView);
         countView.setText(cursor.getCount() + " ascents in DB");

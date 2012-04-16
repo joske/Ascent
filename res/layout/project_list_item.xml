@@ -20,20 +20,16 @@
 	</TextView>
 	<TextView android:id="@+id/nameCell"
 	    android:layout_width="100dip"
-	    android:layout_height="wrap_content"
-	    android:layout_toRightOf="@id/gradeCell">
+	    android:layout_height="wrap_content">
 	</TextView>
 	<TextView android:id="@+id/cragCell"
 	    android:layout_width="100dip"
-	    android:layout_height="wrap_content"
-	    android:layout_toRightOf="@id/nameCell">
+	    android:layout_height="wrap_content">
 	</TextView>
 	<TextView android:id="@+id/attemptsCell"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
-	    android:layout_alignParentRight="true"
-	    android:layout_toRightOf="@id/cragCell"
-	    android:paddingLeft="5dip">
+	    android:paddingLeft="5dp">
 	</TextView>
 	</LinearLayout>
 </RelativeLayout>

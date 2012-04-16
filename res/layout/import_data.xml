@@ -8,14 +8,14 @@
     <TextView android:id="@+id/importTitle" 
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content" 
-		      android:textSize="18px"
+		      android:textSize="18dp"
               android:text=""/>
               
     <Button android:text="@string/importButton"
         android:id="@+id/ok"
         android:layout_width="wrap_content"
-        android:textSize="12px"
-        android:layout_height="55px">
+        android:textSize="12dp"
+        android:layout_height="55dp">
     </Button>
     
 </LinearLayout>
