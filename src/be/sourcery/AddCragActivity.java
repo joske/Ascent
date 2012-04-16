@@ -24,6 +24,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import be.sourcery.db.InternalDB;
@@ -39,6 +40,9 @@ public class AddCragActivity extends Activity {
         setTitle(R.string.addCrag);
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+        EditText cragView = (EditText)findViewById(R.id.crag);
+        cragView.requestFocus();
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         db = new InternalDB(this);
         // Capture our button from layout
         Button button = (Button)findViewById(R.id.ok);
