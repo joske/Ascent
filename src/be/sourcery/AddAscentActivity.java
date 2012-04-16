@@ -59,7 +59,7 @@ public class AddAscentActivity extends Activity {
     private int day;
     DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
     private DatePickerDialog.OnDateSetListener dateSetListener =
-        new DatePickerDialog.OnDateSetListener() {
+            new DatePickerDialog.OnDateSetListener() {
 
         public void onDateSet(DatePicker view, int year,
                               int monthOfYear, int dayOfMonth) {
@@ -153,8 +153,8 @@ public class AddAscentActivity extends Activity {
         button.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 String text = null;
-                EditText cragView = (EditText)findViewById(R.id.routename);
-                String name = cragView.getText().toString();
+                EditText routeNameView = (EditText)findViewById(R.id.routename);
+                String name = routeNameView.getText().toString();
                 EditText gradeView = (EditText)findViewById(R.id.grade);
                 String country = gradeView.getText().toString();
                 Spinner s = (Spinner) findViewById(R.id.cragspinner);
