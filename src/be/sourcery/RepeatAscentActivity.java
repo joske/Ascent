@@ -7,8 +7,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
@@ -25,14 +23,14 @@ import android.widget.Toast;
 import be.sourcery.db.InternalDB;
 
 
-public class RepeatAscentActivity extends Activity {
+public class RepeatAscentActivity extends MyActivity {
 
     private InternalDB db;
     DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
     static final int DATE_DIALOG_ID = 0;
     private GregorianCalendar cal = new GregorianCalendar();
     private DatePickerDialog.OnDateSetListener dateSetListener =
-        new DatePickerDialog.OnDateSetListener() {
+            new DatePickerDialog.OnDateSetListener() {
 
         public void onDateSet(DatePicker view, int year,
                               int monthOfYear, int dayOfMonth) {
@@ -46,8 +44,7 @@ public class RepeatAscentActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.repeat_ascent);
         setTitle(R.string.repeatAscent);
-        ActionBar actionBar = getActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        setupActionBar();
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         Bundle b = this.getIntent().getExtras();
         long ascentId = b.getLong("ascentId");

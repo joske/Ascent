@@ -23,8 +23,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
@@ -51,7 +49,7 @@ import android.widget.Toast;
 import be.sourcery.db.InternalDB;
 
 
-public class AddAscentActivity extends Activity {
+public class AddAscentActivity extends MyActivity {
 
     InternalDB db = null;
     private int year;
@@ -76,8 +74,7 @@ public class AddAscentActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_ascent);
         setTitle(R.string.addAscent);
-        ActionBar actionBar = getActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        setupActionBar();
         Bundle b = this.getIntent().getExtras();
         long cragId = -1;
         if (b != null) {

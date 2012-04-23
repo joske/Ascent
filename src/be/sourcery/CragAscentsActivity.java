@@ -1,7 +1,5 @@
 package be.sourcery;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -20,7 +18,7 @@ import android.widget.TextView;
 import be.sourcery.db.InternalDB;
 
 
-public class CragAscentsActivity extends Activity {
+public class CragAscentsActivity extends MyActivity {
 
     private CursorAdapter adapter;
     private InternalDB db;
@@ -33,8 +31,7 @@ public class CragAscentsActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        ActionBar actionBar = getActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        setupActionBar();
         Bundle b = this.getIntent().getExtras();
         long cragId = b.getLong("cragId");
         db = new InternalDB(this);

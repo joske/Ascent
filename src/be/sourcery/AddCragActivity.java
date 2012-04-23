@@ -17,8 +17,6 @@ package be.sourcery;
  *  along with Ascent.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -30,7 +28,7 @@ import android.widget.EditText;
 import be.sourcery.db.InternalDB;
 
 
-public class AddCragActivity extends Activity {
+public class AddCragActivity extends MyActivity {
 
     InternalDB db = null;
 
@@ -38,8 +36,7 @@ public class AddCragActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_crag);
         setTitle(R.string.addCrag);
-        ActionBar actionBar = getActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        setupActionBar();
         EditText cragView = (EditText)findViewById(R.id.crag);
         cragView.requestFocus();
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);

@@ -8,8 +8,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -23,7 +21,7 @@ import android.widget.TextView;
 import be.sourcery.db.InternalDB;
 
 
-public class ImportDataActivity extends Activity {
+public class ImportDataActivity extends MyActivity {
 
     private static final int ID_DIALOG_PROGRESS = 1;
     DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
@@ -32,8 +30,7 @@ public class ImportDataActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.import_data);
         setTitle(R.string.importData);
-        ActionBar actionBar = getActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        setupActionBar();
         // Capture our button from layout
         TextView text = (TextView)findViewById(R.id.importTitle);
         Button button = (Button)findViewById(R.id.ok);

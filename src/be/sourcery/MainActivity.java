@@ -36,7 +36,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import be.sourcery.db.InternalDB;
 
-public class MainActivity extends Activity {
+public class MainActivity extends MyActivity {
 
     private static final int MENU_PROJECTS = 0;
     private static final int MENU_CRAGS = 1;

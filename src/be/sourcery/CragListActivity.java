@@ -17,8 +17,6 @@ package be.sourcery;
  *  along with Ascent.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -34,7 +32,7 @@ import android.widget.TextView;
 import be.sourcery.db.InternalDB;
 
 
-public class CragListActivity extends Activity {
+public class CragListActivity extends MyActivity {
 
     private CursorAdapter adapter;
     private InternalDB db;
@@ -45,8 +43,7 @@ public class CragListActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.crag_list);
         setTitle(R.string.crags);
-        ActionBar actionBar = getActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        setupActionBar();
         db = new InternalDB(this);
         cursor = db.getCragsCrusor();
         startManagingCursor(cursor);
