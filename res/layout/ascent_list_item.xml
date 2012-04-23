@@ -6,6 +6,7 @@
 	
 	<TextView 
 		android:id="@+id/dateCell" 
+        android:textSize="15dp"
 		android:padding="2dip"
 		android:layout_width="100dip"
 		android:layout_height="wrap_content"
@@ -13,16 +14,19 @@
 	</TextView>
 	<TextView 
 		android:id="@+id/styleCell" 
+        android:textSize="15dp"
 		android:layout_width="30dip"
 		android:layout_height="fill_parent">
 	</TextView>
 	<TextView 
 		android:id="@+id/gradeCell" 
+        android:textSize="15dp"
 		android:layout_width="30dip"
 		android:layout_height="fill_parent">
 	</TextView>
 	<TextView 
 		android:id="@+id/nameCell" 
+        android:textSize="15dp"
 		android:layout_width="500dip"
 		android:layout_height="fill_parent">
 	</TextView>
