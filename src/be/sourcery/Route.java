@@ -24,16 +24,18 @@ public class Route {
     private String name;
     private Crag crag;
     private String grade;
+    private int score;
 
     public Route() {
     }
 
-    public Route(long id, String name, String grade, Crag crag) {
+    public Route(long id, String name, String grade, Crag crag, int score) {
         super();
         this.id = id;
         this.name = name;
         this.crag = crag;
         this.grade = grade;
+        this.score = score;
     }
 
 
@@ -71,6 +73,9 @@ public class Route {
         return grade;
     }
 
+    public int getGradeScore() {
+        return score;
+    }
 
     public void setGrade(String grade) {
         this.grade = grade;

@@ -60,6 +60,7 @@ public class MainActivity extends MyActivity {
         setTitle(R.string.latestAscents);
         db = new InternalDB(this);
         prepareList();
+        calculateScore();
     }
 
     private void prepareList() {
@@ -80,6 +81,11 @@ public class MainActivity extends MyActivity {
                 editAscent(ascent);
             }
         });
+    }
+
+    private void calculateScore() {
+        TextView scoreView = (TextView) this.findViewById(R.id.scoreView);
+        scoreView.setText("Score: " + db.getScoreLast12Months());
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {

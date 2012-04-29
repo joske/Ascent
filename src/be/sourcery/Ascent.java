@@ -36,21 +36,23 @@ public class Ascent {
     private Date date;
     private String comment;
     private int stars;
+    private int score;
 
     public Ascent() {
     }
 
-    public Ascent(long id, Route route, int style, int attempts, Date date) {
+    public Ascent(long id, Route route, int style, int attempts, Date date, int score) {
         super();
         this.id = id;
+        this.setScore(score);
         this.setRoute(route);
         this.style = style;
         this.attempts = attempts;
         this.date = date;
     }
 
-    public Ascent(long id, Route route, int style, int attempts, Date date, String comment, int stars) {
-        this(id, route, style, attempts, date);
+    public Ascent(long id, Route route, int style, int attempts, Date date, String comment, int stars, int score) {
+        this(id, route, style, attempts, date, score);
         this.comment = comment;
         this.stars = stars;
     }
@@ -124,6 +126,14 @@ public class Ascent {
 
     public String toString() {
         return route + " on " + date;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public int getScore() {
+        return score;
     }
 
 }
