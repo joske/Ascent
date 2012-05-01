@@ -57,7 +57,7 @@ public class AddAscentActivity extends MyActivity {
     private int day;
     DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
     private DatePickerDialog.OnDateSetListener dateSetListener =
-            new DatePickerDialog.OnDateSetListener() {
+        new DatePickerDialog.OnDateSetListener() {
 
         public void onDateSet(DatePicker view, int year,
                               int monthOfYear, int dayOfMonth) {
@@ -91,6 +91,11 @@ public class AddAscentActivity extends MyActivity {
         if (cragId != -1) {
             s.setSelection(selection);
         }
+        Spinner gs = (Spinner) findViewById(R.id.gradespinner);
+        ArrayAdapter gadapter = ArrayAdapter.createFromResource(
+                this, R.array.grades, android.R.layout.simple_spinner_item);
+        gadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        gs.setAdapter(gadapter);
         Spinner ss = (Spinner) findViewById(R.id.stylespinner);
         ss.setOnItemSelectedListener(new OnItemSelectedListener() {
 
@@ -152,12 +157,12 @@ public class AddAscentActivity extends MyActivity {
                 String text = null;
                 EditText routeNameView = (EditText)findViewById(R.id.routename);
                 String name = routeNameView.getText().toString();
-                EditText gradeView = (EditText)findViewById(R.id.grade);
-                String country = gradeView.getText().toString();
+                Spinner gradeView = (Spinner)findViewById(R.id.gradespinner);
+                String grade = gradeView.getSelectedItem().toString();
                 Spinner s = (Spinner) findViewById(R.id.cragspinner);
                 long selectedItemId = s.getSelectedItemId();
                 Crag crag = db.getCrag(selectedItemId);
-                Route r = db.addRoute(name, country, crag);
+                Route r = db.addRoute(name, grade, crag);
                 if (r != null) {
                     text = "Route added";
                 }

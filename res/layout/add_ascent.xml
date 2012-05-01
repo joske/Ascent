@@ -29,11 +29,12 @@
 			android:layout_height="wrap_content"
 			android:text="@string/grade" />
 
-		<EditText
-			android:id="@+id/grade"
-			android:inputType="text"
+		<Spinner
+			android:id="@+id/gradespinner"
 			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"/>
+			android:layout_height="wrap_content"
+			android:drawSelectorOnTop="true"
+			android:prompt="@string/grade" />
 
 		<TextView
 			android:id="@+id/craglabel"
