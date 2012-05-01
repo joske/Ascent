@@ -124,12 +124,14 @@ public class AddAscentActivity extends MyActivity {
                 EditText attemptsView = (EditText)findViewById(R.id.attempts);
                 Spinner ss = (Spinner) findViewById(R.id.stylespinner);
                 TextView dateDisplay = (TextView)findViewById(R.id.dateDisplay);
+                Button datePicker = (Button)findViewById(R.id.pickDate);
                 RatingBar starsView = (RatingBar)findViewById(R.id.stars);
                 EditText commentView = (EditText)findViewById(R.id.comment);
                 if (addProject.isChecked()) {
                     ss.setEnabled(false);
                     attemptsView.setEnabled(false);
                     dateDisplay.setEnabled(false);
+                    datePicker.setEnabled(false);
                     starsView.setEnabled(false);
                     commentView.setEnabled(false);
                     ss.setFocusable(false);
@@ -141,6 +143,7 @@ public class AddAscentActivity extends MyActivity {
                     ss.setEnabled(true);
                     attemptsView.setEnabled(true);
                     dateDisplay.setEnabled(true);
+                    datePicker.setEnabled(true);
                     starsView.setEnabled(true);
                     commentView.setEnabled(true);
                     ss.setFocusable(true);
