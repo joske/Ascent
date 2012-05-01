@@ -38,11 +38,6 @@ import be.sourcery.db.InternalDB;
 
 public class MainActivity extends MyActivity {
 
-    private static final int MENU_PROJECTS = 0;
-    private static final int MENU_CRAGS = 1;
-    private static final int MENU_IMPORT = 2;
-    private static final int MENU_EXPORT = 3;
-
     private static final int EXPORT_DATA_REQUEST = 1;
     private static final int IMPORT_DATA_REQUEST = 2;
     private static final int REPEAT_REQUEST = 3;
@@ -59,14 +54,12 @@ public class MainActivity extends MyActivity {
         setContentView(R.layout.main);
         setTitle(R.string.latestAscents);
         db = new InternalDB(this);
-        prepareList();
-        calculateScore();
+        populateList();
+        update();
     }
 
-    private void prepareList() {
+    private void populateList() {
         cursor = db.getAscentsCursor();
-        TextView countView = (TextView) this.findViewById(R.id.countView);
-        countView.setText(cursor.getCount() + " ascents in DB");
         startManagingCursor(cursor);
         adapter = new SimpleCursorAdapter(getApplicationContext(), R.layout.ascent_list_item, cursor,
                 new String[] {"date", "style", "route_grade", "date", "route_name"},
@@ -83,7 +76,11 @@ public class MainActivity extends MyActivity {
         });
     }
 
-    private void calculateScore() {
+    private void update() {
+        cursor.requery();
+        adapter.notifyDataSetChanged();
+        TextView countView = (TextView) this.findViewById(R.id.countView);
+        countView.setText(cursor.getCount() + " ascents in DB");
         TextView scoreView = (TextView) this.findViewById(R.id.scoreView);
         scoreView.setText("Score: " + db.getScoreLast12Months());
     }
@@ -109,15 +106,11 @@ public class MainActivity extends MyActivity {
         switch (item.getItemId()) {
             case R.id.delete:
                 db.deleteAscent(ascent);
-                cursor.requery();
-                TextView countView = (TextView) this.findViewById(R.id.countView);
-                countView.setText(cursor.getCount() + " ascents in DB");
-                adapter.notifyDataSetChanged();
+                update();
                 return true;
             case R.id.repeat:
                 repeatAscent(ascent);
-                cursor.requery();
-                adapter.notifyDataSetChanged();
+                update();
                 return true;
             default:
                 return super.onContextItemSelected(item);
@@ -147,6 +140,7 @@ public class MainActivity extends MyActivity {
                 break;
             }
         }
+        update();
     }
 
     public void onDestroy() {
@@ -156,9 +150,7 @@ public class MainActivity extends MyActivity {
 
     public void onResume() {
         super.onResume();
-        cursor.requery();
-        TextView countView = (TextView) this.findViewById(R.id.countView);
-        countView.setText(cursor.getCount() + " ascents in DB");
+        update();
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -175,8 +167,16 @@ public class MainActivity extends MyActivity {
             case R.id.menu_add:
                 addAscent();
                 return true;
+            case R.id.menu_score:
+                showScore();
+                return true;
         }
         return false;
+    }
+
+    private void showScore() {
+        Intent myIntent = new Intent(this, ScoreGraphActivity.class);
+        startActivity(myIntent);
     }
 
     private void editAscent(Ascent ascent) {

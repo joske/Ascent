@@ -1,15 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/menu_add"
-          android:title="Add"
-          android:showAsAction="ifRoom|withText" />
-    <item android:id="@+id/menu_crags"
-          android:title="Crags"
-          android:showAsAction="ifRoom|withText" />
-    <item android:id="@+id/menu_import"
-          android:title="Import"
-          android:showAsAction="ifRoom|withText" />
-    <item android:id="@+id/menu_export"
-          android:title="Export"
-          android:showAsAction="ifRoom|withText" />
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/menu_add"
+        android:showAsAction="ifRoom|withText"
+        android:title="Add"/>
+    <item
+        android:id="@+id/menu_crags"
+        android:showAsAction="ifRoom|withText"
+        android:title="Crags"/>
+    <item
+        android:id="@+id/menu_score"
+        android:showAsAction="ifRoom|withText"
+        android:title="Score"/>
+    <item
+        android:id="@+id/menu_import"
+        android:showAsAction="ifRoom|withText"
+        android:title="Import"/>
+    <item
+        android:id="@+id/menu_export"
+        android:showAsAction="ifRoom|withText"
+        android:title="Export"/>
+
 </menu>

@@ -29,7 +29,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
-import android.util.Log;
 import be.sourcery.Ascent;
 import be.sourcery.Crag;
 import be.sourcery.Project;
@@ -83,11 +82,15 @@ public class InternalDB {
         insert.bindString(4, fmt.format(date));
         insert.bindString(5, comment);
         insert.bindLong(6, stars);
-        int gradeScore = route.getGradeScore();
-        int styleScore = getStyleScore(style);
-        insert.bindLong(7, gradeScore + styleScore);
+        int score = 0;
+        if (style != 5) {
+            int gradeScore = route.getGradeScore();
+            int styleScore = getStyleScore(style);
+            score = gradeScore + styleScore;
+        }
+        insert.bindLong(7, score);
         long id =  insert.executeInsert();
-        return new Ascent(id, route, style, attempts, new Date(), comment, stars, gradeScore + styleScore);
+        return new Ascent(id, route, style, attempts, new Date(), comment, stars, score);
     }
 
     public void updateAscent(Ascent ascent) {
@@ -98,10 +101,10 @@ public class InternalDB {
         update.bindString(3, fmt.format(ascent.getDate()));
         update.bindString(4, ascent.getComment());
         update.bindLong(5, ascent.getStars());
-        update.bindLong(6, ascent.getId());
         int gradeScore = ascent.getRoute().getGradeScore();
         int styleScore = getStyleScore(ascent.getStyle());
-        update.bindLong(7, gradeScore + styleScore);
+        update.bindLong(6, gradeScore + styleScore);
+        update.bindLong(7, ascent.getId());
         update.execute();
     }
 
@@ -149,7 +152,7 @@ public class InternalDB {
     public Crag getCrag(long id) {
         Crag c = null;
         Cursor cursor = database.query("crag", new String[] { "name", "country" },
-                "_id = " + id, null, null, null, "name desc");
+                "_id = ?", new String[] { "" + id}, null, null, "name desc");
         if (cursor.moveToFirst()) {
             String name = cursor.getString(0);
             String country = cursor.getString(1);
@@ -164,7 +167,7 @@ public class InternalDB {
     public Crag getCrag(String searchName) {
         Crag c = null;
         Cursor cursor = database.query("crag", new String[] { "_id", "name", "country" },
-                "name like '" + searchName + "%'", null, null, null, "_id desc");
+                "name like ? ", new String[] { searchName + "%'"}, null, null, "_id desc");
         if (cursor.moveToFirst()) {
             long id = cursor.getLong(0);
             String name = cursor.getString(1);
@@ -201,7 +204,7 @@ public class InternalDB {
     public List<Route> getRoutes(Crag crag) {
         List<Route> list = new ArrayList<Route>();
         Cursor cursor = database.query("routes", new String[] { "_id", "name", "grade" },
-                "crag_id = " + crag.getId(), null, null, null, "_id desc");
+                "crag_id = ?", new String[] { "" + crag.getId()}, null, null, "_id desc");
         if (cursor.moveToFirst()) {
             do {
                 long id = cursor.getLong(0);
@@ -221,7 +224,7 @@ public class InternalDB {
     public int getGradeScore(String grade) {
         int gradeScore = 0;
         Cursor cursor = database.query("grades", new String[] { "score" },
-                "grade = '" + grade + "'", null, null, null, null);
+                "grade = ?", new String[] {grade }, null, null, null, null);
         if (cursor.moveToFirst()) {
             gradeScore = cursor.getInt(0);
         }
@@ -234,7 +237,7 @@ public class InternalDB {
     public int getStyleScore(int style) {
         int styleScore = 0;
         Cursor cursor = database.query("styles", new String[] { "score" },
-                "_id = " + style, null, null, null, null);
+                "_id = ? ", new String[] { "" + style }, null, null, null, null);
         if (cursor.moveToFirst()) {
             styleScore = cursor.getInt(0);
         }
@@ -247,7 +250,7 @@ public class InternalDB {
     public Route getRoute(long id) {
         Route c = null;
         Cursor cursor = database.query("routes", new String[] { "_id", "name", "grade", "crag_id" },
-                "_id = " + id, null, null, null, "name desc");
+                "_id = ?", new String[] { "" + id}, null, null, "name desc");
         if (cursor.moveToFirst()) {
             String name = cursor.getString(1);
             String grade = cursor.getString(2);
@@ -341,7 +344,7 @@ public class InternalDB {
         List<Ascent> list = new ArrayList<Ascent>();
         Cursor cursor = database.query("ascent_routes",
                 new String[] { "_id", "route_id", "route_name", "route_grade", "attempts", "style", "date" },
-                "crag_id = " + crag.getId(), null, null, null, "date desc");
+                "crag_id = ?", new String[] { "" + crag.getId()}, null, null, "date desc");
         return cursor;
     }
 
@@ -369,7 +372,6 @@ public class InternalDB {
                 int score = cursor.getInt(0);
                 String name = cursor.getString(2);
                 String grade = cursor.getString(3);
-                Log.w("score", "name=" + name + ", grade=" + grade + ", score=" + score);
                 total += score;
             } while (cursor.moveToNext());
         }
@@ -377,9 +379,54 @@ public class InternalDB {
         return total;
     }
 
+    public int getScoreForYear(int year) {
+        List<Ascent> list = new ArrayList<Ascent>();
+        Cursor cursor = database.query("ascent_routes",
+                new String[] { "score", "date", "route_name", "route_grade" },
+                "strftime('%Y', date) = ?",
+                new String[] { "" + year },
+                null,
+                null,
+                "score desc, date desc",
+        "10");
+        int total = 0;
+        if (cursor.moveToFirst()) {
+            do {
+                int score = cursor.getInt(0);
+                String name = cursor.getString(2);
+                String grade = cursor.getString(3);
+                total += score;
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return total;
+    }
+
+    public int getFirstYear() {
+        List<Ascent> list = new ArrayList<Ascent>();
+        Cursor cursor = database.query("ascent_routes",
+                new String[] { "date, route_name" },
+                null,
+                null,
+                null,
+                null,
+                "date asc",
+        "1");
+        int year = 0;
+        if (cursor.moveToFirst()) {
+            try {
+                Date date = fmt.parse(cursor.getString(0));
+                year = date.getYear() + 1900;
+            } catch (ParseException e) {
+            }
+        }
+        cursor.close();
+        return year;
+    }
+
     public Ascent getAscent(long ascentId) {
         Cursor cursor = database.query("ascents", new String[] { "_id", "route_id", "attempts", "style_id", "date", "comment", "stars", "score" },
-                "_id = " + ascentId, null, null, null, null);
+                "_id = ?", new String[] { "" + ascentId }, null, null, null, null);
         if (cursor.moveToFirst()) {
             long id = cursor.getLong(0);
             long route_id = cursor.getLong(1);
