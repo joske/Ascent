@@ -3,9 +3,13 @@ package be.sourcery;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
@@ -16,6 +20,9 @@ import be.sourcery.db.InternalDB;
 public class ProjectListActivity extends MyActivity {
 
     private CursorAdapter adapter;
+    private InternalDB db;
+    private ListView listView;
+    private Cursor cursor;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -23,22 +30,16 @@ public class ProjectListActivity extends MyActivity {
         setContentView(R.layout.project_list);
         setTitle(R.string.projects);
         setupActionBar();
-        InternalDB db = new InternalDB(this);
-        TextView countView = (TextView) this.findViewById(R.id.countView);
-        Cursor cursor = db.getProjectsCursor();
+        db = new InternalDB(this);
+        cursor = db.getProjectsCursor();
         startManagingCursor(cursor);
-        countView.setText(cursor.getCount() + " projects in DB");
         adapter = new SimpleCursorAdapter(getApplicationContext(), R.layout.project_list_item, cursor,
                 new String[] {"route_name", "route_grade", "crag_name", "attempts"},
                 new int[] {R.id.nameCell, R.id.gradeCell, R.id.cragCell, R.id.attemptsCell});
 
-        ListView listView = (ListView)this.findViewById(R.id.list);
+        listView = (ListView)this.findViewById(R.id.list);
         listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> arg0, View view, int position, long row) {
-            }
-        });
-        db.close();
+        registerForContextMenu(listView);
     }
 
     @Override
@@ -50,9 +51,74 @@ public class ProjectListActivity extends MyActivity {
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 return true;
+            case R.id.menu_add:
+                addProject();
+                update();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void onDestroy() {
+        super.onDestroy();
+        db.close();
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.crags_actionbar, menu);
+        return true;
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.project_list_menu, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+        Project project = db.getProject(info.id);
+        switch (item.getItemId()) {
+            case R.id.tickProjectMenu:
+                tickProject(project);
+                return true;
+            case R.id.deleteProjectMenu:
+                db.deleteProject(project);
+                update();
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
+    }
+
+    public void onResume() {
+        super.onResume();
+        update();
+    }
+
+    private void update() {
+        cursor.requery();
+        adapter.notifyDataSetChanged();
+        TextView countView = (TextView) this.findViewById(R.id.countView);
+        countView.setText(cursor.getCount() + " projects in DB");
+    }
+
+    private void addProject() {
+        Intent myIntent = new Intent(this, AddProjectActivity.class);
+        startActivity(myIntent);
+    }
+
+    private void tickProject(Project project) {
+        Intent myIntent = new Intent(this, TickProjectActivity.class);
+        Bundle b = new Bundle();
+        b.putLong("projectId", project.getId());
+        myIntent.putExtras(b);
+        startActivity(myIntent);
     }
 
 }

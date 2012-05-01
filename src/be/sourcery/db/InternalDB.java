@@ -73,6 +73,37 @@ public class InternalDB {
         return r;
     }
 
+    public Ascent addAscent(Project project, Date date, int attempts, int style, String comment, int stars) {
+        database.beginTransaction();
+        Route route;
+        int score;
+        long id;
+        try {
+            String stmt = "insert into ascents (route_id, attempts, style_id, date, comment, stars, score) values (?, ?, ?, ?, ?, ?, ?);";
+            SQLiteStatement insert = database.compileStatement(stmt);
+            route = project.getRoute();
+            insert.bindLong(1, route.getId());
+            insert.bindLong(2, attempts);
+            insert.bindLong(3, style);
+            insert.bindString(4, fmt.format(date));
+            insert.bindString(5, comment);
+            insert.bindLong(6, stars);
+            score = 0;
+            if (style != 5) {
+                int gradeScore = route.getGradeScore();
+                int styleScore = getStyleScore(style);
+                score = gradeScore + styleScore;
+            }
+            insert.bindLong(7, score);
+            id = insert.executeInsert();
+            deleteProject(project);
+            database.setTransactionSuccessful();
+        } finally {
+            database.endTransaction();
+        }
+        return new Ascent(id, route, style, attempts, new Date(), comment, stars, score);
+    }
+
     public Ascent addAscent(Route route, Date date, int attempts, int style, String comment, int stars) {
         String stmt = "insert into ascents (route_id, attempts, style_id, date, comment, stars, score) values (?, ?, ?, ?, ?, ?, ?);";
         SQLiteStatement insert = database.compileStatement(stmt);
@@ -294,6 +325,27 @@ public class InternalDB {
         return list;
     }
 
+    public Project getProject(long id) {
+        Project project = null;
+        Cursor cursor = database.query("projects", new String[] { "route_id", "attempts", },
+                null, null, null, null, "_id desc");
+        if (cursor.moveToFirst()) {
+            do {
+                long route_id = cursor.getLong(0);
+                int attempts = cursor.getInt(1);
+                project = new Project();
+                Route r = getRoute(route_id);
+                project.setId(id);
+                project.setRoute(r);
+                project.setAttempts(attempts);
+            } while (cursor.moveToNext());
+        }
+        if (cursor != null && !cursor.isClosed()) {
+            cursor.close();
+        }
+        return project;
+    }
+
     public Cursor getAscentsCursor() {
         Cursor cursor = database.query("ascent_routes",
                 new String[] { "_id", "route_id", "route_name", "route_grade", "attempts", "style", "date" },
@@ -461,6 +513,13 @@ public class InternalDB {
         String stmt = "delete from ascents where _id = ?;";
         SQLiteStatement update = database.compileStatement(stmt);
         update.bindLong(1, ascent.getId());
+        update.execute();
+    }
+
+    public void deleteProject(Project project) {
+        String stmt = "delete from projects where _id = ?;";
+        SQLiteStatement update = database.compileStatement(stmt);
+        update.bindLong(1, project.getId());
         update.execute();
     }
 

@@ -9,6 +9,7 @@
 	<string name="repeatAscent">Repeat Ascent</string>
 	<string name="latestAscents">Latest Ascents</string>
 	<string name="addAscent">Add Ascent</string>
+	<string name="addProject">Add Project</string>
 	<string name="editAscent">Edit Ascent</string>
 	<string name="addCrag">Add Crag</string>
 	<string name="addAsProject">Add as Project</string>
@@ -37,6 +38,8 @@
 	<string name="update">Update</string>
 	<string name="add">Add</string>
 	<string name="score">Score</string>
+	<string name="tickProject">Tick Project</string>
+	<string name="deleteProject">Delete Project</string>
 
 	<string-array name="styles">
 		<item>Onsight</item>

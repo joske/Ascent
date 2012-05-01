@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/scrollview"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:layout_weight="1" >
+
+	<LinearLayout
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical" >
+
+		<TextView
+			android:id="@+id/namelabel"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/name" />
+
+		<EditText
+			android:id="@+id/routename"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:inputType="text" />
+
+		<TextView
+			android:id="@+id/gradelabel"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/grade" />
+
+		<Spinner
+			android:id="@+id/gradespinner"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:drawSelectorOnTop="true"
+			android:prompt="@string/grade" />
+
+		<TextView
+			android:id="@+id/craglabel"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/crag" />
+
+		<Spinner
+			android:id="@+id/cragspinner"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:drawSelectorOnTop="true"
+			android:prompt="@string/crag" />
+
+		<Button
+			android:id="@+id/ok"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/add"
+			android:textSize="14dp" >
+		</Button>
+	</LinearLayout>
+
+</ScrollView>

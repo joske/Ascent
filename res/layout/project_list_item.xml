@@ -1,35 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="fill_parent" 
-            android:layout_height="wrap_content">
-    <CheckBox
-        android:id="@+id/tickProject"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_centerVertical="true"
+    android:gravity="center_vertical" >
+
+    <TextView
+        android:id="@+id/gradeCell"
+        android:layout_width="30dip"
+        android:layout_height="wrap_content" >
+    </TextView>
+
+    <TextView
+        android:id="@+id/nameCell"
+        android:layout_width="100dip"
+        android:layout_height="wrap_content" >
+    </TextView>
+
+    <TextView
+        android:id="@+id/cragCell"
+        android:layout_width="100dip"
+        android:layout_height="wrap_content" >
+    </TextView>
+
+    <TextView
+        android:id="@+id/attemptsCell"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        />
-    <LinearLayout
-    	android:layout_width="fill_parent"
-    	android:layout_height="fill_parent"
-    	android:gravity="center_vertical"
-    	android:layout_centerVertical="true"
-		android:layout_toRightOf="@id/tickProject"
-    >
-	<TextView android:id="@+id/gradeCell"
-	    android:layout_width="30dip"
-	    android:layout_height="wrap_content">
-	</TextView>
-	<TextView android:id="@+id/nameCell"
-	    android:layout_width="100dip"
-	    android:layout_height="wrap_content">
-	</TextView>
-	<TextView android:id="@+id/cragCell"
-	    android:layout_width="100dip"
-	    android:layout_height="wrap_content">
-	</TextView>
-	<TextView android:id="@+id/attemptsCell"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:paddingLeft="5dp">
-	</TextView>
-	</LinearLayout>
-</RelativeLayout>
+        android:paddingLeft="5dp" >
+    </TextView>
+    <TextView
+        android:id="@+id/fillCell"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:paddingLeft="5dp" >
+    </TextView>
+    
+</LinearLayout>

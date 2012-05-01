@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/scrollview"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:layout_weight="1" >
+
+	<LinearLayout
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical" >
+
+		<TextView
+			android:id="@+id/route"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:text=""
+			android:textSize="12pt" />
+
+		<RelativeLayout
+			xmlns:android="http://schemas.android.com/apk/res/android"
+			android:layout_width="fill_parent"
+			android:layout_height="fill_parent"
+			android:orientation="horizontal"
+			android:paddingBottom="10dip"
+			android:paddingTop="10dip" >
+
+			<TextView
+				android:id="@+id/dateDisplay"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_centerVertical="true"
+				android:text="" />
+
+			<Button
+				android:id="@+id/pickDate"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentRight="true"
+				android:layout_centerVertical="true"
+				android:text="@string/pickDate" />
+		</RelativeLayout>
+
+		<TextView
+			android:id="@+id/attemptlabel"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/attempts" />
+
+		<EditText
+			android:id="@+id/attempts"
+			android:inputType="number"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"/>
+
+		<RatingBar
+			android:id="@+id/stars"
+			android:layout_width="wrap_content"
+			android:layout_height="100dip"
+			android:numStars="3"
+			android:stepSize="1.0" >
+		</RatingBar>
+
+		<TextView
+			android:id="@+id/commentlabel"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/commentLabel" />
+
+		<EditText
+			android:id="@+id/comment"
+			android:inputType="text"
+			android:layout_width="fill_parent"
+			android:layout_height="100dip"/>
+
+		<LinearLayout
+			xmlns:android="http://schemas.android.com/apk/res/android"
+			android:layout_width="fill_parent"
+			android:layout_height="fill_parent"
+			android:orientation="horizontal" >
+
+			<Button
+				android:id="@+id/cancel"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/cancel"
+				android:textSize="14dp" >
+			</Button>
+
+			<Button
+				android:id="@+id/ok"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/update"
+				android:textSize="14dp" >
+			</Button>
+		</LinearLayout>
+	</LinearLayout>
+
+</ScrollView>

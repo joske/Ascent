@@ -170,6 +170,9 @@ public class MainActivity extends MyActivity {
             case R.id.menu_score:
                 showScore();
                 return true;
+            case R.id.menu_projects:
+                projectsList();
+                return true;
         }
         return false;
     }

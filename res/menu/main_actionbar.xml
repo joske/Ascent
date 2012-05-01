@@ -10,6 +10,10 @@
         android:showAsAction="ifRoom|withText"
         android:title="Crags"/>
     <item
+        android:id="@+id/menu_projects"
+        android:showAsAction="ifRoom|withText"
+        android:title="Projects"/>
+    <item
         android:id="@+id/menu_score"
         android:showAsAction="ifRoom|withText"
         android:title="Score"/>
