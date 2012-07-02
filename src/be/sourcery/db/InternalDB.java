@@ -52,16 +52,6 @@ public class InternalDB {
         database.close();
     }
 
-    public Crag addCrag(String name, String country) {
-        String stmt = "insert into crag (name, country) values (?, ?);";
-        SQLiteStatement insert = database.compileStatement(stmt);
-        insert.bindString(1, name);
-        insert.bindString(2, country);
-        long id = insert.executeInsert();
-        Crag crag = new Crag(id, name, country);
-        return crag;
-    }
-
     public Route addRoute(String name, String grade, Crag crag) {
         String stmt = "insert into routes (name, grade, crag_id) values (?, ?, ?);";
         SQLiteStatement insert = database.compileStatement(stmt);
@@ -146,6 +136,16 @@ public class InternalDB {
         insert.bindLong(2, attempts);
         long id = insert.executeInsert();
         return new Project(id, route, attempts);
+    }
+
+    public Crag addCrag(String name, String country) {
+        String stmt = "insert into crag (name, country) values (?, ?);";
+        SQLiteStatement insert = database.compileStatement(stmt);
+        insert.bindString(1, name);
+        insert.bindString(2, country);
+        long id = insert.executeInsert();
+        Crag crag = new Crag(id, name, country);
+        return crag;
     }
 
     public Cursor getCragsCrusor() {
@@ -349,7 +349,7 @@ public class InternalDB {
     public Cursor getAscentsCursor() {
         Cursor cursor = database.query("ascent_routes",
                 new String[] { "_id", "route_id", "route_name", "route_grade", "attempts", "style", "date" },
-                null, null, null, null, "date desc");
+                null, null, null, null, "date desc, _id asc");
         return cursor;
     }
 
@@ -357,7 +357,7 @@ public class InternalDB {
     public List<Ascent> getAscents() {
         List<Ascent> list = new ArrayList<Ascent>();
         Cursor cursor = database.query("ascents", new String[] { "_id", "route_id", "attempts", "style_id", "date", "comment", "stars", "score" },
-                null, null, null, null, "date desc");
+                null, null, null, null, "date desc, _id asc");
         if (cursor.moveToFirst()) {
             do {
                 long id = cursor.getLong(0);
@@ -396,7 +396,7 @@ public class InternalDB {
         List<Ascent> list = new ArrayList<Ascent>();
         Cursor cursor = database.query("ascent_routes",
                 new String[] { "_id", "route_id", "route_name", "route_grade", "attempts", "style", "date" },
-                "crag_id = ?", new String[] { "" + crag.getId()}, null, null, "date desc");
+                "crag_id = ?", new String[] { "" + crag.getId()}, null, null, "date desc, _id asc");
         return cursor;
     }
 
@@ -417,7 +417,7 @@ public class InternalDB {
                 null,
                 null,
                 "score desc, date desc",
-        "10");
+                "10");
         int total = 0;
         if (cursor.moveToFirst()) {
             do {
@@ -440,7 +440,7 @@ public class InternalDB {
                 null,
                 null,
                 "score desc, date desc",
-        "10");
+                "10");
         int total = 0;
         if (cursor.moveToFirst()) {
             do {
@@ -463,7 +463,7 @@ public class InternalDB {
                 null,
                 null,
                 "date asc",
-        "1");
+                "1");
         int year = 0;
         if (cursor.moveToFirst()) {
             try {
