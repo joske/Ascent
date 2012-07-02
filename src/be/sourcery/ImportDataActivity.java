@@ -7,6 +7,8 @@ import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -72,6 +74,7 @@ public class ImportDataActivity extends MyActivity {
             File importFile = new File(sdcard, "ascent.csv");
             BufferedReader r = new BufferedReader(new InputStreamReader(new FileInputStream(importFile), "ISO-8859-1"));
             int count = 0;
+            Map<String, Crag> crags = new HashMap<String, Crag>();
             while (r.ready()) {
                 String line = r.readLine();
                 String[] strings = line.split(";");
@@ -88,15 +91,11 @@ public class ImportDataActivity extends MyActivity {
                         int stars = Integer.parseInt(strings[8]);
 
                         Crag crag = null;
-                        try {
-                            crag = db.getCrag(cragName);
-                        } catch (Exception e) {
-                            // not found
-                            e.printStackTrace();
-                        }
+                        crag = crags.get(cragName);
                         if (crag == null) {
                             // not found, create it
                             crag = db.addCrag(cragName, cragCountry);
+                            crags.put(cragName, crag);
                         }
                         Route route = db.addRoute(routeName, routeGrade, crag);
                         Ascent ascent = db.addAscent(route, date, attempts, style, comments, stars);
