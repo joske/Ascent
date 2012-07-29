@@ -392,6 +392,84 @@ public class InternalDB {
         return list;
     }
 
+    public List<Ascent> getSortedAscentsForLast12Months() {
+        List<Ascent> list = new ArrayList<Ascent>();
+        Cursor cursor = database.query("ascent_routes", new String[] { "_id", "route_id", "route_grade", "attempts", "style_id", "date", "comment", "stars", "score" },
+                "julianday(date('now'))- julianday(date) < 365", null, null, null, "route_grade desc");
+        if (cursor.moveToFirst()) {
+            do {
+                long id = cursor.getLong(0);
+                long route_id = cursor.getLong(1);
+                String route_grade = cursor.getString(2);
+                int attempts = cursor.getInt(3);
+                int style = cursor.getInt(4);
+                String date = cursor.getString(5);
+                String comment = cursor.getString(6);
+                int stars = cursor.getInt(7);
+                Ascent a = new Ascent();
+                Route r = getRoute(route_id);
+                a.setId(id);
+                a.setRoute(r);
+                a.setStyle(style);
+                a.setAttempts(attempts);
+                a.setComment(comment);
+                a.setStars(stars);
+                a.setScore(cursor.getInt(7));
+                try {
+                    if (date != null) {
+                        a.setDate(fmt.parse(date));
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                list.add(a);
+            } while (cursor.moveToNext());
+        }
+        if (cursor != null && !cursor.isClosed()) {
+            cursor.close();
+        }
+        return list;
+    }
+
+    public List<Ascent> getSortedAscents() {
+        List<Ascent> list = new ArrayList<Ascent>();
+        Cursor cursor = database.query("ascent_routes", new String[] { "_id", "route_id", "route_grade", "attempts", "style_id", "date", "comment", "stars", "score" },
+                null, null, null, null, "route_grade desc");
+        if (cursor.moveToFirst()) {
+            do {
+                long id = cursor.getLong(0);
+                long route_id = cursor.getLong(1);
+                String route_grade = cursor.getString(2);
+                int attempts = cursor.getInt(3);
+                int style = cursor.getInt(4);
+                String date = cursor.getString(5);
+                String comment = cursor.getString(6);
+                int stars = cursor.getInt(7);
+                Ascent a = new Ascent();
+                Route r = getRoute(route_id);
+                a.setId(id);
+                a.setRoute(r);
+                a.setStyle(style);
+                a.setAttempts(attempts);
+                a.setComment(comment);
+                a.setStars(stars);
+                a.setScore(cursor.getInt(7));
+                try {
+                    if (date != null) {
+                        a.setDate(fmt.parse(date));
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                list.add(a);
+            } while (cursor.moveToNext());
+        }
+        if (cursor != null && !cursor.isClosed()) {
+            cursor.close();
+        }
+        return list;
+    }
+
     public Cursor getAscentsCursor(Crag crag) {
         List<Ascent> list = new ArrayList<Ascent>();
         Cursor cursor = database.query("ascent_routes",
@@ -400,11 +478,27 @@ public class InternalDB {
         return cursor;
     }
 
+    public Cursor getAscentsCursor(String grade, boolean allTime) {
+        List<Ascent> list = new ArrayList<Ascent>();
+        Cursor cursor = database.query("ascent_routes",
+                new String[] { "_id", "route_id", "route_name", "route_grade", "attempts", "style", "date" },
+                "route_grade = ?" + (allTime ? "" : " and julianday(date('now'))- julianday(date) < 365"), new String[] {grade}, null, null, "date desc, _id asc");
+        return cursor;
+    }
+
     public Cursor getAscentsCursorForHighestScoredLast12Months() {
         List<Ascent> list = new ArrayList<Ascent>();
         Cursor cursor = database.query("ascent_routes",
                 new String[] { "_id", "route_id", "route_name", "route_grade", "attempts", "style", "date", "score" },
                 "julianday(date('now'))- julianday(date) < 365", null, null, null, "date desc, score desc",  "10");
+        return cursor;
+    }
+
+    public Cursor getAscentsCursorForLast12Months() {
+        List<Ascent> list = new ArrayList<Ascent>();
+        Cursor cursor = database.query("ascent_routes",
+                new String[] { "_id", "route_id", "route_name", "route_grade", "attempts", "style", "date", "score" },
+                "julianday(date('now'))- julianday(date) < 365", null, null, null, "route_grade desc");
         return cursor;
     }
 
@@ -417,7 +511,7 @@ public class InternalDB {
                 null,
                 null,
                 "score desc, date desc",
-                "10");
+        "10");
         int total = 0;
         if (cursor.moveToFirst()) {
             do {
@@ -440,7 +534,7 @@ public class InternalDB {
                 null,
                 null,
                 "score desc, date desc",
-                "10");
+        "10");
         int total = 0;
         if (cursor.moveToFirst()) {
             do {
@@ -463,7 +557,7 @@ public class InternalDB {
                 null,
                 null,
                 "date asc",
-                "1");
+        "1");
         int year = 0;
         if (cursor.moveToFirst()) {
             try {
@@ -525,7 +619,7 @@ public class InternalDB {
 
     class OpenHelper extends SQLiteOpenHelper {
 
-        private static final int DATABASE_VERSION = 3;
+        private static final int DATABASE_VERSION = 6;
         private static final String DATABASE_NAME = "ascent";
 
 
@@ -582,12 +676,24 @@ public class InternalDB {
             db.execSQL("insert into grades values ('10b+', 1750);");
             db.execSQL("insert into grades values ('10c', 1800);");
             db.execSQL("insert into grades values ('10c+', 1850);");
-            db.execSQL("create view ascent_routes as select a._id as _id, r._id as route_id, r.name as route_name, r.grade as route_grade, a.attempts as attempts, s.short_name as style, s.score as style_score, a.date as date, r.crag_id as crag_id, a.score as score, g.score as grade_score from ascents a inner join routes r on a.route_id = r._id inner join styles s on a.style_id = s._id inner join grades g on g.grade = r.grade;");
+            db.execSQL("create view ascent_routes as select a._id as _id, r._id as route_id, r.name as route_name, r.grade as route_grade, a.attempts as attempts, s._id as style_id, s.short_name as style, s.score as style_score, a.date as date, r.crag_id as crag_id, a.score as score, g.score as grade_score from ascents a inner join routes r on a.route_id = r._id inner join styles s on a.style_id = s._id inner join grades g on g.grade = r.grade;");
             db.execSQL("create view project_routes as select p._id as _id, r.name as route_name, r.grade as route_grade, c.name as crag_name, p.attempts as attempts from projects p inner join routes r on p.route_id = r._id inner join crag c on r.crag_id = c._id;");
         }
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+            if (oldVersion == 3) {
+                db.execSQL("drop view ascent_routes;");
+                db.execSQL("create view ascent_routes as select a._id as _id, r._id as route_id, r.name as route_name, r.grade as route_grade, a.attempts as attempts, s._id as style_id, s.short_name as style, s.score as style_score, a.date as date, r.crag_id as crag_id, a.score as score, g.score as grade_score from ascents a inner join routes r on a.route_id = r._id inner join styles s on a.style_id = s._id inner join grades g on g.grade = r.grade;");
+            }
+            if (oldVersion == 4) {
+                db.execSQL("drop view ascent_routes;");
+                db.execSQL("create view ascent_routes as select a._id as _id, r._id as route_id, r.name as route_name, r.grade as route_grade, a.attempts as attempts, a.comment as comment, s._id as style_id, s.short_name as style, s.score as style_score, a.date as date, r.crag_id as crag_id, a.score as score, g.score as grade_score from ascents a inner join routes r on a.route_id = r._id inner join styles s on a.style_id = s._id inner join grades g on g.grade = r.grade;");
+            }
+            if (oldVersion == 5) {
+                db.execSQL("drop view ascent_routes;");
+                db.execSQL("create view ascent_routes as select a._id as _id, r._id as route_id, r.name as route_name, r.grade as route_grade, a.attempts as attempts, a.comment as comment, s._id as style_id, s.short_name as style, s.score as style_score, a.stars as stars, a.date as date, r.crag_id as crag_id, a.score as score, g.score as grade_score from ascents a inner join routes r on a.route_id = r._id inner join styles s on a.style_id = s._id inner join grades g on g.grade = r.grade;");
+            }
         }
     }
 

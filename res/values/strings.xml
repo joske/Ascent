@@ -40,6 +40,9 @@
 	<string name="score">Score</string>
 	<string name="tickProject">Tick Project</string>
 	<string name="deleteProject">Delete Project</string>
+	<string name="grades">Grades</string>
+	<string name="last12Months">Last 12 Months</string>
+	<string name="allTime">All Time</string>
 
 	<string-array name="styles">
 		<item>Onsight</item>

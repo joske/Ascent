@@ -18,6 +18,10 @@
         android:showAsAction="ifRoom|withText"
         android:title="Score"/>
     <item
+        android:id="@+id/menu_grade"
+        android:showAsAction="ifRoom|withText"
+        android:title="Grades"/>
+    <item
         android:id="@+id/menu_import"
         android:showAsAction="ifRoom|withText"
         android:title="Import"/>

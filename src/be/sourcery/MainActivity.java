@@ -170,6 +170,9 @@ public class MainActivity extends MyActivity {
             case R.id.menu_score:
                 showScore();
                 return true;
+            case R.id.menu_grade:
+                showGrades();
+                return true;
             case R.id.menu_projects:
                 projectsList();
                 return true;
@@ -179,6 +182,11 @@ public class MainActivity extends MyActivity {
 
     private void showScore() {
         Intent myIntent = new Intent(this, ScoreGraphActivity.class);
+        startActivity(myIntent);
+    }
+
+    private void showGrades() {
+        Intent myIntent = new Intent(this, GradeGraphActivity.class);
         startActivity(myIntent);
     }
 

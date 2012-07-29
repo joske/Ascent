@@ -26,7 +26,9 @@
 			android:configChanges="orientation"></activity>
 		<activity android:name="ProjectListActivity"></activity>
 		<activity android:name="CragAscentsActivity"></activity>
+		<activity android:name="GradeAscentsActivity"></activity>
 		<activity android:name="ScoreGraphActivity"></activity>
+		<activity android:name="GradeGraphActivity"></activity>
 		<activity android:name="TickProjectActivity"></activity>
 		<activity android:name="AddProjectActivity"></activity>
 	</application>
