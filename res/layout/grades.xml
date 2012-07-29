@@ -4,48 +4,10 @@
     android:layout_height="fill_parent"
     android:orientation="horizontal" >
 
-    <LinearLayout
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
-
-        <TextView
-            android:layout_width="wrap_content"
+        <be.sourcery.GradeView
+            android:id="@+id/gradeView"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="20dp"
-            android:paddingRight="20dp"
-            android:text="@string/last12Months"
-            android:textSize="12dp" >
-        </TextView>
-
-        <ListView
-            android:id="@+id/last12"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fastScrollEnabled="true" >
-        </ListView>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingBottom="20dp"
-            android:paddingRight="20dp"
-            android:text="@string/allTime"
-            android:textSize="12dp" >
-        </TextView>
-
-        <ListView
-            android:id="@+id/allTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fastScrollEnabled="true" >
-        </ListView>
-    </LinearLayout>
+      />
 
 </LinearLayout>
