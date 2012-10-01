@@ -9,7 +9,6 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.Toast;
 
 
 public class GradeView extends View {
@@ -49,7 +48,6 @@ public class GradeView extends View {
             int maxSize = getMax();
             int center = boxStart + availableWidth / 2;
             int scale = availableWidth / maxSize;
-            Toast.makeText(getContext(), "width " + availableWidth, Toast.LENGTH_SHORT).show();
             int rectHeight = 10;
             int count = 0;
             for (Iterator iterator = data.iterator(); iterator.hasNext();) {
