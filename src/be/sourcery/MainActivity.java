@@ -82,7 +82,7 @@ public class MainActivity extends MyActivity {
         TextView countView = (TextView) this.findViewById(R.id.countView);
         countView.setText(cursor.getCount() + " ascents in DB");
         TextView scoreView = (TextView) this.findViewById(R.id.scoreView);
-        scoreView.setText("Score: " + db.getScoreLast12Months());
+        scoreView.setText("Score: " + db.getScoreLast12Months() + " - All Time: " + db.getScoreAllTime());
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -536,6 +536,29 @@ public class InternalDB {
         return total;
     }
 
+    public int getScoreAllTime() {
+        List<Ascent> list = new ArrayList<Ascent>();
+        Cursor cursor = database.query("ascent_routes",
+                new String[] { "score", "date", "route_name", "route_grade" },
+                null,
+                null,
+                null,
+                null,
+                "score desc, date desc",
+                "10");
+        int total = 0;
+        if (cursor.moveToFirst()) {
+            do {
+                int score = cursor.getInt(0);
+                String name = cursor.getString(2);
+                String grade = cursor.getString(3);
+                total += score;
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return total;
+    }
+
     public int getScoreForYear(int year) {
         List<Ascent> list = new ArrayList<Ascent>();
         Cursor cursor = database.query("ascent_routes",
