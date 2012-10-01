@@ -29,26 +29,47 @@ public class GradeGraphActivity extends MyActivity {
     private void addGrades(InternalDB db, GradeView view, final boolean allTime) {
         List<Ascent> ascents = allTime ? db.getSortedAscents() : db.getSortedAscentsForLast12Months();
         String currentGrade = null;
-        int count = 0;
+        int osCount = 0;
+        int flCount = 0;
+        int rpCount = 0;
+        int tpCount = 0;
         List<GradeInfo> lines = new ArrayList<GradeInfo>();
         for (Iterator iterator = ascents.iterator(); iterator.hasNext();) {
             Ascent ascent = (Ascent)iterator.next();
             String grade = ascent.getRoute().getGrade();
+            if (currentGrade == null || grade.equals(currentGrade)) {
+                switch (ascent.getStyle()) {
+                    case Ascent.STYLE_ONSIGHT:
+                        osCount++;
+                        break;
+                    case Ascent.STYLE_FLASH:
+                        flCount++;
+                        break;
+                    case Ascent.STYLE_REDPOINT:
+                        rpCount++;
+                        break;
+                    case Ascent.STYLE_TOPROPE:
+                        tpCount++;
+                        break;
+                    default:
+                        break;
+                }
+            }
             if (currentGrade == null) {
                 currentGrade = grade;
-                count++;
             } else {
                 if (!grade.equals(currentGrade)) {
-                    GradeInfo grades = new GradeInfo(currentGrade, count, 0, 0, 0);
+                    GradeInfo grades = new GradeInfo(currentGrade, osCount, flCount, rpCount, tpCount);
                     lines.add(grades);
                     currentGrade = grade;
-                    count = 1;
-                } else {
-                    count++;
+                    osCount = ascent.getStyle() == Ascent.STYLE_ONSIGHT ? 1 : 0;
+                    flCount = ascent.getStyle() == Ascent.STYLE_FLASH ? 1 : 0;
+                    rpCount = ascent.getStyle() == Ascent.STYLE_REDPOINT ? 1 : 0;
+                    tpCount = ascent.getStyle() == Ascent.STYLE_TOPROPE ? 1 : 0;
                 }
             }
         }
-        GradeInfo grades = new GradeInfo(currentGrade, count, 0, 0, 0);
+        GradeInfo grades = new GradeInfo(currentGrade, osCount, flCount, rpCount, tpCount);
         lines.add(grades);
         view.setGradeInfo(lines);
     }
