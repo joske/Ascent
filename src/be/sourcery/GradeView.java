@@ -27,7 +27,7 @@ public class GradeView extends View {
         paint.setColor(0x80FFFFFF);
         osPaint = new Paint();
         osPaint.setStyle(Paint.Style.FILL);
-        osPaint.setColor(0x80404040);
+        osPaint.setColor(0x80FFFFFF);
         flPaint = new Paint(osPaint);
         flPaint.setColor(0x80FFFF00);
         rpPaint = new Paint(osPaint);
