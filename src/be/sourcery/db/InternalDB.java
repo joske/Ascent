@@ -103,30 +103,41 @@ public class InternalDB {
         insert.bindString(4, fmt.format(date));
         insert.bindString(5, comment);
         insert.bindLong(6, stars);
-        int score = 0;
+        int totalScore = 0;
         if (style != 5) {
             int gradeScore = route.getGradeScore();
             int styleScore = getStyleScore(style);
-            score = gradeScore + styleScore;
+            totalScore = calculateScore(attempts, style, gradeScore, styleScore);
         }
-        insert.bindLong(7, score);
+        insert.bindLong(7, totalScore);
         long id =  insert.executeInsert();
-        return new Ascent(id, route, style, attempts, new Date(), comment, stars, score);
+        return new Ascent(id, route, style, attempts, new Date(), comment, stars, totalScore);
     }
 
     public void updateAscent(Ascent ascent) {
         String stmt = "update ascents set attempts = ?, style_id = ?, date = ?, comment = ?, stars = ?, score = ? where _id = ?;";
         SQLiteStatement update = database.compileStatement(stmt);
-        update.bindLong(1, ascent.getAttempts());
-        update.bindLong(2, ascent.getStyle());
+        int attempts = ascent.getAttempts();
+        update.bindLong(1, attempts);
+        int style = ascent.getStyle();
+        update.bindLong(2, style);
         update.bindString(3, fmt.format(ascent.getDate()));
         update.bindString(4, ascent.getComment());
         update.bindLong(5, ascent.getStars());
         int gradeScore = ascent.getRoute().getGradeScore();
-        int styleScore = getStyleScore(ascent.getStyle());
-        update.bindLong(6, gradeScore + styleScore);
+        int styleScore = getStyleScore(style);
+        int totalScore = calculateScore(attempts, style, gradeScore, styleScore);
+        update.bindLong(6, totalScore);
         update.bindLong(7, ascent.getId());
         update.execute();
+    }
+
+    protected int calculateScore(int attempts, int style, int gradeScore, int styleScore) {
+        int totalScore = gradeScore + styleScore;
+        if (style == Ascent.STYLE_REDPOINT && attempts == 2) {
+            totalScore += 2;
+        }
+        return totalScore;
     }
 
     public Project addProject(Route route, int attempts) {
@@ -511,7 +522,7 @@ public class InternalDB {
                 null,
                 null,
                 "score desc, date desc",
-        "10");
+                "10");
         int total = 0;
         if (cursor.moveToFirst()) {
             do {
@@ -534,7 +545,7 @@ public class InternalDB {
                 null,
                 null,
                 "score desc, date desc",
-        "10");
+                "10");
         int total = 0;
         if (cursor.moveToFirst()) {
             do {
@@ -557,7 +568,7 @@ public class InternalDB {
                 null,
                 null,
                 "date asc",
-        "1");
+                "1");
         int year = 0;
         if (cursor.moveToFirst()) {
             try {
