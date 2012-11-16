@@ -39,11 +39,12 @@ public class CragAscentsActivity extends MyActivity {
         setTitle("Latest Ascents for " + crag.getName());
         cursor = db.getAscentsCursor(crag);
         TextView countView = (TextView) this.findViewById(R.id.countView);
-        countView.setText(cursor.getCount() + " ascents in DB");
+        int count12M = db.getCountLast12Months(cragId);
+        countView.setText("Ascents: " + cursor.getCount() + " - 12M: " + count12M);
         startManagingCursor(cursor);
         adapter = new SimpleCursorAdapter(getApplicationContext(), R.layout.ascent_list_item, cursor,
-                new String[] {"date", "style", "route_grade", "date", "route_name"},
-                new int[] {R.id.dateCell, R.id.styleCell, R.id.gradeCell, R.id.dateCell, R.id.nameCell});
+                new String[] {"date", "style", "route_grade", "route_name", "comment"},
+                new int[] {R.id.dateCell, R.id.styleCell, R.id.gradeCell, R.id.nameCell, R.id.commentCell});
         listView = (ListView)this.findViewById(R.id.list);
         listView.setAdapter(adapter);
         registerForContextMenu(listView);
@@ -116,7 +117,8 @@ public class CragAscentsActivity extends MyActivity {
         super.onResume();
         cursor.requery();
         TextView countView = (TextView) this.findViewById(R.id.countView);
-        countView.setText(cursor.getCount() + " ascents in DB");
+        int count12M = db.getCountLast12Months(crag.getId());
+        countView.setText("Ascents: " + cursor.getCount() + " - 12M: " + count12M);
     }
 
     private void editAscent(Ascent ascent) {

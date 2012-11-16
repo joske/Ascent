@@ -359,7 +359,7 @@ public class InternalDB {
 
     public Cursor getAscentsCursor() {
         Cursor cursor = database.query("ascent_routes",
-                new String[] { "_id", "route_id", "route_name", "route_grade", "attempts", "style", "date" },
+                new String[] { "_id", "route_id", "route_name", "route_grade", "attempts", "style", "date", "stars", "comment" },
                 null, null, null, null, "date desc, _id asc");
         return cursor;
     }
@@ -484,7 +484,7 @@ public class InternalDB {
     public Cursor getAscentsCursor(Crag crag) {
         List<Ascent> list = new ArrayList<Ascent>();
         Cursor cursor = database.query("ascent_routes",
-                new String[] { "_id", "route_id", "route_name", "route_grade", "attempts", "style", "date" },
+                new String[] { "_id", "route_id", "route_name", "route_grade", "attempts", "style", "date", "stars", "comment" },
                 "crag_id = ?", new String[] { "" + crag.getId()}, null, null, "date desc, _id asc");
         return cursor;
     }
@@ -513,6 +513,34 @@ public class InternalDB {
         return cursor;
     }
 
+    public int getCountLast12Months() {
+        List<Ascent> list = new ArrayList<Ascent>();
+        Cursor cursor = database.query("ascent_routes",
+                new String[] { "_id", "date" },
+                "julianday(date('now'))- julianday(date) < 365",
+                null,
+                null,
+                null,
+        "date desc");
+        int count = cursor.getCount();
+        cursor.close();
+        return count;
+    }
+
+    public int getCountLast12Months(long cragId) {
+        List<Ascent> list = new ArrayList<Ascent>();
+        Cursor cursor = database.query("ascent_routes",
+                new String[] { "_id", "date" },
+                "julianday(date('now'))- julianday(date) < 365 and crag_id = ?",
+                new String[] { "" + cragId},
+                null,
+                null,
+        "date desc");
+        int count = cursor.getCount();
+        cursor.close();
+        return count;
+    }
+
     public int getScoreLast12Months() {
         List<Ascent> list = new ArrayList<Ascent>();
         Cursor cursor = database.query("ascent_routes",
@@ -522,7 +550,7 @@ public class InternalDB {
                 null,
                 null,
                 "score desc, date desc",
-                "10");
+        "10");
         int total = 0;
         if (cursor.moveToFirst()) {
             do {
@@ -545,7 +573,7 @@ public class InternalDB {
                 null,
                 null,
                 "score desc, date desc",
-                "10");
+        "10");
         int total = 0;
         if (cursor.moveToFirst()) {
             do {
@@ -568,7 +596,7 @@ public class InternalDB {
                 null,
                 null,
                 "score desc, date desc",
-                "10");
+        "10");
         int total = 0;
         if (cursor.moveToFirst()) {
             do {
@@ -591,7 +619,7 @@ public class InternalDB {
                 null,
                 null,
                 "date asc",
-                "1");
+        "1");
         int year = 0;
         if (cursor.moveToFirst()) {
             try {
