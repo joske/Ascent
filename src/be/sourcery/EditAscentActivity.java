@@ -52,7 +52,7 @@ public class EditAscentActivity extends MyActivity {
     static final int DATE_DIALOG_ID = 0;
     private GregorianCalendar cal = new GregorianCalendar();
     private DatePickerDialog.OnDateSetListener dateSetListener =
-            new DatePickerDialog.OnDateSetListener() {
+        new DatePickerDialog.OnDateSetListener() {
 
         public void onDateSet(DatePicker view, int year,
                               int monthOfYear, int dayOfMonth) {
@@ -73,8 +73,16 @@ public class EditAscentActivity extends MyActivity {
         long ascentId = b.getLong("ascentId");
         db = new InternalDB(this);
         ascent = db.getAscent(ascentId);
-        TextView routeView = (TextView) this.findViewById(R.id.route);
-        routeView.setText(ascent.getRoute().getName() + " " + ascent.getRoute().getGrade() + " (" + ascent.getRoute().getCrag().getName() + ")");
+        EditText routeView = (EditText) this.findViewById(R.id.routename);
+        routeView.setText(ascent.getRoute().getName());
+        Spinner gradeView = (Spinner)findViewById(R.id.gradespinner);
+        ArrayAdapter gadapter = ArrayAdapter.createFromResource(
+                this, R.array.grades, android.R.layout.simple_spinner_item);
+        gadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        gradeView.setAdapter(gadapter);
+        String grade = ascent.getRoute().getGrade();
+        int gradeIndex = gadapter.getPosition(grade);
+        gradeView.setSelection(gradeIndex);
 
         TextView dateDisplay = (TextView)findViewById(R.id.dateDisplay);
         Date date = ascent.getDate();
@@ -129,6 +137,16 @@ public class EditAscentActivity extends MyActivity {
         button.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 String text = null;
+                EditText routeNameView = (EditText)findViewById(R.id.routename);
+                String name = routeNameView.getText().toString();
+                Spinner gradeView = (Spinner)findViewById(R.id.gradespinner);
+                String grade = gradeView.getSelectedItem().toString();
+                Route r = ascent.getRoute();
+                if (!(r.getName().equals(name)) || !(r.getGrade().equals(grade))) {
+                    r.setName(name);
+                    r.setGrade(grade);
+                    db.updateRoute(r);
+                }
                 int pos = ss.getSelectedItemPosition();
                 ascent.setStyle(pos + 1);
                 EditText attemptsView = (EditText)findViewById(R.id.attempts);

@@ -132,6 +132,15 @@ public class InternalDB {
         update.execute();
     }
 
+    public void updateRoute(Route r) {
+        String stmt = "update routes set name = ?, grade = ? where _id = ?;";
+        SQLiteStatement update = database.compileStatement(stmt);
+        update.bindString(1, r.getName());
+        update.bindString(2, r.getGrade());
+        update.bindLong(3, r.getId());
+        update.execute();
+    }
+
     protected int calculateScore(int attempts, int style, int gradeScore, int styleScore) {
         int totalScore = gradeScore + styleScore;
         if (style == Ascent.STYLE_REDPOINT && attempts == 2) {

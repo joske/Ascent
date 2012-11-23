@@ -26,9 +26,6 @@ public class Route {
     private String grade;
     private int score;
 
-    public Route() {
-    }
-
     public Route(long id, String name, String grade, Crag crag, int score) {
         super();
         this.id = id;
