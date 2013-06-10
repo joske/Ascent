@@ -17,6 +17,8 @@ package be.sourcery;
  *  along with Ascent.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import java.util.Date;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -83,7 +85,9 @@ public class MainActivity extends MyActivity {
         int count = db.getCountLast12Months();
         countView.setText("Ascents: " + cursor.getCount() + " - 12M: " + count);
         TextView scoreView = (TextView) this.findViewById(R.id.scoreView);
-        scoreView.setText("Score: " + db.getScoreLast12Months() + " - All Time: " + db.getScoreAllTime());
+        Date now = new Date();
+        int year = now.getYear() + 1900;
+        scoreView.setText("Score: " + db.getScoreLast12Months() + " - All Time: " + db.getScoreAllTime() + " - Year: " + db.getScoreForYear(year));
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
