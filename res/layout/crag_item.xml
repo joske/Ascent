@@ -2,14 +2,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="fill_parent"
+    android:weightSum="100"
     >
 <TextView android:id="@+id/nameCell"
-    android:layout_width="150sp"
+    android:layout_width="0dp"
+    android:layout_weight="50"
+    android:textSize="20dp"
     android:layout_height="fill_parent">
 </TextView>
 <TextView android:id="@+id/countryCell"
-    android:layout_width="500dip"
+    android:layout_width="0dp"
+    android:layout_weight="50"
+    android:textSize="20dp"
     android:layout_height="fill_parent">
 </TextView>
 </LinearLayout>
