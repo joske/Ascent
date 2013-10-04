@@ -6,7 +6,6 @@
 	android:layout_weight="1" >
 
 	<LinearLayout
-		xmlns:android="http://schemas.android.com/apk/res/android"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:orientation="vertical" >
@@ -50,7 +49,6 @@
 			android:prompt="@string/crag" />
 
 		<RadioGroup
-			xmlns:android="http://schemas.android.com/apk/res/android"
 			android:id="@+id/group"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
@@ -76,7 +74,6 @@
 		</RadioGroup>
 
 		<RelativeLayout
-			xmlns:android="http://schemas.android.com/apk/res/android"
 			android:layout_width="fill_parent"
 			android:layout_height="fill_parent"
 			android:orientation="horizontal" >

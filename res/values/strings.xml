@@ -43,6 +43,7 @@
 	<string name="grades">Grades</string>
 	<string name="last12Months">Last 12 Months</string>
 	<string name="allTime">All Time</string>
+	<string name="tried">Tried</string>
 
 	<string-array name="styles">
 		<item>Onsight</item>
@@ -51,7 +52,9 @@
 		<item>Toprope</item>
 		<item>Repeat</item>
 		<item>Multipitch</item>
+		<item>Tried</item>
 	</string-array>
+
 	<string-array name="grades">
 		<item>3</item>
 		<item>4</item>

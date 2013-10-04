@@ -82,8 +82,9 @@ public class MainActivity extends MyActivity {
         cursor.requery();
         adapter.notifyDataSetChanged();
         TextView countView = (TextView) this.findViewById(R.id.countView);
-        int count = db.getCountLast12Months();
-        countView.setText("Ascents: " + cursor.getCount() + " - 12M: " + count);
+        int count12 = db.getCountLast12Months();
+        int count = db.getCountAllTime();
+        countView.setText("Ascents: " + count + " - 12M: " + count12);
         TextView scoreView = (TextView) this.findViewById(R.id.scoreView);
         Date now = new Date();
         int year = now.getYear() + 1900;

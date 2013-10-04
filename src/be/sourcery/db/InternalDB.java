@@ -104,7 +104,7 @@ public class InternalDB {
         insert.bindString(5, comment);
         insert.bindLong(6, stars);
         int totalScore = 0;
-        if (style != 5) {
+        if (style != 5 && style != 6 && style != 7) {
             int gradeScore = route.getGradeScore();
             int styleScore = getStyleScore(style);
             totalScore = calculateScore(attempts, style, gradeScore, styleScore);
@@ -522,6 +522,34 @@ public class InternalDB {
         return cursor;
     }
 
+    public int getCountAllTime() {
+        List<Ascent> list = new ArrayList<Ascent>();
+        Cursor cursor = database.query("ascent_routes",
+                new String[] { "_id", "date" },
+                "style_id <> 7",
+                null,
+                null,
+                null,
+                "date desc");
+        int count = cursor.getCount();
+        cursor.close();
+        return count;
+    }
+
+    public int getCountAllTime(long cragId) {
+        List<Ascent> list = new ArrayList<Ascent>();
+        Cursor cursor = database.query("ascent_routes",
+                new String[] { "_id", "date" },
+                "julianday(date('now'))- julianday(date) < 365 and crag_id = ? and style_id <> 7",
+                new String[] { "" + cragId},
+                null,
+                null,
+                "date desc");
+        int count = cursor.getCount();
+        cursor.close();
+        return count;
+    }
+
     public int getCountLast12Months() {
         List<Ascent> list = new ArrayList<Ascent>();
         Cursor cursor = database.query("ascent_routes",
@@ -530,7 +558,7 @@ public class InternalDB {
                 null,
                 null,
                 null,
-        "date desc");
+                "date desc");
         int count = cursor.getCount();
         cursor.close();
         return count;
@@ -544,7 +572,7 @@ public class InternalDB {
                 new String[] { "" + cragId},
                 null,
                 null,
-        "date desc");
+                "date desc");
         int count = cursor.getCount();
         cursor.close();
         return count;
@@ -554,12 +582,12 @@ public class InternalDB {
         List<Ascent> list = new ArrayList<Ascent>();
         Cursor cursor = database.query("ascent_routes",
                 new String[] { "score", "date", "route_name", "route_grade" },
-                "julianday(date('now'))- julianday(date) < 365",
+                "julianday(date('now'))- julianday(date) < 365 and style_id <> 7",
                 null,
                 null,
                 null,
                 "score desc, date desc",
-        "10");
+                "10");
         int total = 0;
         if (cursor.moveToFirst()) {
             do {
@@ -577,12 +605,12 @@ public class InternalDB {
         List<Ascent> list = new ArrayList<Ascent>();
         Cursor cursor = database.query("ascent_routes",
                 new String[] { "score", "date", "route_name", "route_grade" },
-                null,
+                "style_id <> 7",
                 null,
                 null,
                 null,
                 "score desc, date desc",
-        "10");
+                "10");
         int total = 0;
         if (cursor.moveToFirst()) {
             do {
@@ -600,12 +628,12 @@ public class InternalDB {
         List<Ascent> list = new ArrayList<Ascent>();
         Cursor cursor = database.query("ascent_routes",
                 new String[] { "score", "date", "route_name", "route_grade" },
-                "strftime('%Y', date) = ?",
+                "strftime('%Y', date) = ? and style_id <> 7",
                 new String[] { "" + year },
                 null,
                 null,
                 "score desc, date desc",
-        "10");
+                "10");
         int total = 0;
         if (cursor.moveToFirst()) {
             do {
@@ -628,7 +656,7 @@ public class InternalDB {
                 null,
                 null,
                 "date asc",
-        "1");
+                "1");
         int year = 0;
         if (cursor.moveToFirst()) {
             try {
@@ -690,7 +718,7 @@ public class InternalDB {
 
     class OpenHelper extends SQLiteOpenHelper {
 
-        private static final int DATABASE_VERSION = 6;
+        private static final int DATABASE_VERSION = 7;
         private static final String DATABASE_NAME = "ascent";
 
 
@@ -708,6 +736,7 @@ public class InternalDB {
             db.execSQL("insert into styles values (4, 'Toprope', 'TP', -52);");
             db.execSQL("insert into styles values (5, 'Repeat', 'Rep', 0);");
             db.execSQL("insert into styles values (6, 'Multipitch', 'MP', 0);");
+            db.execSQL("insert into styles values (7, 'Tried', 'AT', 0);");
             db.execSQL("create table routes (_id integer primary key autoincrement, name text, grade text, crag_id integer);");
             db.execSQL("create table ascents (_id integer primary key autoincrement, route_id int, date text, attempts int, style_id int, comment string, stars int, score int);");
             db.execSQL("create table projects (_id integer primary key autoincrement, route_id int, attempts int);");
@@ -764,6 +793,9 @@ public class InternalDB {
             if (oldVersion == 5) {
                 db.execSQL("drop view ascent_routes;");
                 db.execSQL("create view ascent_routes as select a._id as _id, r._id as route_id, r.name as route_name, r.grade as route_grade, a.attempts as attempts, a.comment as comment, s._id as style_id, s.short_name as style, s.score as style_score, a.stars as stars, a.date as date, r.crag_id as crag_id, a.score as score, g.score as grade_score from ascents a inner join routes r on a.route_id = r._id inner join styles s on a.style_id = s._id inner join grades g on g.grade = r.grade;");
+            }
+            if (oldVersion == 6) {
+                db.execSQL("insert into styles values (7, 'Tried', 'AT', 0);");
             }
         }
     }

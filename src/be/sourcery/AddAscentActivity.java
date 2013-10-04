@@ -57,7 +57,7 @@ public class AddAscentActivity extends MyActivity {
     private int day;
     DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
     private DatePickerDialog.OnDateSetListener dateSetListener =
-        new DatePickerDialog.OnDateSetListener() {
+            new DatePickerDialog.OnDateSetListener() {
 
         public void onDateSet(DatePicker view, int year,
                               int monthOfYear, int dayOfMonth) {
@@ -101,8 +101,8 @@ public class AddAscentActivity extends MyActivity {
 
             public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long rowId) {
                 EditText attemptsView = (EditText)findViewById(R.id.attempts);
-                if (rowId == 2) {
-                    // redpoint
+                if (rowId == 2 || rowId == 6) {
+                    // redpoint or tried
                     attemptsView.setEnabled(true);
                 } else {
                     attemptsView.setText("1");

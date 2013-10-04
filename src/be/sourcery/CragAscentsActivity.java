@@ -40,7 +40,8 @@ public class CragAscentsActivity extends MyActivity {
         cursor = db.getAscentsCursor(crag);
         TextView countView = (TextView) this.findViewById(R.id.countView);
         int count12M = db.getCountLast12Months(cragId);
-        countView.setText("Ascents: " + cursor.getCount() + " - 12M: " + count12M);
+        int count = db.getCountAllTime(cragId);
+        countView.setText("Ascents: " + count + " - 12M: " + count12M);
         startManagingCursor(cursor);
         adapter = new SimpleCursorAdapter(getApplicationContext(), R.layout.ascent_list_item, cursor,
                 new String[] {"date", "style", "route_grade", "route_name", "comment"},
