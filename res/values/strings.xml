@@ -44,8 +44,17 @@
 	<string name="last12Months">Last 12 Months</string>
 	<string name="allTime">All Time</string>
 	<string name="tried">Tried</string>
+    <string name="no_results">No results found for \"%s\"</string>
+	<string name="search_hint">Search Ascents</string>
+    <string name="search_instructions">Use the search box in the Action Bar to look up an Ascent</string>
+    <string name="menu_search">Search</string>
 
-	<string-array name="styles">
+    <plurals name="search_results">
+      <item quantity="one">%1$d result for \"%2$s\": </item>
+      <item quantity="other">%1$d results for \"%2$s\": </item>
+    </plurals>
+
+   	<string-array name="styles">
 		<item>Onsight</item>
 		<item>Flash</item>
 		<item>Redpoint</item>

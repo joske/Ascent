@@ -1,4 +1,4 @@
-package be.sourcery;
+package be.sourcery.ascent;
 
 import java.util.Date;
 
@@ -15,7 +15,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
-import be.sourcery.db.InternalDB;
 
 
 public class ScoreGraphActivity extends MyActivity {

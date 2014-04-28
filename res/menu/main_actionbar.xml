@@ -9,6 +9,11 @@
         android:id="@+id/menu_crags"
         android:showAsAction="ifRoom|withText"
         android:title="Crags"/>
+    <item android:id="@+id/search"
+          android:title="@string/menu_search"
+          android:icon="@drawable/ic_menu_search"
+          android:showAsAction="collapseActionView|ifRoom"
+          android:actionViewClass="android.widget.SearchView" />
     <item
         android:id="@+id/menu_projects"
         android:showAsAction="ifRoom|withText"
@@ -21,6 +26,10 @@
         android:id="@+id/menu_grade"
         android:showAsAction="ifRoom|withText"
         android:title="Grades"/>
+    <item
+        android:id="@+id/menu_top10"
+        android:showAsAction="ifRoom|withText"
+        android:title="Top10"/>
     <item
         android:id="@+id/menu_import"
         android:showAsAction="ifRoom|withText"

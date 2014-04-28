@@ -1,4 +1,4 @@
-package be.sourcery;
+package be.sourcery.ascent;
 
 /*
  * This file is part of Ascent.
@@ -30,7 +30,6 @@ import android.widget.EditText;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
-import be.sourcery.db.InternalDB;
 
 
 public class AddProjectActivity extends MyActivity {

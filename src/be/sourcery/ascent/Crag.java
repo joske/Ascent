@@ -1,4 +1,4 @@
-package be.sourcery;
+package be.sourcery.ascent;
 
 /*
  * This file is part of Ascent.

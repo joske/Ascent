@@ -1,4 +1,4 @@
-package be.sourcery;
+package be.sourcery.ascent;
 
 /*
  * This file is part of Ascent.
@@ -25,7 +25,6 @@ import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import be.sourcery.db.InternalDB;
 
 
 public class AddCragActivity extends MyActivity {

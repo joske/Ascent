@@ -1,4 +1,4 @@
-package be.sourcery;
+package be.sourcery.ascent;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -20,7 +20,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
-import be.sourcery.db.InternalDB;
 
 
 public class ImportDataActivity extends MyActivity {

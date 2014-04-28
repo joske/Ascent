@@ -1,4 +1,4 @@
-package be.sourcery.db;
+package be.sourcery.ascent;
 
 /*
  * This file is part of Ascent.
@@ -22,20 +22,26 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
+import android.app.SearchManager;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.database.sqlite.SQLiteStatement;
-import be.sourcery.Ascent;
-import be.sourcery.Crag;
-import be.sourcery.Project;
-import be.sourcery.Route;
+import android.provider.BaseColumns;
 
 
 public class InternalDB {
+
+    public static final String KEY_ROUTE = SearchManager.SUGGEST_COLUMN_TEXT_1;
+    public static final String KEY_GRADE = SearchManager.SUGGEST_COLUMN_TEXT_2;
+    private static final String FTSASCENTS = "FTascents";
+    private static final String DATABASE_NAME = "ascent";
 
     private SQLiteDatabase database;
     private final Context ctx;
@@ -367,6 +373,10 @@ public class InternalDB {
     }
 
     public Cursor getAscentsCursor() {
+        return getAscentsCursor(database);
+    }
+
+    public static Cursor getAscentsCursor(SQLiteDatabase database) {
         Cursor cursor = database.query("ascent_routes",
                 new String[] { "_id", "route_id", "route_name", "route_grade", "attempts", "style", "date", "stars", "comment" },
                 null, null, null, null, "date desc, _id asc");
@@ -554,7 +564,7 @@ public class InternalDB {
         List<Ascent> list = new ArrayList<Ascent>();
         Cursor cursor = database.query("ascent_routes",
                 new String[] { "_id", "date" },
-                "julianday(date('now'))- julianday(date) < 365",
+                "julianday(date('now'))- julianday(date) < 365 and style_id <> 7",
                 null,
                 null,
                 null,
@@ -568,7 +578,7 @@ public class InternalDB {
         List<Ascent> list = new ArrayList<Ascent>();
         Cursor cursor = database.query("ascent_routes",
                 new String[] { "_id", "date" },
-                "julianday(date('now'))- julianday(date) < 365 and crag_id = ?",
+                "julianday(date('now'))- julianday(date) < 365 and style_id <> 7 and crag_id = ?",
                 new String[] { "" + cragId},
                 null,
                 null,
@@ -601,6 +611,18 @@ public class InternalDB {
         return total;
     }
 
+    protected Cursor getTop10TwelveMonths() {
+        Cursor cursor = database.query("ascent_routes",
+                new String[] { "_id", "date", "style", "route_grade", "route_name", "score" },
+                "julianday(date('now'))- julianday(date) < 365 and style_id <> 7",
+                null,
+                null,
+                null,
+                "score desc, date desc",
+                "10");
+        return cursor;
+    }
+
     public int getScoreAllTime() {
         List<Ascent> list = new ArrayList<Ascent>();
         Cursor cursor = database.query("ascent_routes",
@@ -622,6 +644,30 @@ public class InternalDB {
         }
         cursor.close();
         return total;
+    }
+
+    protected Cursor getTop10AllTime() {
+        Cursor cursor = database.query("ascent_routes",
+                new String[] { "_id", "date", "style", "route_grade", "route_name", "score" },
+                "style_id <> 7",
+                null,
+                null,
+                null,
+                "score desc, date desc",
+                "10");
+        return cursor;
+    }
+
+    public Cursor getTop10ForYear(int year) {
+        Cursor cursor = database.query("ascent_routes",
+                new String[] { "_id", "date", "style", "route_grade", "route_name", "score" },
+                "strftime('%Y', date) = ? and style_id <> 7",
+                new String[] { "" + year },
+                null,
+                null,
+                "score desc, date desc",
+                "10");
+        return cursor;
     }
 
     public int getScoreForYear(int year) {
@@ -668,6 +714,47 @@ public class InternalDB {
         cursor.close();
         return year;
     }
+
+    public Cursor searchAscents(String query, String[] columns) {
+        String selection = KEY_ROUTE + " MATCH ?";
+        String[] selectionArgs = new String[] {query+"*"};
+
+        return query(selection, selectionArgs, columns);
+    }
+
+    /**
+     * Performs a database query.
+     * @param selection The selection clause
+     * @param selectionArgs Selection arguments for "?" components in the selection
+     * @param columns The columns to return
+     * @return A Cursor over all rows matching the query
+     */
+    private Cursor query(String selection, String[] selectionArgs, String[] columns) {
+        /* The SQLiteBuilder provides a map for all possible columns requested to
+         * actual columns in the database, creating a simple column alias mechanism
+         * by which the ContentProvider does not need to know the real column names
+         */
+        SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+        builder.setTables(FTSASCENTS);
+        HashMap<String,String> columnMap = new HashMap<String,String>();
+        builder.setProjectionMap(columnMap);
+        columnMap.put(KEY_ROUTE, KEY_ROUTE);
+        columnMap.put(BaseColumns._ID, "rowid AS " + BaseColumns._ID);
+        columnMap.put(SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID, "rowid AS " + SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID);
+        columnMap.put(SearchManager.SUGGEST_COLUMN_SHORTCUT_ID, "rowid AS " + SearchManager.SUGGEST_COLUMN_SHORTCUT_ID);
+
+        Cursor cursor = builder.query(openHelper.getReadableDatabase(),
+                columns, selection, selectionArgs, null, null, null);
+
+        if (cursor == null) {
+            return null;
+        } else if (!cursor.moveToFirst()) {
+            cursor.close();
+            return null;
+        }
+        return cursor;
+    }
+
 
     public Ascent getAscent(long ascentId) {
         Cursor cursor = database.query("ascents", new String[] { "_id", "route_id", "attempts", "style_id", "date", "comment", "stars", "score" },
@@ -718,7 +805,7 @@ public class InternalDB {
 
     class OpenHelper extends SQLiteOpenHelper {
 
-        private static final int DATABASE_VERSION = 7;
+        private static final int DATABASE_VERSION = 8;
         private static final String DATABASE_NAME = "ascent";
 
 
@@ -796,6 +883,20 @@ public class InternalDB {
             }
             if (oldVersion == 6) {
                 db.execSQL("insert into styles values (7, 'Tried', 'AT', 0);");
+            }
+            if (oldVersion == 7) {
+                db.execSQL("CREATE VIRTUAL TABLE " + FTSASCENTS + " USING fts3 (" + KEY_ROUTE + ", " + KEY_GRADE + ");");
+                Cursor ascentsCursor = getAscentsCursor(db);
+                if (ascentsCursor.moveToFirst()) {
+                    do {
+                        String name = ascentsCursor.getString(2);
+                        String grade = ascentsCursor.getString(3);
+                        ContentValues initialValues = new ContentValues();
+                        initialValues.put(KEY_ROUTE, name);
+                        initialValues.put(KEY_GRADE, grade);
+                        db.insert(FTSASCENTS, null, initialValues);
+                    } while (ascentsCursor.moveToNext());
+                }
             }
         }
     }

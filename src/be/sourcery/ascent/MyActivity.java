@@ -1,4 +1,4 @@
-package be.sourcery;
+package be.sourcery.ascent;
 
 import android.annotation.TargetApi;
 import android.app.ActionBar;

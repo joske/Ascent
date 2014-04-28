@@ -1,4 +1,4 @@
-package be.sourcery;
+package be.sourcery.ascent;
 
 import java.util.Iterator;
 import java.util.List;

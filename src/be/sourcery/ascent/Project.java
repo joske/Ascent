@@ -1,4 +1,4 @@
-package be.sourcery;
+package be.sourcery.ascent;
 
 /*
  * This file is part of Ascent.
@@ -18,21 +18,20 @@ package be.sourcery;
  */
 
 
-public class Route {
+public class Project {
 
     private long id;
-    private String name;
-    private Crag crag;
-    private String grade;
-    private int score;
+    private Route route;
+    private int attempts;
 
-    public Route(long id, String name, String grade, Crag crag, int score) {
+    public Project() {
+    }
+
+    public Project(long id, Route route, int attempts) {
         super();
         this.id = id;
-        this.name = name;
-        this.crag = crag;
-        this.grade = grade;
-        this.score = score;
+        this.setRoute(route);
+        this.attempts = attempts;
     }
 
 
@@ -46,40 +45,22 @@ public class Route {
     }
 
 
-    public String getName() {
-        return name;
+    public int getAttempts() {
+        return attempts;
     }
 
 
-    public void setName(String name) {
-        this.name = name;
+    public void setAttempts(int attempts) {
+        this.attempts = attempts;
     }
 
 
-    public Crag getCrag() {
-        return crag;
+    public void setRoute(Route route) {
+        this.route = route;
     }
 
-
-    public void setCrag(Crag crag) {
-        this.crag = crag;
-    }
-
-
-    public String getGrade() {
-        return grade;
-    }
-
-    public int getGradeScore() {
-        return score;
-    }
-
-    public void setGrade(String grade) {
-        this.grade = grade;
-    }
-
-    public String toString() {
-        return name + " " + grade + " (" + crag + ")";
+    public Route getRoute() {
+        return route;
     }
 
 }

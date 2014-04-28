@@ -4,7 +4,7 @@
     android:layout_height="fill_parent"
     android:orientation="horizontal" >
 
-        <be.sourcery.GradeView
+        <be.sourcery.ascent.GradeView
             android:id="@+id/gradeView"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"

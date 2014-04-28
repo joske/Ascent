@@ -1,4 +1,4 @@
-package be.sourcery;
+package be.sourcery.ascent;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -14,7 +14,6 @@ import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
-import be.sourcery.db.InternalDB;
 
 
 public class ProjectListActivity extends MyActivity {

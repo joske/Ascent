@@ -1,4 +1,4 @@
-package be.sourcery;
+package be.sourcery.ascent;
 
 /*
  * This file is part of Ascent.
@@ -42,7 +42,6 @@ import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import be.sourcery.db.InternalDB;
 
 
 public class EditAscentActivity extends MyActivity {
@@ -52,7 +51,7 @@ public class EditAscentActivity extends MyActivity {
     static final int DATE_DIALOG_ID = 0;
     private GregorianCalendar cal = new GregorianCalendar();
     private DatePickerDialog.OnDateSetListener dateSetListener =
-        new DatePickerDialog.OnDateSetListener() {
+            new DatePickerDialog.OnDateSetListener() {
 
         public void onDateSet(DatePicker view, int year,
                               int monthOfYear, int dayOfMonth) {

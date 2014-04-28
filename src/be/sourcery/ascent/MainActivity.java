@@ -1,4 +1,4 @@
-package be.sourcery;
+package be.sourcery.ascent;
 
 /*
  * This file is part of Ascent.
@@ -36,7 +36,6 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
-import be.sourcery.db.InternalDB;
 
 public class MainActivity extends MyActivity {
 
@@ -176,6 +175,9 @@ public class MainActivity extends MyActivity {
             case R.id.menu_score:
                 showScore();
                 return true;
+            case R.id.menu_top10:
+                showTop10();
+                return true;
             case R.id.menu_grade:
                 showGrades();
                 return true;
@@ -193,6 +195,11 @@ public class MainActivity extends MyActivity {
 
     private void showGrades() {
         Intent myIntent = new Intent(this, GradeGraphActivity.class);
+        startActivity(myIntent);
+    }
+
+    private void showTop10() {
+        Intent myIntent = new Intent(this, Top10Activity.class);
         startActivity(myIntent);
     }
 

@@ -1,4 +1,4 @@
-package be.sourcery;
+package be.sourcery.ascent;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -20,7 +20,6 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import be.sourcery.db.InternalDB;
 
 
 public class RepeatAscentActivity extends MyActivity {

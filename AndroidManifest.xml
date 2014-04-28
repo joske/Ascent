@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="be.sourcery" android:versionCode="1" android:versionName="1.0">
-	<uses-sdk android:minSdkVersion="10" android:targetSdkVersion="14" />
+	package="be.sourcery.ascent" android:versionCode="1" android:versionName="1.0">
+	<uses-sdk android:minSdkVersion="11" android:targetSdkVersion="14" />
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 	<application android:icon="@drawable/icon" android:label="@string/app_name"
 		android:name=".AscentApplication" android:theme="@style/android:Theme.Holo">
@@ -11,9 +11,18 @@
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
+            <meta-data android:name="android.app.default_searchable"
+	                   android:value=".SearchAscentsActivity" />
 		</activity>
 
 		<activity android:name="AddAscentActivity"></activity>
+		<activity android:name=".SearchAscentsActivity">
+			<intent-filter>
+				<action android:name="android.intent.action.SEARCH" />
+			</intent-filter>
+			<meta-data android:name="android.app.searchable"
+                   android:resource="@xml/searchable"/>
+		</activity>
 		<activity android:name="AddCragActivity"></activity>
 
 		<activity android:name="RepeatAscentActivity"></activity>
@@ -25,12 +34,16 @@
 		<activity android:name="ExportDataActivity"
 			android:configChanges="orientation"></activity>
 		<activity android:name="ProjectListActivity"></activity>
-		<activity android:name="CragAscentsActivity"></activity>
+		<activity android:name="CragAscentsActivity">
+		    <meta-data android:name="android.app.default_searchable"
+                   android:value=".SearchAscentActivity" />
+		</activity>
 		<activity android:name="GradeAscentsActivity"></activity>
 		<activity android:name="ScoreGraphActivity"></activity>
 		<activity android:name="GradeGraphActivity"></activity>
 		<activity android:name="TickProjectActivity"></activity>
 		<activity android:name="AddProjectActivity"></activity>
+		<activity android:name="Top10Activity"></activity>
 	</application>
 
 
