@@ -27,7 +27,7 @@ public class Top10Activity extends MyActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.top10);
-        setTitle(R.string.crags);
+        setTitle(R.string.top10);
         setupActionBar();
         db = new InternalDB(this);
         Date now = new Date();
