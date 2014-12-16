@@ -35,6 +35,10 @@ public class SearchAscentsActivity extends ListActivity {
         listView = (ListView) findViewById(R.id.list);
         // Get the intent, verify the action and get the query
         Intent intent = getIntent();
+        handleIntent(intent);
+    }
+
+    private void handleIntent(Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
             doMySearch(query);
