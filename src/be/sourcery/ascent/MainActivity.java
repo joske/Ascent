@@ -67,7 +67,8 @@ public class MainActivity extends MyActivity {
         startManagingCursor(cursor);
         adapter = new SimpleCursorAdapter(getApplicationContext(), R.layout.ascent_list_item, cursor,
                 new String[] {"date", "style", "route_grade", "route_name", "comment"},
-                new int[] {R.id.dateCell, R.id.styleCell, R.id.gradeCell, R.id.nameCell, R.id.commentCell});
+                new int[] {R.id.dateCell, R.id.styleCell, R.id.gradeCell, R.id.nameCell, R.id.commentCell},
+                0);
         listView = (ListView)this.findViewById(R.id.list);
         listView.setAdapter(adapter);
         registerForContextMenu(listView);
@@ -98,12 +99,9 @@ public class MainActivity extends MyActivity {
         inflater.inflate(R.menu.main_actionbar, menu);
 
         // Associate searchable configuration with the SearchView
-        SearchManager searchManager =
-                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView =
-                (SearchView) menu.findItem(R.id.search).getActionView();
-        searchView.setSearchableInfo(
-                searchManager.getSearchableInfo(getComponentName()));
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
         return true;
     }

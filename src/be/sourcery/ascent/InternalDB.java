@@ -716,10 +716,14 @@ public class InternalDB {
         return year;
     }
 
-    public Cursor searchAscents(String query) {
-        String[] columns = new String[] { "_id, route_name, date, route_name as suggest_text_1, date as suggest_text_2" };
+    public Cursor searchAscents(String query, long crag_id) {
+        String[] columns = new String[] { "_id, route_name, date, crag_name" };
         String selection = "route_name like ?";
         String[] selectionArgs = new String[] { "%" + query + "%"};
+        if (crag_id != -1) {
+            selection += " and crag_id = ?";
+            selectionArgs = new String[] { "%" + query + "%", "" + crag_id};
+        }
         Cursor cursor = database.query(
                 "ascent_routes",
                 columns,
@@ -822,7 +826,7 @@ public class InternalDB {
 
     class OpenHelper extends SQLiteOpenHelper {
 
-        private static final int DATABASE_VERSION = 8;
+        private static final int DATABASE_VERSION = 10;
         private static final String DATABASE_NAME = "ascent";
 
 
@@ -880,7 +884,7 @@ public class InternalDB {
             db.execSQL("insert into grades values ('10b+', 1750);");
             db.execSQL("insert into grades values ('10c', 1800);");
             db.execSQL("insert into grades values ('10c+', 1850);");
-            db.execSQL("create view ascent_routes as select a._id as _id, r._id as route_id, r.name as route_name, r.grade as route_grade, a.attempts as attempts, a.comment as comment, s._id as style_id, s.short_name as style, s.score as style_score, a.stars as stars, a.date as date, r.crag_id as crag_id, a.score as score, g.score as grade_score from ascents a inner join routes r on a.route_id = r._id inner join styles s on a.style_id = s._id inner join grades g on g.grade = r.grade;");
+            db.execSQL("create view ascent_routes as select a._id as _id, r._id as route_id, r.name as route_name, r.grade as route_grade, a.attempts as attempts, a.comment as comment, s._id as style_id, s.short_name as style, s.score as style_score, a.stars as stars, a.date as date, r.crag_id as crag_id, a.score as score, g.score as grade_score, c.name as crag_name, c._id as crag_id from ascents a inner join routes r on a.route_id = r._id inner join styles s on a.style_id = s._id inner join grades g on g.grade = r.grade inner join crag c on r.crag_id = c._id;");
             db.execSQL("create view project_routes as select p._id as _id, r.name as route_name, r.grade as route_grade, c.name as crag_name, p.attempts as attempts from projects p inner join routes r on p.route_id = r._id inner join crag c on r.crag_id = c._id;");
         }
 
@@ -914,6 +918,14 @@ public class InternalDB {
                         db.insert(FTSASCENTS, null, initialValues);
                     } while (ascentsCursor.moveToNext());
                 }
+            }
+            if (oldVersion == 8) {
+                db.execSQL("drop view ascent_routes;");
+                db.execSQL("create view ascent_routes as select a._id as _id, r._id as route_id, r.name as route_name, r.grade as route_grade, a.attempts as attempts, a.comment as comment, s._id as style_id, s.short_name as style, s.score as style_score, a.stars as stars, a.date as date, r.crag_id as crag_id, a.score as score, g.score as grade_score, c.name as crag_name from ascents a inner join routes r on a.route_id = r._id inner join styles s on a.style_id = s._id inner join grades g on g.grade = r.grade inner join crag c on r.crag_id = c._id;");
+            }
+            if (oldVersion == 9) {
+                db.execSQL("drop view ascent_routes;");
+                db.execSQL("create view ascent_routes as select a._id as _id, r._id as route_id, r.name as route_name, r.grade as route_grade, a.attempts as attempts, a.comment as comment, s._id as style_id, s.short_name as style, s.score as style_score, a.stars as stars, a.date as date, r.crag_id as crag_id, a.score as score, g.score as grade_score, c.name as crag_name, c._id as crag_id from ascents a inner join routes r on a.route_id = r._id inner join styles s on a.style_id = s._id inner join grades g on g.grade = r.grade inner join crag c on r.crag_id = c._id;");
             }
         }
     }

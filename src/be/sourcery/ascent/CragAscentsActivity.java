@@ -1,5 +1,8 @@
 package be.sourcery.ascent;
 
+import android.app.SearchManager;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -13,8 +16,10 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class CragAscentsActivity extends MyActivity {
@@ -60,11 +65,28 @@ public class CragAscentsActivity extends MyActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.crags_actionbar, menu);
+        // Associate searchable configuration with the SearchView
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+        ComponentName cn = new ComponentName(this, SearchAscentsActivity.class);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(cn));
+        return true;
+    }
+
+    @Override
+    public boolean onSearchRequested() {
+        Bundle appDataBundle = new Bundle();
+        appDataBundle.putLong("crag_id", crag.getId());
+        startSearch(null, false, appDataBundle, false);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getTitle().equals("Search")) {
+            Toast.makeText(getApplicationContext(), "Search = "+onSearchRequested(), Toast.LENGTH_LONG).show();
+            return onSearchRequested();
+        }
         switch (item.getItemId()) {
             case android.R.id.home:
                 // app icon in action bar clicked; go home

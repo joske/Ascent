@@ -89,7 +89,7 @@ public class CragListActivity extends MyActivity {
 
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.crags_actionbar, menu);
+        inflater.inflate(R.menu.add_actionbar, menu);
         return true;
     }
 

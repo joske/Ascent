@@ -25,6 +25,7 @@ public class SearchAscentsActivity extends ListActivity {
     private InternalDB db;
     private ListView listView;
     private TextView textView;
+    private long crag_id = -1;
 
     /** Called when the activity is first created. */
     @Override
@@ -40,15 +41,24 @@ public class SearchAscentsActivity extends ListActivity {
         handleIntent(intent);
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        handleIntent(intent);
+    }
+
     private void handleIntent(Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            Bundle bundle = getIntent().getBundleExtra(SearchManager.APP_DATA);
+            if (bundle != null) {
+                crag_id = bundle.getLong("crag_id");
+            }
             String query = intent.getStringExtra(SearchManager.QUERY);
             doMySearch(query);
         }
     }
 
     private void doMySearch(String query) {
-        Cursor cursor = db.searchAscents(query);
+        Cursor cursor = db.searchAscents(query, crag_id);
         if (cursor == null) {
             // There are no results
             textView.setText(getString(R.string.no_results, new Object[] {query}));
@@ -60,11 +70,11 @@ public class SearchAscentsActivity extends ListActivity {
             textView.setText(countString);
 
             // Specify the columns we want to display in the result
-            String[] from = new String[] { InternalDB.KEY_ROUTE, InternalDB.KEY_GRADE};
+            String[] from = new String[] { "route_name", "date", "crag_name"};
 
             // Specify the corresponding layout elements where we want the columns to go
             int[] to = new int[] { R.id.routeName,
-                    R.id.date };
+                    R.id.date, R.id.crag};
 
             // Create a simple cursor adapter for the definitions and apply them to the ListView
             final SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
