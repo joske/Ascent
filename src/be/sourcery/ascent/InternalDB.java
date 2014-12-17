@@ -512,7 +512,8 @@ public class InternalDB {
         List<Ascent> list = new ArrayList<Ascent>();
         Cursor cursor = database.query("ascent_routes",
                 new String[] { "_id", "route_id", "route_name", "route_grade", "attempts", "style", "date" },
-                "route_grade = ?" + (allTime ? "" : " and julianday(date('now'))- julianday(date) < 365"), new String[] {grade}, null, null, "date desc, _id asc");
+                "route_grade = ?" + (allTime ? "" : " and julianday(date('now'))- julianday(date) < 365"),
+                new String[] {grade}, null, null, "date desc, _id asc");
         return cursor;
     }
 
@@ -713,6 +714,22 @@ public class InternalDB {
         }
         cursor.close();
         return year;
+    }
+
+    public Cursor searchAscents(String query) {
+        String[] columns = new String[] { "_id, route_name, date, route_name as suggest_text_1, date as suggest_text_2" };
+        String selection = "route_name like ?";
+        String[] selectionArgs = new String[] { "%" + query + "%"};
+        Cursor cursor = database.query(
+                "ascent_routes",
+                columns,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                "date desc",
+                null);
+        return cursor;
     }
 
     public Cursor searchAscents(String query, String[] columns) {

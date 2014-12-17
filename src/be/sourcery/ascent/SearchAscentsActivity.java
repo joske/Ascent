@@ -12,6 +12,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.SimpleCursorAdapter;
@@ -32,7 +34,7 @@ public class SearchAscentsActivity extends ListActivity {
         setupActionBar();
         db = new InternalDB(this);
         textView = (TextView) findViewById(R.id.text);
-        listView = (ListView) findViewById(R.id.list);
+        listView = (ListView) findViewById(android.R.id.list);
         // Get the intent, verify the action and get the query
         Intent intent = getIntent();
         handleIntent(intent);
@@ -46,8 +48,7 @@ public class SearchAscentsActivity extends ListActivity {
     }
 
     private void doMySearch(String query) {
-        Cursor cursor = managedQuery(AscentProvider.CONTENT_URI, null, null,
-                new String[] {query}, null);
+        Cursor cursor = db.searchAscents(query);
         if (cursor == null) {
             // There are no results
             textView.setText(getString(R.string.no_results, new Object[] {query}));
@@ -62,14 +63,29 @@ public class SearchAscentsActivity extends ListActivity {
             String[] from = new String[] { InternalDB.KEY_ROUTE, InternalDB.KEY_GRADE};
 
             // Specify the corresponding layout elements where we want the columns to go
-            int[] to = new int[] { R.id.word,
-                    R.id.definition };
+            int[] to = new int[] { R.id.routeName,
+                    R.id.date };
 
             // Create a simple cursor adapter for the definitions and apply them to the ListView
-            SimpleCursorAdapter words = new SimpleCursorAdapter(this,
+            final SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
                     R.layout.search_results, cursor, from, to);
-            listView.setAdapter(words);
+            listView.setAdapter(adapter);
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                public void onItemClick(AdapterView<?> arg0, View view, int position, long row) {
+                    long id = adapter.getItemId(position);
+                    Ascent ascent = db.getAscent(id);
+                    editAscent(ascent);
+                }
+            });
         }
+    }
+
+    private void editAscent(Ascent ascent) {
+        Intent myIntent = new Intent(this, EditAscentActivity.class);
+        Bundle b = new Bundle();
+        b.putLong("ascentId", ascent.getId());
+        myIntent.putExtras(b);
+        startActivity(myIntent);
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
