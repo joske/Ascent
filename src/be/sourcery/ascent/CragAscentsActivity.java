@@ -19,7 +19,6 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 public class CragAscentsActivity extends MyActivity {
@@ -84,7 +83,6 @@ public class CragAscentsActivity extends MyActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getTitle().equals("Search")) {
-            Toast.makeText(getApplicationContext(), "Search = "+onSearchRequested(), Toast.LENGTH_LONG).show();
             return onSearchRequested();
         }
         switch (item.getItemId()) {

@@ -69,16 +69,11 @@ public class SearchAscentsActivity extends ListActivity {
                     count, new Object[] {count, query});
             textView.setText(countString);
 
-            // Specify the columns we want to display in the result
-            String[] from = new String[] { "route_name", "date", "crag_name"};
-
-            // Specify the corresponding layout elements where we want the columns to go
-            int[] to = new int[] { R.id.routeName,
-                    R.id.date, R.id.crag};
-
             // Create a simple cursor adapter for the definitions and apply them to the ListView
-            final SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
-                    R.layout.search_results, cursor, from, to);
+            final SimpleCursorAdapter adapter = new SimpleCursorAdapter(getApplicationContext(), R.layout.ascent_list_item, cursor,
+                    new String[] {"date", "style", "route_grade", "route_name", "comment"},
+                    new int[] {R.id.dateCell, R.id.styleCell, R.id.gradeCell, R.id.nameCell, R.id.commentCell},
+                    0);
             listView.setAdapter(adapter);
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 public void onItemClick(AdapterView<?> arg0, View view, int position, long row) {

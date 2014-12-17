@@ -717,7 +717,7 @@ public class InternalDB {
     }
 
     public Cursor searchAscents(String query, long crag_id) {
-        String[] columns = new String[] { "_id, route_name, date, crag_name" };
+        String[] columns = new String[] {  "_id", "route_id", "route_name", "route_grade", "attempts", "style", "date", "stars", "comment"  };
         String selection = "route_name like ?";
         String[] selectionArgs = new String[] { "%" + query + "%"};
         if (crag_id != -1) {
