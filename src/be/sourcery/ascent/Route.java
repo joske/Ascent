@@ -74,6 +74,10 @@ public class Route {
         return score;
     }
 
+    public void setGradeScore(int score) {
+        this.score = score;
+    }
+
     public void setGrade(String grade) {
         this.grade = grade;
     }

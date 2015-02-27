@@ -69,6 +69,16 @@ public class InternalDB {
         return r;
     }
 
+    public void updateRoute(Route r) {
+        String stmt = "update routes set name = ?, grade = ? where _id = ?;";
+        SQLiteStatement update = database.compileStatement(stmt);
+        update.bindString(1, r.getName());
+        update.bindString(2, r.getGrade());
+        update.bindLong(3, r.getId());
+        r.setGradeScore(getGradeScore(r.getGrade()));
+        update.execute();
+    }
+
     public Ascent addAscent(Project project, Date date, int attempts, int style, String comment, int stars) {
         database.beginTransaction();
         Route route;
@@ -135,15 +145,6 @@ public class InternalDB {
         int totalScore = calculateScore(attempts, style, gradeScore, styleScore);
         update.bindLong(6, totalScore);
         update.bindLong(7, ascent.getId());
-        update.execute();
-    }
-
-    public void updateRoute(Route r) {
-        String stmt = "update routes set name = ?, grade = ? where _id = ?;";
-        SQLiteStatement update = database.compileStatement(stmt);
-        update.bindString(1, r.getName());
-        update.bindString(2, r.getGrade());
-        update.bindLong(3, r.getId());
         update.execute();
     }
 
