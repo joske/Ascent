@@ -83,6 +83,9 @@ public class EditAscentActivity extends MyActivity {
         int gradeIndex = gadapter.getPosition(grade);
         gradeView.setSelection(gradeIndex);
 
+        TextView cragDisplay = (TextView)findViewById(R.id.cragText);
+        cragDisplay.setText(ascent.getRoute().getCrag().getName());
+
         TextView dateDisplay = (TextView)findViewById(R.id.dateDisplay);
         Date date = ascent.getDate();
         String dateString = fmt.format(date);
