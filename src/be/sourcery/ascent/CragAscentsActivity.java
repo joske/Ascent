@@ -82,7 +82,7 @@ public class CragAscentsActivity extends MyActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getTitle().equals("Search")) {
+        if ("Search".equals(item.getTitle())) {
             return onSearchRequested();
         }
         switch (item.getItemId()) {
