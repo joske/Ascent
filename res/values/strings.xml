@@ -8,7 +8,8 @@
 	<string name="commentLabel">Comment</string>
 	<string name="deleteAscent">Delete Ascent</string>
 	<string name="repeatAscent">Repeat Ascent</string>
-	<string name="latestAscents">Ascents</string>
+	<string name="deleteCrag">Delete Crag</string>
+		<string name="latestAscents">Ascents</string>
 	<string name="addAscent">Add Ascent</string>
 	<string name="addProject">Add Project</string>
 	<string name="editAscent">Edit Ascent</string>

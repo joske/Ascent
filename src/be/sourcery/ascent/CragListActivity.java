@@ -20,11 +20,14 @@ package be.sourcery.ascent;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
@@ -53,6 +56,7 @@ public class CragListActivity extends MyActivity {
                 new int[] {R.id.nameCell, R.id.countryCell});
         ListView listView = (ListView)this.findViewById(R.id.list);
         listView.setAdapter(adapter);
+        registerForContextMenu(listView);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> arg0, View view, int position, long row) {
                 long id = adapter.getItemId(position);
@@ -108,6 +112,33 @@ public class CragListActivity extends MyActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.crags_context, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+        Crag crag = db.getCrag(info.id);
+        switch (item.getItemId()) {
+            case R.id.delete:
+                db.deleteCrag(crag);
+                update();
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
+    }
+
+    private void update() {
+        cursor.requery();
+        adapter.notifyDataSetChanged();
     }
 
 }

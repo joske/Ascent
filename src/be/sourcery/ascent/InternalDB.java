@@ -825,6 +825,13 @@ public class InternalDB {
         update.execute();
     }
 
+    public void deleteCrag(Crag crag) {
+        String stmt = "delete from crag where _id = ?;";
+        SQLiteStatement update = database.compileStatement(stmt);
+        update.bindLong(1, crag.getId());
+        update.execute();
+    }
+
     class OpenHelper extends SQLiteOpenHelper {
 
         private static final int DATABASE_VERSION = 10;
@@ -930,5 +937,6 @@ public class InternalDB {
             }
         }
     }
+
 
 }
