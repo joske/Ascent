@@ -9,11 +9,14 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.SimpleCursorAdapter;
@@ -26,6 +29,8 @@ public class SearchAscentsActivity extends ListActivity {
     private ListView listView;
     private TextView textView;
     private long crag_id = -1;
+    private String query;
+    private Cursor cursor;
 
     /** Called when the activity is first created. */
     @Override
@@ -36,6 +41,7 @@ public class SearchAscentsActivity extends ListActivity {
         db = new InternalDB(this);
         textView = (TextView) findViewById(R.id.text);
         listView = (ListView) findViewById(android.R.id.list);
+        registerForContextMenu(listView);
         // Get the intent, verify the action and get the query
         Intent intent = getIntent();
         handleIntent(intent);
@@ -52,17 +58,18 @@ public class SearchAscentsActivity extends ListActivity {
             if (bundle != null) {
                 crag_id = bundle.getLong("crag_id");
             }
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            doMySearch(query);
+            query = intent.getStringExtra(SearchManager.QUERY);
+            doMySearch();
         }
     }
 
-    private void doMySearch(String query) {
-        Cursor cursor = db.searchAscents(query, crag_id);
+    private void doMySearch() {
+        cursor = db.searchAscents(query, crag_id);
         if (cursor == null) {
             // There are no results
             textView.setText(getString(R.string.no_results, new Object[] {query}));
         } else {
+            startManagingCursor(cursor);
             // Display the number of results
             int count = cursor.getCount();
             String countString = getResources().getQuantityString(R.plurals.search_results,
@@ -117,6 +124,49 @@ public class SearchAscentsActivity extends ListActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.context_menu, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+        Ascent ascent = db.getAscent(info.id);
+        switch (item.getItemId()) {
+            case R.id.delete:
+                db.deleteAscent(ascent);
+                update();
+                return true;
+            case R.id.repeat:
+                repeatAscent(ascent);
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        update();
+    }
+
+    private void repeatAscent(Ascent ascent) {
+        Intent myIntent = new Intent(this, RepeatAscentActivity.class);
+        Bundle b = new Bundle();
+        b.putLong("ascentId", ascent.getId());
+        myIntent.putExtras(b);
+        startActivityForResult(myIntent, 1);
+    }
+
+    private void update() {
+        doMySearch();
     }
 
     public void onDestroy() {
