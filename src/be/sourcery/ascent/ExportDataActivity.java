@@ -2,6 +2,7 @@ package be.sourcery.ascent;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.text.DateFormat;
@@ -9,13 +10,22 @@ import java.text.SimpleDateFormat;
 import java.util.Iterator;
 import java.util.List;
 
+import com.dropbox.client2.DropboxAPI;
+import com.dropbox.client2.DropboxAPI.Entry;
+import com.dropbox.client2.android.AndroidAuthSession;
+import com.dropbox.client2.session.AccessTokenPair;
+import com.dropbox.client2.session.AppKeyPair;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,9 +37,16 @@ public class ExportDataActivity extends MyActivity {
 
     private static final int ID_DIALOG_PROGRESS = 1;
     DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
-
+    
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // We create a new AuthSession so that we can use the Dropbox API.
+        AndroidAuthSession session = buildSession();
+        mDBApi = new DropboxAPI<AndroidAuthSession>(session);
+        if (!loggedIn) {
+        	mDBApi.getSession().startOAuth2Authentication(ExportDataActivity.this);
+        }
+        
         setContentView(R.layout.import_data);
         setTitle(R.string.exportData);
         setupActionBar();
@@ -71,7 +88,7 @@ public class ExportDataActivity extends MyActivity {
             button.setEnabled(false);
         }
     }
-
+    
     protected void exportData() {
         InternalDB db = new InternalDB(this);
         int count = 0;
@@ -97,8 +114,17 @@ public class ExportDataActivity extends MyActivity {
                 bw.write(line.toString());
             }
             bw.close();
+            
+            Entry existingEntry = mDBApi.metadata("/ascent.csv", 1, null, false, null);
+            
+            FileInputStream inputStream = new FileInputStream(importFile);
+            String rev = existingEntry != null ? existingEntry.rev : null;
+			Entry response = mDBApi.putFile("/ascent.csv", inputStream,
+                                            importFile.length(), rev, null);
+            Log.i("DbExampleLog", "The uploaded file's rev is: " + response.rev);
             Intent intent = this.getIntent();
             intent.putExtra("count", count);
+            intent.putExtra("rev", response.rev);
             setResult(RESULT_OK, intent);
         } catch (Exception e) {
             setResult(RESULT_CANCELED);
@@ -143,4 +169,20 @@ public class ExportDataActivity extends MyActivity {
             }
         }).start();
     }
+    
+    protected void onResume() {
+        super.onResume();
+
+        if (mDBApi.getSession().authenticationSuccessful()) {
+            try {
+                // Required to complete auth, sets the access token on the session
+                mDBApi.getSession().finishAuthentication();
+                // Store it locally in our app for later use
+                storeAuth(mDBApi.getSession());
+            } catch (IllegalStateException e) {
+                Log.i("Ascent", "Error authenticating", e);
+            }
+        }
+    }
+
 }

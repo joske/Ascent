@@ -139,7 +139,8 @@ public class MainActivity extends MyActivity {
             case (EXPORT_DATA_REQUEST) : {
                 if (resultCode == Activity.RESULT_OK) {
                     int count = data.getIntExtra("count", 0);
-                    Toast.makeText(this, "Exported " + count + " ascents", Toast.LENGTH_SHORT).show();
+                    String rev = data.getStringExtra("rev");
+                    Toast.makeText(this, "Exported " + count + " ascents and added to Dropbox rev " + rev, Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(this, "Failed exporting ascents", Toast.LENGTH_SHORT).show();
                 }

@@ -3,6 +3,7 @@ package be.sourcery.ascent;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -10,11 +11,16 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.dropbox.client2.DropboxAPI;
+import com.dropbox.client2.DropboxAPI.DropboxFileInfo;
+import com.dropbox.client2.android.AndroidAuthSession;
+
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -32,6 +38,13 @@ public class ImportDataActivity extends MyActivity {
         setContentView(R.layout.import_data);
         setTitle(R.string.importData);
         setupActionBar();
+
+        AndroidAuthSession session = buildSession();
+        mDBApi = new DropboxAPI<AndroidAuthSession>(session);
+        if (!loggedIn) {
+        	mDBApi.getSession().startOAuth2Authentication(ImportDataActivity.this);
+        }
+
         // Capture our button from layout
         TextView text = (TextView)findViewById(R.id.importTitle);
         Button button = (Button)findViewById(R.id.ok);
@@ -53,14 +66,14 @@ public class ImportDataActivity extends MyActivity {
         if (Environment.MEDIA_MOUNTED.equals(state)) {
             File sdcard = Environment.getExternalStorageDirectory();
             File importFile = new File(sdcard, "ascent.csv");
-            if (importFile.exists()) {
-                // file exists, enable button
-                text.setText(R.string.importFileFound);
-                button.setEnabled(true);
-            } else {
-                text.setText(R.string.importFileNotFound);
-                button.setEnabled(false);
-            }
+            text.setText(R.string.importFileFound);
+            button.setEnabled(true);
+//            if (importFile.exists()) {
+//                // file exists, enable button
+//            } else {
+//                text.setText(R.string.importFileNotFound);
+//                button.setEnabled(false);
+//            }
         }
     }
 
@@ -71,6 +84,12 @@ public class ImportDataActivity extends MyActivity {
             // routeName;routeGrade;cragName;cragCountry;style;attempts;date;comment;stars
             File sdcard = Environment.getExternalStorageDirectory();
             File importFile = new File(sdcard, "ascent.csv");
+            FileOutputStream outputStream = new FileOutputStream(importFile);
+            DropboxFileInfo info = mDBApi.getFile("/ascent.csv", null, outputStream, null);
+            Log.i("DbExampleLog", "The file's rev is: " + info.getMetadata().rev);
+            
+            // now we have downoaded from dropbox into the sdcard, we can start parsing this
+            
             BufferedReader r = new BufferedReader(new InputStreamReader(new FileInputStream(importFile), "ISO-8859-1"));
             int count = 0;
             Map<String, Crag> crags = new HashMap<String, Crag>();
@@ -140,6 +159,21 @@ public class ImportDataActivity extends MyActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    protected void onResume() {
+        super.onResume();
+
+        if (mDBApi.getSession().authenticationSuccessful()) {
+            try {
+                // Required to complete auth, sets the access token on the session
+                mDBApi.getSession().finishAuthentication();
+                // Store it locally in our app for later use
+                storeAuth(mDBApi.getSession());
+            } catch (IllegalStateException e) {
+                Log.i("Ascent", "Error authenticating", e);
+            }
         }
     }
 
