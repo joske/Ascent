@@ -4,7 +4,8 @@
 	<string name="app_name">Ascent</string>
 	<string name="crag">Crag</string>
 	<string name="top10">Top 10</string>
-	<string name="style_prompt">Style</string>
+	<string name="summary">Overview</string>
+		<string name="style_prompt">Style</string>
 	<string name="commentLabel">Comment</string>
 	<string name="deleteAscent">Delete Ascent</string>
 	<string name="repeatAscent">Repeat Ascent</string>

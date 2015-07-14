@@ -189,6 +189,9 @@ public class MainActivity extends MyActivity {
             case R.id.menu_top10:
                 showTop10();
                 return true;
+            case R.id.menu_summary:
+                showSummary();
+                return true;
             case R.id.menu_grade:
                 showGrades();
                 return true;
@@ -197,6 +200,11 @@ public class MainActivity extends MyActivity {
                 return true;
         }
         return false;
+    }
+
+    private void showSummary() {
+        Intent myIntent = new Intent(this, SummaryActivity.class);
+        startActivity(myIntent);
     }
 
     private void showScore() {

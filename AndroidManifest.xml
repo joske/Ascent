@@ -47,6 +47,7 @@
 		<activity android:name="TickProjectActivity"></activity>
 		<activity android:name="AddProjectActivity"></activity>
 		<activity android:name="Top10Activity"></activity>
+		<activity android:name="SummaryActivity"></activity>
 		<activity
             android:name="com.dropbox.client2.android.AuthActivity"
             android:configChanges="orientation|keyboard"

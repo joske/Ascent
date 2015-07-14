@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import android.app.SearchManager;
 import android.content.ContentValues;
@@ -156,6 +157,22 @@ public class InternalDB {
         return totalScore;
     }
 
+    public List<String> getGrades() {
+        List<String> list = new ArrayList();
+        Cursor cursor = database.query("grades", new String[] { "grade" },
+                null, null, null, null, "score desc");
+        if (cursor.moveToFirst()) {
+            do {
+                String name = cursor.getString(0);
+                list.add(name);
+            } while (cursor.moveToNext());
+        }
+        if (cursor != null && !cursor.isClosed()) {
+            cursor.close();
+        }
+        return list;
+    }
+
     public Project addProject(Route route, int attempts) {
         String stmt = "insert into projects (route_id, attempts) values (?, ?);";
         SQLiteStatement insert = database.compileStatement(stmt);
@@ -225,7 +242,7 @@ public class InternalDB {
     public Crag getCrag(String searchName) {
         Crag c = null;
         Cursor cursor = database.query("crag", new String[] { "_id", "name", "country" },
-                "name like ? ", new String[] { searchName + "%'"}, null, null, "_id desc");
+                "name like ? ", new String[] { searchName + "%"}, null, null, "_id desc");
         if (cursor.moveToFirst()) {
             long id = cursor.getLong(0);
             String name = cursor.getString(1);
@@ -670,6 +687,68 @@ public class InternalDB {
                 "score desc, date desc",
                 "10");
         return cursor;
+    }
+
+    public Map<String, Integer> getSummaryDoneForYear(int year, long crag) {
+        String whereClause = "strftime('%Y', date) = ? and (style_id = 1 or style_id = 2 or style_id = 3)";
+        if (crag != -1) {
+            whereClause += " and crag_id = ?";
+        }
+        String[] selectionArgs = new String[] { "" + year, "" + crag };
+        if (crag == -1) {
+            selectionArgs = new String[] { "" + year};
+        }
+        Cursor cursor = database.query("ascent_routes",
+                new String[] { "route_grade", "count(*)" },
+                whereClause,
+                selectionArgs,
+                "route_grade",
+                null,
+                "route_grade desc",
+                null);
+        Map<String, Integer> list = new HashMap();
+        if (cursor.moveToFirst()) {
+            do {
+                String grade = cursor.getString(0);
+                int count = cursor.getInt(1);
+                list.put(grade, Integer.valueOf(count));
+            } while (cursor.moveToNext());
+        }
+        if (cursor != null && !cursor.isClosed()) {
+            cursor.close();
+        }
+        return list;
+    }
+
+    public Map<String, Integer> getSummaryTriedForYear(int year, long crag) {
+        String whereClause = "strftime('%Y', date) = ? and style_id = 7";
+        if (crag != -1) {
+            whereClause += " and crag_id = ?";
+        }
+        String[] selectionArgs = new String[] { "" + year, "" + crag };
+        if (crag == -1) {
+            selectionArgs = new String[] { "" + year};
+        }
+        Cursor cursor = database.query("ascent_routes",
+                new String[] { "route_grade", "count(*)" },
+                whereClause,
+                selectionArgs,
+                "route_grade",
+                null,
+                "route_grade desc",
+                null);
+        Map<String, Integer> list = new HashMap();
+        if (cursor.moveToFirst()) {
+            do {
+                String grade = cursor.getString(0);
+                int count = cursor.getInt(1);
+                list.put(grade, Integer.valueOf(count));
+            } while (cursor.moveToNext());
+        }
+        if (cursor != null && !cursor.isClosed()) {
+            cursor.close();
+        }
+        return list;
     }
 
     public int getScoreForYear(int year) {
