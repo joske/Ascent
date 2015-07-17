@@ -401,6 +401,52 @@ public class InternalDB {
         return cursor;
     }
 
+    public List<Ascent> getAscents(String grade, int year, long crag) {
+        List<Ascent> list = new ArrayList<Ascent>();
+        String whereClause = "strftime('%Y', date) = ? and (style_id = 1 or style_id = 2 or style_id = 3) and route_grade = ?";
+        if (crag != -1) {
+            whereClause += " and crag_id = ?";
+        }
+        String[] selectionArgs = new String[] { "" + year, "" + grade, "" + crag };
+        if (crag == -1) {
+            selectionArgs = new String[] { "" + year, "" + grade};
+        }
+        Cursor cursor = database.query("ascent_routes",
+                new String[] { "_id", "route_id", "attempts", "style_id", "date", "comment", "stars", "score" },
+                whereClause, selectionArgs, null, null, "date desc, _id asc");
+        if (cursor.moveToFirst()) {
+            do {
+                long id = cursor.getLong(0);
+                long route_id = cursor.getLong(1);
+                int attempts = cursor.getInt(2);
+                int style = cursor.getInt(3);
+                String date = cursor.getString(4);
+                String comment = cursor.getString(5);
+                int stars = cursor.getInt(6);
+                Ascent a = new Ascent();
+                Route r = getRoute(route_id);
+                a.setId(id);
+                a.setRoute(r);
+                a.setStyle(style);
+                a.setAttempts(attempts);
+                a.setComment(comment);
+                a.setStars(stars);
+                a.setScore(cursor.getInt(7));
+                try {
+                    if (date != null) {
+                        a.setDate(fmt.parse(date));
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                list.add(a);
+            } while (cursor.moveToNext());
+        }
+        if (cursor != null && !cursor.isClosed()) {
+            cursor.close();
+        }
+        return list;
+    }
 
     public List<Ascent> getAscents() {
         List<Ascent> list = new ArrayList<Ascent>();

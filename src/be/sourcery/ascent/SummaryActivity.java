@@ -17,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 
 
@@ -93,7 +94,7 @@ public class SummaryActivity extends MyActivity {
         ListView listView = (ListView)this.findViewById(R.id.list);
         String[] from = new String[] {"grade", "done", "tried"};
         int[] to = new int[] { R.id.gradeColumn, R.id.doneColumn, R.id.triedColumn};
-        List<Map<String, String>> data = new ArrayList();
+        final List<Map<String, String>> data = new ArrayList();
         for (Iterator iterator = grades.iterator(); iterator.hasNext();) {
             String grade = (String)iterator.next();
             if (summaryDoneForYear.containsKey(grade) || summaryTriedForYear.containsKey(grade)) {
@@ -114,6 +115,23 @@ public class SummaryActivity extends MyActivity {
         }
         SimpleAdapter adapter = new SimpleAdapter(this, data, R.layout.summary_item, from, to);
         listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> arg0, View view, int position, long row) {
+                Map<String, String> map = data.get((int)row);
+                String grade = map.get("grade");
+                showDetails(grade);
+            }
+        });
+    }
+
+    protected void showDetails(String grade) {
+        List<Ascent> ascents = db.getAscents(grade, year, crag);
+        StringBuilder buf = new StringBuilder();
+        for (Iterator iterator = ascents.iterator(); iterator.hasNext();) {
+            Ascent ascent = (Ascent)iterator.next();
+            buf.append(ascent.toString()).append("\n");
+        }
+        Toast.makeText(this, buf.toString(), Toast.LENGTH_LONG).show();;
     }
 
     public void onDestroy() {
