@@ -72,6 +72,24 @@ public class Ascent {
         return style;
     }
 
+    public String getStyleString() {
+        switch (style) {
+            case 1:
+                return "OS";
+            case 2:
+                return "FL";
+            case 3:
+                return "RP";
+            case 4:
+                return "TP";
+            case 5:
+                return "Rep";
+            case 6:
+                return "MP";
+            default:
+                return "AT";
+        }
+    }
 
     public void setStyle(int style) {
         this.style = style;

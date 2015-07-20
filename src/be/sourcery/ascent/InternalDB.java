@@ -391,14 +391,22 @@ public class InternalDB {
 
     public List<Ascent> getAscents(String grade, int year, long crag) {
         List<Ascent> list = new ArrayList<Ascent>();
-        String whereClause = "strftime('%Y', date) = ? and (style_id = 1 or style_id = 2 or style_id = 3) and route_grade = ?";
+        String whereClause = "(style_id = 1 or style_id = 2 or style_id = 3) and route_grade = ?";
+        if (year != -1) {
+            whereClause += " and strftime('%Y', date) = ?";
+        }
         if (crag != -1) {
             whereClause += " and crag_id = ?";
         }
-        String[] selectionArgs = new String[] { "" + year, "" + grade, "" + crag };
-        if (crag == -1) {
-            selectionArgs = new String[] { "" + year, "" + grade};
+        List<String> selectionList = new ArrayList();
+        selectionList.add("" + grade);
+        if (year != -1) {
+            selectionList.add("" + year);
         }
+        if (crag != -1) {
+            selectionList.add("" + crag);
+        }
+        String[] selectionArgs = selectionList.toArray(new String[selectionList.size()]);
         Cursor cursor = database.query("ascent_routes",
                 new String[] { "_id", "route_id", "attempts", "style_id", "date", "comment", "stars", "score" },
                 whereClause, selectionArgs, null, null, "date desc, _id asc");
@@ -716,7 +724,7 @@ public class InternalDB {
         if (crag != -1) {
             selectionList.add("" + crag);
         }
-        String[] selectionArgs = (String[])selectionList.toArray();
+        String[] selectionArgs = selectionList.toArray(new String[selectionList.size()]);
         Cursor cursor = database.query("ascent_routes",
                 new String[] { "route_grade", "count(*)" },
                 whereClause,

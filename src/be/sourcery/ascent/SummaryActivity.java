@@ -1,5 +1,6 @@
 package be.sourcery.ascent;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -7,8 +8,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,7 +20,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 
 
@@ -68,6 +70,7 @@ public class SummaryActivity extends MyActivity {
         Spinner yearSpinner = (Spinner) findViewById(R.id.year_spinner);
         int firstYear = db.getFirstYear();
         List<String> years = new ArrayList<String>();
+        years.add("*");
         for (int i = year; i >= firstYear; i--) {
             years.add("" + i);
         }
@@ -77,7 +80,11 @@ public class SummaryActivity extends MyActivity {
         yearSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 
             public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long rowId) {
-                year = (int)(thisYear - rowId);
+                if (rowId == 0) {
+                    year = -1;
+                } else {
+                    year = (int)(thisYear - rowId);
+                }
                 updateView();
             }
 
@@ -126,13 +133,31 @@ public class SummaryActivity extends MyActivity {
 
     protected void showDetails(String grade) {
         List<Ascent> ascents = db.getAscents(grade, year, crag);
-        StringBuilder buf = new StringBuilder();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        builder.setView(inflater.inflate(R.layout.summary_detail, null));
+        AlertDialog dialog = builder.create();
+        dialog.show();
+        ListView listView = (ListView)dialog.findViewById(R.id.detailList);
+        String[] from = new String[] {"date", "style", "route_grade", "route_name", "comment"};
+        int[] to = new int[] {R.id.dateCell, R.id.styleCell, R.id.gradeCell, R.id.nameCell, R.id.commentCell};
+        final List<Map<String, String>> data = new ArrayList();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         for (Iterator iterator = ascents.iterator(); iterator.hasNext();) {
             Ascent ascent = (Ascent)iterator.next();
-            buf.append(ascent.toString()).append("\n");
+            Map<String, String> line = new HashMap();
+            line.put("date", format.format(ascent.getDate()));
+            line.put("style", ascent.getStyleString());
+            line.put("route_grade", ascent.getRoute().getGrade());
+            line.put("route_name", ascent.getRoute().getName());
+            line.put("comment", ascent.getComment());
+            data.add(line);
         }
-        Toast.makeText(this, buf.toString(), Toast.LENGTH_LONG).show();;
+
+        SimpleAdapter adapter = new SimpleAdapter(this, data, R.layout.ascent_list_item, from, to);
+        listView.setAdapter(adapter);
     }
+
 
     public void onDestroy() {
         super.onDestroy();
