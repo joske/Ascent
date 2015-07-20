@@ -590,8 +590,11 @@ public class InternalDB {
         return cursor;
     }
 
-    public int getCountAllTime(long cragId) {
+    protected int getCount(long cragId, boolean last12Months) {
         String whereClause = "style_id <> 7";
+        if (last12Months) {
+            whereClause += " and (julianday(date('now'))- julianday(date) < 365)";
+        }
         String[] selectionArgs = null;
         if (cragId != -1) {
             whereClause += " and crag_id = ?";
@@ -608,33 +611,33 @@ public class InternalDB {
         int count = cursor.getCount();
         cursor.close();
         return count;
+    }
+
+    public int getCountAllTime(long cragId) {
+        return getCount(cragId, false);
     }
 
     public int getCountLast12Months(long cragId) {
-        String whereClause = "julianday(date('now'))- julianday(date) < 365 and style_id <> 7";
-        String[] selectionArgs = null;
-        if (cragId != -1) {
-            whereClause += " and crag_id = ?";
-            selectionArgs = new String[] { "" + cragId};
-        }
-        List<Ascent> list = new ArrayList<Ascent>();
-        Cursor cursor = database.query("ascent_routes",
-                new String[] { "_id", "date" },
-                whereClause,
-                selectionArgs,
-                null,
-                null,
-                "date desc");
-        int count = cursor.getCount();
-        cursor.close();
-        return count;
+        return getCount(cragId, true);
     }
 
     public int getScoreLast12Months() {
+        return getScore(true);
+    }
+
+    public int getScoreAllTime() {
+        return getScore(false);
+    }
+
+    protected int getScore(boolean last12Months) {
+        String whereClause = "style_id <> 7";
+        if (last12Months) {
+            whereClause += " and (julianday(date('now'))- julianday(date) < 365)";
+        }
         List<Ascent> list = new ArrayList<Ascent>();
         Cursor cursor = database.query("ascent_routes",
                 new String[] { "score", "date", "route_name", "route_grade" },
-                "julianday(date('now'))- julianday(date) < 365 and style_id <> 7",
+                whereClause,
                 null,
                 null,
                 null,
@@ -665,29 +668,6 @@ public class InternalDB {
         return cursor;
     }
 
-    public int getScoreAllTime() {
-        List<Ascent> list = new ArrayList<Ascent>();
-        Cursor cursor = database.query("ascent_routes",
-                new String[] { "score", "date", "route_name", "route_grade" },
-                "style_id <> 7",
-                null,
-                null,
-                null,
-                "score desc, date desc",
-                "10");
-        int total = 0;
-        if (cursor.moveToFirst()) {
-            do {
-                int score = cursor.getInt(0);
-                String name = cursor.getString(2);
-                String grade = cursor.getString(3);
-                total += score;
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        return total;
-    }
-
     protected Cursor getTop10AllTime() {
         Cursor cursor = database.query("ascent_routes",
                 new String[] { "_id", "date", "style", "route_grade", "route_name", "score" },
@@ -713,45 +693,30 @@ public class InternalDB {
     }
 
     public Map<String, Integer> getSummaryDoneForYear(int year, long crag) {
-        String whereClause = "strftime('%Y', date) = ? and (style_id = 1 or style_id = 2 or style_id = 3)";
-        if (crag != -1) {
-            whereClause += " and crag_id = ?";
-        }
-        String[] selectionArgs = new String[] { "" + year, "" + crag };
-        if (crag == -1) {
-            selectionArgs = new String[] { "" + year};
-        }
-        Cursor cursor = database.query("ascent_routes",
-                new String[] { "route_grade", "count(*)" },
-                whereClause,
-                selectionArgs,
-                "route_grade",
-                null,
-                "route_grade desc",
-                null);
-        Map<String, Integer> list = new HashMap();
-        if (cursor.moveToFirst()) {
-            do {
-                String grade = cursor.getString(0);
-                int count = cursor.getInt(1);
-                list.put(grade, Integer.valueOf(count));
-            } while (cursor.moveToNext());
-        }
-        if (cursor != null && !cursor.isClosed()) {
-            cursor.close();
-        }
-        return list;
+        String whereClause = "(style_id = 1 or style_id = 2 or style_id = 3)";
+        return getSummary(year, crag, whereClause);
     }
 
     public Map<String, Integer> getSummaryTriedForYear(int year, long crag) {
-        String whereClause = "strftime('%Y', date) = ? and style_id = 7";
+        String whereClause = "style_id = 7";
+        return getSummary(year, crag, whereClause);
+    }
+
+    protected Map<String, Integer> getSummary(int year, long crag, String whereClause) {
+        if (year != -1) {
+            whereClause += " and strftime('%Y', date) = ?";
+        }
         if (crag != -1) {
             whereClause += " and crag_id = ?";
         }
-        String[] selectionArgs = new String[] { "" + year, "" + crag };
-        if (crag == -1) {
-            selectionArgs = new String[] { "" + year};
+        List<String> selectionList = new ArrayList();
+        if (year != -1) {
+            selectionList.add("" + year);
         }
+        if (crag != -1) {
+            selectionList.add("" + crag);
+        }
+        String[] selectionArgs = (String[])selectionList.toArray();
         Cursor cursor = database.query("ascent_routes",
                 new String[] { "route_grade", "count(*)" },
                 whereClause,
