@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Map;
 
 import android.app.SearchManager;
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -390,17 +389,6 @@ public class InternalDB {
         return project;
     }
 
-    public Cursor getAscentsCursor() {
-        return getAscentsCursor(database);
-    }
-
-    public static Cursor getAscentsCursor(SQLiteDatabase database) {
-        Cursor cursor = database.query("ascent_routes",
-                new String[] { "_id", "route_id", "route_name", "route_grade", "attempts", "style", "date", "stars", "comment" },
-                null, null, null, null, "date desc, _id asc");
-        return cursor;
-    }
-
     public List<Ascent> getAscents(String grade, int year, long crag) {
         List<Ascent> list = new ArrayList<Ascent>();
         String whereClause = "strftime('%Y', date) = ? and (style_id = 1 or style_id = 2 or style_id = 3) and route_grade = ?";
@@ -564,11 +552,16 @@ public class InternalDB {
         return list;
     }
 
-    public Cursor getAscentsCursor(Crag crag) {
-        List<Ascent> list = new ArrayList<Ascent>();
+    public Cursor getAscentsCursor(long cragId) {
+        String whereClause = null;
+        String[] selectionArgs = null;
+        if (cragId != -1) {
+            whereClause = "crag_id = ?";
+            selectionArgs = new String[] { "" + cragId};
+        }
         Cursor cursor = database.query("ascent_routes",
                 new String[] { "_id", "route_id", "route_name", "route_grade", "attempts", "style", "date", "stars", "comment" },
-                "crag_id = ?", new String[] { "" + crag.getId()}, null, null, "date desc, _id asc");
+                whereClause, selectionArgs, null, null, "date desc, _id asc");
         return cursor;
     }
 
@@ -597,40 +590,18 @@ public class InternalDB {
         return cursor;
     }
 
-    public int getCountAllTime() {
-        List<Ascent> list = new ArrayList<Ascent>();
-        Cursor cursor = database.query("ascent_routes",
-                new String[] { "_id", "date" },
-                "style_id <> 7",
-                null,
-                null,
-                null,
-                "date desc");
-        int count = cursor.getCount();
-        cursor.close();
-        return count;
-    }
-
     public int getCountAllTime(long cragId) {
+        String whereClause = "style_id <> 7";
+        String[] selectionArgs = null;
+        if (cragId != -1) {
+            whereClause += " and crag_id = ?";
+            selectionArgs = new String[] { "" + cragId};
+        }
         List<Ascent> list = new ArrayList<Ascent>();
         Cursor cursor = database.query("ascent_routes",
                 new String[] { "_id", "date" },
-                "julianday(date('now'))- julianday(date) < 365 and crag_id = ? and style_id <> 7",
-                new String[] { "" + cragId},
-                null,
-                null,
-                "date desc");
-        int count = cursor.getCount();
-        cursor.close();
-        return count;
-    }
-
-    public int getCountLast12Months() {
-        List<Ascent> list = new ArrayList<Ascent>();
-        Cursor cursor = database.query("ascent_routes",
-                new String[] { "_id", "date" },
-                "julianday(date('now'))- julianday(date) < 365 and style_id <> 7",
-                null,
+                whereClause,
+                selectionArgs,
                 null,
                 null,
                 "date desc");
@@ -640,11 +611,17 @@ public class InternalDB {
     }
 
     public int getCountLast12Months(long cragId) {
+        String whereClause = "julianday(date('now'))- julianday(date) < 365 and style_id <> 7";
+        String[] selectionArgs = null;
+        if (cragId != -1) {
+            whereClause += " and crag_id = ?";
+            selectionArgs = new String[] { "" + cragId};
+        }
         List<Ascent> list = new ArrayList<Ascent>();
         Cursor cursor = database.query("ascent_routes",
                 new String[] { "_id", "date" },
-                "julianday(date('now'))- julianday(date) < 365 and style_id <> 7 and crag_id = ?",
-                new String[] { "" + cragId},
+                whereClause,
+                selectionArgs,
                 null,
                 null,
                 "date desc");
@@ -1023,35 +1000,6 @@ public class InternalDB {
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            if (oldVersion == 3) {
-                db.execSQL("drop view ascent_routes;");
-                db.execSQL("create view ascent_routes as select a._id as _id, r._id as route_id, r.name as route_name, r.grade as route_grade, a.attempts as attempts, s._id as style_id, s.short_name as style, s.score as style_score, a.date as date, r.crag_id as crag_id, a.score as score, g.score as grade_score from ascents a inner join routes r on a.route_id = r._id inner join styles s on a.style_id = s._id inner join grades g on g.grade = r.grade;");
-            }
-            if (oldVersion == 4) {
-                db.execSQL("drop view ascent_routes;");
-                db.execSQL("create view ascent_routes as select a._id as _id, r._id as route_id, r.name as route_name, r.grade as route_grade, a.attempts as attempts, a.comment as comment, s._id as style_id, s.short_name as style, s.score as style_score, a.date as date, r.crag_id as crag_id, a.score as score, g.score as grade_score from ascents a inner join routes r on a.route_id = r._id inner join styles s on a.style_id = s._id inner join grades g on g.grade = r.grade;");
-            }
-            if (oldVersion == 5) {
-                db.execSQL("drop view ascent_routes;");
-                db.execSQL("create view ascent_routes as select a._id as _id, r._id as route_id, r.name as route_name, r.grade as route_grade, a.attempts as attempts, a.comment as comment, s._id as style_id, s.short_name as style, s.score as style_score, a.stars as stars, a.date as date, r.crag_id as crag_id, a.score as score, g.score as grade_score from ascents a inner join routes r on a.route_id = r._id inner join styles s on a.style_id = s._id inner join grades g on g.grade = r.grade;");
-            }
-            if (oldVersion == 6) {
-                db.execSQL("insert into styles values (7, 'Tried', 'AT', 0);");
-            }
-            if (oldVersion == 7) {
-                db.execSQL("CREATE VIRTUAL TABLE " + FTSASCENTS + " USING fts3 (" + KEY_ROUTE + ", " + KEY_GRADE + ");");
-                Cursor ascentsCursor = getAscentsCursor(db);
-                if (ascentsCursor.moveToFirst()) {
-                    do {
-                        String name = ascentsCursor.getString(2);
-                        String grade = ascentsCursor.getString(3);
-                        ContentValues initialValues = new ContentValues();
-                        initialValues.put(KEY_ROUTE, name);
-                        initialValues.put(KEY_GRADE, grade);
-                        db.insert(FTSASCENTS, null, initialValues);
-                    } while (ascentsCursor.moveToNext());
-                }
-            }
             if (oldVersion == 8) {
                 db.execSQL("drop view ascent_routes;");
                 db.execSQL("create view ascent_routes as select a._id as _id, r._id as route_id, r.name as route_name, r.grade as route_grade, a.attempts as attempts, a.comment as comment, s._id as style_id, s.short_name as style, s.score as style_score, a.stars as stars, a.date as date, r.crag_id as crag_id, a.score as score, g.score as grade_score, c.name as crag_name from ascents a inner join routes r on a.route_id = r._id inner join styles s on a.style_id = s._id inner join grades g on g.grade = r.grade inner join crag c on r.crag_id = c._id;");

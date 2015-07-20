@@ -17,10 +17,14 @@ package be.sourcery.ascent;
  *  along with Ascent.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 import android.app.Activity;
 import android.app.SearchManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -33,10 +37,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,6 +57,8 @@ public class MainActivity extends MyActivity {
     private InternalDB db;
     private ListView listView;
     private Cursor cursor;
+    private long crag = -1;
+    private List<String> crags;
 
     /** Called when the activity is first created. */
     @Override
@@ -63,14 +72,33 @@ public class MainActivity extends MyActivity {
     }
 
     private void populateList() {
-        cursor = db.getAscentsCursor();
-        startManagingCursor(cursor);
-        adapter = new SimpleCursorAdapter(getApplicationContext(), R.layout.ascent_list_item, cursor,
-                new String[] {"date", "style", "route_grade", "route_name", "comment"},
-                new int[] {R.id.dateCell, R.id.styleCell, R.id.gradeCell, R.id.nameCell, R.id.commentCell},
-                0);
+        crags = new ArrayList<String>();
+        List<Crag> allCrags = db.getCrags();
+        crags.add("*");
+        for (Iterator iterator = allCrags.iterator(); iterator.hasNext();) {
+            Crag crag = (Crag)iterator.next();
+            crags.add(crag.getName());
+        }
+        Spinner cragSpinner = (Spinner) findViewById(R.id.crag_spinner);
+        cragSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+            public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long rowId) {
+                if (rowId == 0) {
+                    crag = -1;
+                } else {
+                    String cragName = crags.get((int)rowId);
+                    crag = db.getCrag(cragName).getId();
+                }
+                update();
+            }
+
+            public void onNothingSelected(AdapterView<?> arg0) {
+            }
+        });
+        ArrayAdapter ca = new ArrayAdapter(this, android.R.layout.simple_spinner_item, crags);
+        cragSpinner.setAdapter(ca);
+        cragSpinner.setEnabled(true);
         listView = (ListView)this.findViewById(R.id.list);
-        listView.setAdapter(adapter);
         registerForContextMenu(listView);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> arg0, View view, int position, long row) {
@@ -82,11 +110,16 @@ public class MainActivity extends MyActivity {
     }
 
     private void update() {
-        cursor.requery();
-        adapter.notifyDataSetChanged();
+        cursor = db.getAscentsCursor(crag);
+        startManagingCursor(cursor);
+        adapter = new SimpleCursorAdapter(getApplicationContext(), R.layout.ascent_list_item, cursor,
+                new String[] {"date", "style", "route_grade", "route_name", "comment"},
+                new int[] {R.id.dateCell, R.id.styleCell, R.id.gradeCell, R.id.nameCell, R.id.commentCell},
+                0);
+        listView.setAdapter(adapter);
         TextView countView = (TextView) this.findViewById(R.id.countView);
-        int count12 = db.getCountLast12Months();
-        int count = db.getCountAllTime();
+        int count12 = db.getCountLast12Months(crag);
+        int count = db.getCountAllTime(crag);
         countView.setText("Ascents: " + count + " - 12M: " + count12);
         TextView scoreView = (TextView) this.findViewById(R.id.scoreView);
         Date now = new Date();
@@ -101,8 +134,19 @@ public class MainActivity extends MyActivity {
         // Associate searchable configuration with the SearchView
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        ComponentName cn = new ComponentName(this, SearchAscentsActivity.class);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(cn));
 
+        return true;
+    }
+
+    @Override
+    public boolean onSearchRequested() {
+        Bundle appDataBundle = new Bundle();
+        if (crag != -1) {
+            appDataBundle.putLong("crag_id", crag);
+        }
+        startSearch(null, false, appDataBundle, false);
         return true;
     }
 
@@ -170,6 +214,9 @@ public class MainActivity extends MyActivity {
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getTitle() != null && "Search".equals(item.getTitle())) {
+            return onSearchRequested();
+        }
         switch (item.getItemId()) {
             case R.id.menu_crags:
                 cragsList();
@@ -248,13 +295,13 @@ public class MainActivity extends MyActivity {
         startActivityForResult(myIntent, REPEAT_REQUEST);
     }
 
-    private void addCrag() {
-        Intent myIntent = new Intent(this, AddCragActivity.class);
-        startActivityForResult(myIntent, 0);
-    }
-
     private void addAscent() {
         Intent myIntent = new Intent(this, AddAscentActivity.class);
+        if (crag != -1) {
+            Bundle b = new Bundle();
+            b.putLong("cragId", crag);
+            myIntent.putExtras(b);
+        }
         startActivityForResult(myIntent, 0);
     }
 

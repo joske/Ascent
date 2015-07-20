@@ -26,7 +26,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
@@ -56,14 +55,6 @@ public class CragListActivity extends MyActivity {
                 new int[] {R.id.nameCell, R.id.countryCell});
         ListView listView = (ListView)this.findViewById(R.id.list);
         listView.setAdapter(adapter);
-        registerForContextMenu(listView);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> arg0, View view, int position, long row) {
-                long id = adapter.getItemId(position);
-                Crag crag = db.getCrag(id);
-                showAscents(crag);
-            }
-        });
     }
 
     public void onDestroy() {
@@ -76,14 +67,6 @@ public class CragListActivity extends MyActivity {
         cursor.requery();
         TextView countView = (TextView) this.findViewById(R.id.countView);
         countView.setText(cursor.getCount() + " crags in DB");
-    }
-
-    private void showAscents(Crag crag) {
-        Intent myIntent = new Intent(this, CragAscentsActivity.class);
-        Bundle b = new Bundle();
-        b.putLong("cragId", crag.getId());
-        myIntent.putExtras(b);
-        startActivity(myIntent);
     }
 
     private void addCrag() {
