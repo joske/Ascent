@@ -83,7 +83,7 @@ public class SummaryActivity extends MyActivity {
                 if (rowId == 0) {
                     year = -1;
                 } else {
-                    year = (int)(thisYear - rowId);
+                    year = (int)(thisYear - rowId + 1);
                 }
                 updateView();
             }
