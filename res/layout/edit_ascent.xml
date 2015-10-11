@@ -20,7 +20,7 @@
 			android:id="@+id/routename"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			android:inputType="text" />
+			android:inputType="textCapWords" />
 
 		<TextView
 			android:id="@+id/craglabel"
