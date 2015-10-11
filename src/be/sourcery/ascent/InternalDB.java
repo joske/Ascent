@@ -391,7 +391,7 @@ public class InternalDB {
 
     public List<Ascent> getAscents(String grade, int year, long crag) {
         List<Ascent> list = new ArrayList<Ascent>();
-        String whereClause = "(style_id = 1 or style_id = 2 or style_id = 3) and route_grade = ?";
+        String whereClause = "(style_id = 1 or style_id = 2 or style_id = 3 or style_id = 7) and route_grade = ?";
         if (year != -1) {
             whereClause += " and strftime('%Y', date) = ?";
         }
