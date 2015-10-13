@@ -143,9 +143,7 @@ public class MainActivity extends MyActivity {
     @Override
     public boolean onSearchRequested() {
         Bundle appDataBundle = new Bundle();
-        if (crag != -1) {
-            appDataBundle.putLong("crag_id", crag);
-        }
+        appDataBundle.putLong("crag_id", crag);
         startSearch(null, false, appDataBundle, false);
         return true;
     }
