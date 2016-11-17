@@ -7,13 +7,30 @@
 	<LinearLayout
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
+		android:paddingBottom="10dp"
+		android:paddingTop="10dp"
+		android:background="@drawable/crag_spinner_shape"
 		android:orientation="horizontal" >
 
+		<TextView
+		    android:id="@+id/yearsLabel"
+		    android:layout_width="80dp"
+		    android:layout_height="wrap_content"
+		    android:text="@string/years"
+		    android:textSize="18sp"
+		    android:textStyle="bold" />
 		<Spinner
 			android:id="@+id/year_spinner"
-			android:layout_width="200dp"
+			android:layout_width="50dp"
 			android:layout_height="fill_parent" />
 
+		<TextView
+		    android:id="@+id/cragsLabel"
+		    android:layout_width="80dp"
+		    android:layout_height="wrap_content"
+		    android:text="@string/crags"
+		    android:textSize="18sp"
+		    android:textStyle="bold" />
 		<Spinner
 			android:id="@+id/crag_spinner"
 			android:layout_width="200dp"

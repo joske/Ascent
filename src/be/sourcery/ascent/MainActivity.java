@@ -240,9 +240,9 @@ public class MainActivity extends MyActivity {
             case R.id.menu_grade:
                 showGrades();
                 return true;
-            case R.id.menu_projects:
-                projectsList();
-                return true;
+//            case R.id.menu_projects:
+//                projectsList();
+//                return true;
         }
         return false;
     }

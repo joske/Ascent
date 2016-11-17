@@ -13,6 +13,8 @@ import org.achartengine.renderer.XYSeriesRenderer;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
 
@@ -51,13 +53,16 @@ public class ScoreGraphActivity extends MyActivity {
     private XYMultipleSeriesRenderer getRenderer(double minX, double maxX, double minY, double maxY) {
         XYMultipleSeriesRenderer renderer = new XYMultipleSeriesRenderer();
         XYSeriesRenderer r = new XYSeriesRenderer();
-        r.setColor(Color.WHITE);
+        r.setColor(Color.BLUE);
         r.setPointStyle(PointStyle.SQUARE);
         r.setFillBelowLine(false);
         r.setFillPoints(true);
         renderer.addSeriesRenderer(r);
         renderer.setAxesColor(Color.DKGRAY);
-        renderer.setLabelsColor(Color.WHITE);
+        DisplayMetrics metrics = getResources().getDisplayMetrics();
+        float val = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 14, metrics);
+        renderer.setLabelsTextSize(val);
+        renderer.setLabelsColor(Color.BLACK);
         renderer.setDisplayChartValues(true);
         renderer.setChartValuesTextSize(25);
         renderer.setXAxisMin(minX);

@@ -24,15 +24,15 @@ public class GradeView extends View {
         super(context, attrs);
         paint = new Paint();
         paint.setStyle(Paint.Style.STROKE);
-        paint.setColor(0x80FFFFFF);
+        paint.setColor(0x80000000);
         osPaint = new Paint();
         osPaint.setStyle(Paint.Style.FILL);
-        osPaint.setColor(0x80FFFFFF);
-        flPaint = new Paint(osPaint);
+        osPaint.setColor(0x80000000);
+        flPaint = new Paint();
         flPaint.setColor(0x80FFFF00);
-        rpPaint = new Paint(osPaint);
+        rpPaint = new Paint();
         rpPaint.setColor(0x80FF0000);
-        tpPaint = new Paint(osPaint);
+        tpPaint = new Paint();
         tpPaint.setColor(0x80D0D0D0);
     }
 

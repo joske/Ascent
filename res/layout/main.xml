@@ -8,6 +8,7 @@
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:paddingBottom="10dp"
+		android:paddingTop="10dp"
 		android:orientation="horizontal" >
 
 		<TextView
@@ -33,6 +34,8 @@
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:paddingBottom="10dp"
+		android:paddingTop="10dp"
+		android:background="@drawable/crag_spinner_shape"
 		android:orientation="horizontal" >
 
 		<TextView
