@@ -24,7 +24,7 @@
 			android:id="@+id/scoreView"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:gravity="end"
+			android:layout_gravity="right"
 			android:text="Score: 10000 - All Time: 11000 - Year: 9500"
 			android:textSize="12sp" >
 		</TextView>
