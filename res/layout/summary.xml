@@ -9,7 +9,8 @@
 		android:layout_height="wrap_content"
 		android:paddingBottom="10dp"
 		android:paddingTop="10dp"
-		android:background="@drawable/crag_spinner_shape"
+		android:elevation="5dp"
+		android:background="@android:color/white"
 		android:orientation="horizontal" >
 
 		<TextView
