@@ -70,11 +70,12 @@ public class InternalDB {
     }
 
     public void updateRoute(Route r) {
-        String stmt = "update routes set name = ?, grade = ? where _id = ?;";
+        String stmt = "update routes set name = ?, grade = ?, crag_id = ? where _id = ?;";
         SQLiteStatement update = database.compileStatement(stmt);
         update.bindString(1, r.getName());
         update.bindString(2, r.getGrade());
-        update.bindLong(3, r.getId());
+        update.bindLong(3, r.getCrag().getId());
+        update.bindLong(4, r.getId());
         r.setGradeScore(getGradeScore(r.getGrade()));
         update.execute();
     }
