@@ -10,19 +10,12 @@ import java.text.SimpleDateFormat;
 import java.util.Iterator;
 import java.util.List;
 
-import com.dropbox.client2.DropboxAPI;
-import com.dropbox.client2.DropboxAPI.Entry;
-import com.dropbox.client2.android.AndroidAuthSession;
-import com.dropbox.client2.session.AccessTokenPair;
-import com.dropbox.client2.session.AppKeyPair;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -32,20 +25,22 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.dropbox.core.DbxRequestConfig;
+import com.dropbox.core.android.Auth;
+import com.dropbox.core.v2.DbxClientV2;
+import com.dropbox.core.v2.files.DbxUserFilesRequests;
+import com.dropbox.core.v2.files.FileMetadata;
+import com.dropbox.core.v2.files.WriteMode;
+
 
 public class ExportDataActivity extends MyActivity {
 
     private static final int ID_DIALOG_PROGRESS = 1;
     DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+	private DbxClientV2 client;
     
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // We create a new AuthSession so that we can use the Dropbox API.
-        AndroidAuthSession session = buildSession();
-        mDBApi = new DropboxAPI<AndroidAuthSession>(session);
-        if (!loggedIn) {
-        	mDBApi.getSession().startOAuth2Authentication(ExportDataActivity.this);
-        }
         
         setContentView(R.layout.import_data);
         setTitle(R.string.exportData);
@@ -81,12 +76,13 @@ public class ExportDataActivity extends MyActivity {
         String state = Environment.getExternalStorageState();
         if (Environment.MEDIA_MOUNTED.equals(state)) {
             text.setText(R.string.exportToFile);
-            File sdcard = Environment.getExternalStorageDirectory();
             button.setEnabled(true);
         } else {
             text.setText(R.string.notMounted);
             button.setEnabled(false);
         }
+        // We create a new AuthSession so that we can use the Dropbox API.
+       	Auth.startOAuth2Authentication(getApplicationContext(), getString(R.string.APP_KEY));
     }
     
     protected void exportData() {
@@ -99,8 +95,8 @@ public class ExportDataActivity extends MyActivity {
             File importFile = new File(sdcard, "ascent-export.csv");
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(importFile), "ISO-8859-1"));
             List<Ascent> ascents = db.getAscents();
-            for (Iterator iterator = ascents.iterator(); iterator.hasNext(); count++) {
-                Ascent ascent = (Ascent)iterator.next();
+            for (Iterator<Ascent> iterator = ascents.iterator(); iterator.hasNext(); count++) {
+                Ascent ascent = iterator.next();
                 StringBuffer line = new StringBuffer(200);
                 line.append(ascent.getRoute().getName()).append(";");
                 line.append(ascent.getRoute().getGrade()).append(";");
@@ -115,16 +111,13 @@ public class ExportDataActivity extends MyActivity {
             }
             bw.close();
             
-            Entry existingEntry = mDBApi.metadata("/ascent.csv", 1, null, false, null);
-            
+            DbxUserFilesRequests files = client.files();
             FileInputStream inputStream = new FileInputStream(importFile);
-            String rev = existingEntry != null ? existingEntry.rev : null;
-			Entry response = mDBApi.putFile("/ascent.csv", inputStream,
-                                            importFile.length(), rev, null);
-            Log.i("DbExampleLog", "The uploaded file's rev is: " + response.rev);
+            FileMetadata response = files.uploadBuilder("/ascent.csv").withMode(WriteMode.OVERWRITE).uploadAndFinish(inputStream);
+            Log.i("DbExampleLog", "The uploaded file's rev is: " + response.getRev());
             Intent intent = this.getIntent();
             intent.putExtra("count", count);
-            intent.putExtra("rev", response.rev);
+            intent.putExtra("rev", response.getRev());
             setResult(RESULT_OK, intent);
         } catch (Exception e) {
             setResult(RESULT_CANCELED);
@@ -172,16 +165,12 @@ public class ExportDataActivity extends MyActivity {
     
     protected void onResume() {
         super.onResume();
-
-        if (mDBApi.getSession().authenticationSuccessful()) {
-            try {
-                // Required to complete auth, sets the access token on the session
-                mDBApi.getSession().finishAuthentication();
-                // Store it locally in our app for later use
-                storeAuth(mDBApi.getSession());
-            } catch (IllegalStateException e) {
-                Log.i("Ascent", "Error authenticating", e);
-            }
+        loadAuth();
+        SharedPreferences prefs = getSharedPreferences(ACCOUNT_PREFS_NAME, 0);
+        String accessToken = prefs.getString("access-token", null);
+        if (accessToken != null) {
+	        DbxRequestConfig requestConfig = new DbxRequestConfig("ascent");
+	        client = new DbxClientV2(requestConfig, accessToken);
         }
     }
 

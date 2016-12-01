@@ -41,15 +41,12 @@ public class InternalDB {
     public static final String KEY_ROUTE = SearchManager.SUGGEST_COLUMN_TEXT_1;
     public static final String KEY_GRADE = SearchManager.SUGGEST_COLUMN_TEXT_2;
     private static final String FTSASCENTS = "FTascents";
-    private static final String DATABASE_NAME = "ascent";
 
     private SQLiteDatabase database;
-    private final Context ctx;
     private OpenHelper openHelper;
     private DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
 
     public InternalDB(Context ctx) {
-        this.ctx = ctx;
         openHelper = new OpenHelper(ctx);
         this.database = openHelper.getWritableDatabase();
     }
@@ -158,7 +155,7 @@ public class InternalDB {
     }
 
     public List<String> getGrades() {
-        List<String> list = new ArrayList();
+        List<String> list = new ArrayList<String>();
         Cursor cursor = database.query("grades", new String[] { "grade" },
                 null, null, null, null, "score desc");
         if (cursor.moveToFirst()) {
@@ -193,7 +190,6 @@ public class InternalDB {
     }
 
     public Cursor getCragsCrusor() {
-        List<Crag> list = new ArrayList<Crag>();
         Cursor cursor = database.query("crag", new String[] { "_id", "name", "country" },
                 null, null, null, null, "name asc");
         return cursor;
@@ -340,7 +336,6 @@ public class InternalDB {
     }
 
     public Cursor getProjectsCursor() {
-        List<Project> list = new ArrayList<Project>();
         Cursor cursor = database.query("project_routes", new String[] { "_id", "route_name", "route_grade", "crag_name", "attempts"},
                 null, null, null, null, "_id desc");
         return cursor;
@@ -399,7 +394,7 @@ public class InternalDB {
         if (crag != -1) {
             whereClause += " and crag_id = ?";
         }
-        List<String> selectionList = new ArrayList();
+        List<String> selectionList = new ArrayList<String>();
         selectionList.add("" + grade);
         if (year != -1) {
             selectionList.add("" + year);
@@ -491,7 +486,6 @@ public class InternalDB {
             do {
                 long id = cursor.getLong(0);
                 long route_id = cursor.getLong(1);
-                String route_grade = cursor.getString(2);
                 int attempts = cursor.getInt(3);
                 int style = cursor.getInt(4);
                 String date = cursor.getString(5);
@@ -530,7 +524,6 @@ public class InternalDB {
             do {
                 long id = cursor.getLong(0);
                 long route_id = cursor.getLong(1);
-                String route_grade = cursor.getString(2);
                 int attempts = cursor.getInt(3);
                 int style = cursor.getInt(4);
                 String date = cursor.getString(5);
@@ -575,7 +568,6 @@ public class InternalDB {
     }
 
     public Cursor getAscentsCursor(String grade, boolean allTime) {
-        List<Ascent> list = new ArrayList<Ascent>();
         Cursor cursor = database.query("ascent_routes",
                 new String[] { "_id", "route_id", "route_name", "route_grade", "attempts", "style", "date" },
                 "route_grade = ?" + (allTime ? "" : " and julianday(date('now'))- julianday(date) < 365"),
@@ -584,7 +576,6 @@ public class InternalDB {
     }
 
     public Cursor getAscentsCursorForHighestScoredLast12Months() {
-        List<Ascent> list = new ArrayList<Ascent>();
         Cursor cursor = database.query("ascent_routes",
                 new String[] { "_id", "route_id", "route_name", "route_grade", "attempts", "style", "date", "score" },
                 "julianday(date('now'))- julianday(date) < 365", null, null, null, "date desc, score desc",  "10");
@@ -592,7 +583,6 @@ public class InternalDB {
     }
 
     public Cursor getAscentsCursorForLast12Months() {
-        List<Ascent> list = new ArrayList<Ascent>();
         Cursor cursor = database.query("ascent_routes",
                 new String[] { "_id", "route_id", "route_name", "route_grade", "attempts", "style", "date", "score" },
                 "julianday(date('now'))- julianday(date) < 365", null, null, null, "route_grade desc");
@@ -609,7 +599,6 @@ public class InternalDB {
             whereClause += " and crag_id = ?";
             selectionArgs = new String[] { "" + cragId};
         }
-        List<Ascent> list = new ArrayList<Ascent>();
         Cursor cursor = database.query("ascent_routes",
                 new String[] { "_id", "date" },
                 whereClause,
@@ -643,7 +632,6 @@ public class InternalDB {
         if (last12Months) {
             whereClause += " and (julianday(date('now'))- julianday(date) < 365)";
         }
-        List<Ascent> list = new ArrayList<Ascent>();
         Cursor cursor = database.query("ascent_routes",
                 new String[] { "score", "date", "route_name", "route_grade" },
                 whereClause,
@@ -656,8 +644,6 @@ public class InternalDB {
         if (cursor.moveToFirst()) {
             do {
                 int score = cursor.getInt(0);
-                String name = cursor.getString(2);
-                String grade = cursor.getString(3);
                 total += score;
             } while (cursor.moveToNext());
         }
@@ -718,7 +704,7 @@ public class InternalDB {
         if (crag != -1) {
             whereClause += " and crag_id = ?";
         }
-        List<String> selectionList = new ArrayList();
+        List<String> selectionList = new ArrayList<String>();
         if (year != -1) {
             selectionList.add("" + year);
         }
@@ -734,7 +720,7 @@ public class InternalDB {
                 null,
                 "route_grade desc",
                 null);
-        Map<String, Integer> list = new HashMap();
+        Map<String, Integer> list = new HashMap<String, Integer>();
         if (cursor.moveToFirst()) {
             do {
                 String grade = cursor.getString(0);
@@ -749,7 +735,6 @@ public class InternalDB {
     }
 
     public int getScoreForYear(int year) {
-        List<Ascent> list = new ArrayList<Ascent>();
         Cursor cursor = database.query("ascent_routes",
                 new String[] { "score", "date", "route_name", "route_grade" },
                 "strftime('%Y', date) = ? and style_id <> 7",
@@ -762,8 +747,6 @@ public class InternalDB {
         if (cursor.moveToFirst()) {
             do {
                 int score = cursor.getInt(0);
-                String name = cursor.getString(2);
-                String grade = cursor.getString(3);
                 total += score;
             } while (cursor.moveToNext());
         }
@@ -772,7 +755,6 @@ public class InternalDB {
     }
 
     public int getFirstYear() {
-        List<Ascent> list = new ArrayList<Ascent>();
         Cursor cursor = database.query("ascent_routes",
                 new String[] { "date, route_name" },
                 null,

@@ -40,9 +40,6 @@ import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.RatingBar;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
@@ -108,7 +105,8 @@ public class AddAscentActivity extends MyActivity {
 					attemptsView.selectAll();
 					attemptsView.requestFocus();
 					InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-					imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
+					imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT,
+							InputMethodManager.HIDE_NOT_ALWAYS);
 				} else {
 					attemptsView.setText("1");
 					attemptsView.setEnabled(false);

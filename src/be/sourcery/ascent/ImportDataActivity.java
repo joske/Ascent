@@ -11,13 +11,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.dropbox.client2.DropboxAPI;
-import com.dropbox.client2.DropboxAPI.DropboxFileInfo;
-import com.dropbox.client2.android.AndroidAuthSession;
-
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -27,23 +24,22 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.dropbox.core.DbxRequestConfig;
+import com.dropbox.core.v2.DbxClientV2;
+import com.dropbox.core.v2.files.FileMetadata;
+
 
 public class ImportDataActivity extends MyActivity {
 
     private static final int ID_DIALOG_PROGRESS = 1;
     DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+	private DbxClientV2 client;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.import_data);
         setTitle(R.string.importData);
         setupActionBar();
-
-        AndroidAuthSession session = buildSession();
-        mDBApi = new DropboxAPI<AndroidAuthSession>(session);
-        if (!loggedIn) {
-        	mDBApi.getSession().startOAuth2Authentication(ImportDataActivity.this);
-        }
 
         // Capture our button from layout
         TextView text = (TextView)findViewById(R.id.importTitle);
@@ -64,10 +60,10 @@ public class ImportDataActivity extends MyActivity {
         String state = Environment.getExternalStorageState();
 
         if (Environment.MEDIA_MOUNTED.equals(state)) {
-            File sdcard = Environment.getExternalStorageDirectory();
-            File importFile = new File(sdcard, "ascent.csv");
             text.setText(R.string.importFileFound);
             button.setEnabled(true);
+//            File sdcard = Environment.getExternalStorageDirectory();
+//            File importFile = new File(sdcard, "ascent.csv");
 //            if (importFile.exists()) {
 //                // file exists, enable button
 //            } else {
@@ -85,8 +81,8 @@ public class ImportDataActivity extends MyActivity {
             File sdcard = Environment.getExternalStorageDirectory();
             File importFile = new File(sdcard, "ascent.csv");
             FileOutputStream outputStream = new FileOutputStream(importFile);
-            DropboxFileInfo info = mDBApi.getFile("/ascent.csv", null, outputStream, null);
-            Log.i("DbExampleLog", "The file's rev is: " + info.getMetadata().rev);
+            FileMetadata info = client.files().downloadBuilder("/ascent.csv").download(outputStream);
+            Log.i("DbExampleLog", "The file's rev is: " + info.getRev());
             
             // now we have downoaded from dropbox into the sdcard, we can start parsing this
             
@@ -164,16 +160,13 @@ public class ImportDataActivity extends MyActivity {
 
     protected void onResume() {
         super.onResume();
-
-        if (mDBApi.getSession().authenticationSuccessful()) {
-            try {
-                // Required to complete auth, sets the access token on the session
-                mDBApi.getSession().finishAuthentication();
-                // Store it locally in our app for later use
-                storeAuth(mDBApi.getSession());
-            } catch (IllegalStateException e) {
-                Log.i("Ascent", "Error authenticating", e);
-            }
+        loadAuth();
+        loadAuth();
+        SharedPreferences prefs = getSharedPreferences(ACCOUNT_PREFS_NAME, 0);
+        String accessToken = prefs.getString("access-token", null);
+        if (accessToken != null) {
+	        DbxRequestConfig requestConfig = new DbxRequestConfig("ascent");
+	        client = new DbxClientV2(requestConfig, accessToken);
         }
     }
 

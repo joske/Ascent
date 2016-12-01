@@ -55,21 +55,21 @@
 		android:layout_width="wrap_content"
 		android:layout_height="fill_parent" 
 		android:width="100dp" 
-		android:text="Grade"
+		android:text="@string/grade"
 		/>
 		<TextView
 		android:id="@+id/doneHeader"
 		android:layout_width="wrap_content"
 		android:layout_height="fill_parent" 
 		android:width="100dp" 
-		android:text="Done"
+		android:text="@string/done"
 		/>
 		<TextView
 		android:id="@+id/triedHeader"
 		android:layout_width="wrap_content"
 		android:layout_height="fill_parent" 
 		android:width="100dp" 
-		android:text="Tried"
+		android:text="@string/tried"
 		/>
 	</LinearLayout>
 	

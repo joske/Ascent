@@ -75,8 +75,8 @@ public class MainActivity extends MyActivity {
         crags = new ArrayList<String>();
         List<Crag> allCrags = db.getCrags();
         crags.add("*");
-        for (Iterator iterator = allCrags.iterator(); iterator.hasNext();) {
-            Crag crag = (Crag)iterator.next();
+        for (Iterator<Crag> iterator = allCrags.iterator(); iterator.hasNext();) {
+            Crag crag = iterator.next();
             crags.add(crag.getName());
         }
         Spinner cragSpinner = (Spinner) findViewById(R.id.crag_spinner);

@@ -101,11 +101,11 @@ public class SummaryActivity extends MyActivity {
         ListView listView = (ListView)this.findViewById(R.id.list);
         String[] from = new String[] {"grade", "done", "tried"};
         int[] to = new int[] { R.id.gradeColumn, R.id.doneColumn, R.id.triedColumn};
-        final List<Map<String, String>> data = new ArrayList();
-        for (Iterator iterator = grades.iterator(); iterator.hasNext();) {
-            String grade = (String)iterator.next();
+        final List<Map<String, String>> data = new ArrayList<Map<String, String>>();
+        for (Iterator<String> iterator = grades.iterator(); iterator.hasNext();) {
+            String grade = iterator.next();
             if (summaryDoneForYear.containsKey(grade) || summaryTriedForYear.containsKey(grade)) {
-                Map<String, String> line = new HashMap();
+                Map<String, String> line = new HashMap<String, String>();
                 line.put("grade", grade);
                 if (summaryDoneForYear.containsKey(grade)) {
                     line.put("done", "" + summaryDoneForYear.get(grade));
@@ -141,11 +141,11 @@ public class SummaryActivity extends MyActivity {
         ListView listView = (ListView)dialog.findViewById(R.id.detailList);
         String[] from = new String[] {"date", "style", "route_grade", "route_name", "comment"};
         int[] to = new int[] {R.id.dateCell, R.id.styleCell, R.id.gradeCell, R.id.nameCell, R.id.commentCell};
-        final List<Map<String, String>> data = new ArrayList();
+        final List<Map<String, String>> data = new ArrayList<Map<String, String>>();
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        for (Iterator iterator = ascents.iterator(); iterator.hasNext();) {
-            Ascent ascent = (Ascent)iterator.next();
-            Map<String, String> line = new HashMap();
+        for (Iterator<Ascent> iterator = ascents.iterator(); iterator.hasNext();) {
+            Ascent ascent = iterator.next();
+            Map<String, String> line = new HashMap<String, String>();
             line.put("date", format.format(ascent.getDate()));
             line.put("style", ascent.getStyleString());
             line.put("route_grade", ascent.getRoute().getGrade());

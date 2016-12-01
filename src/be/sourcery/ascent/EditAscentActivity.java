@@ -116,8 +116,8 @@ public class EditAscentActivity extends MyActivity {
 			public void onItemSelected(AdapterView<?> arg0, View arg1,
 					int arg2, long rowId) {
 				EditText attemptsView = (EditText) findViewById(R.id.attempts);
-				if (rowId == 2) {
-					// redpoint
+				if (rowId == 2 || rowId == 6) {
+					// redpoint or tried
 					attemptsView.setEnabled(true);
 					attemptsView.selectAll();
 					attemptsView.requestFocus();

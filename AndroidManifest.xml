@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="be.sourcery.ascent" android:versionCode="1" android:versionName="1.1">
+	package="be.sourcery.ascent" android:versionCode="1" android:versionName="1.2">
 	<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="25" />
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-	<uses-permission android:name="android.permission.INTERNET"></uses-permission>
+	<uses-permission android:name="android.permission.INTERNET"/>
 	
 	<application android:icon="@drawable/icon" android:label="@string/app_name" android:allowBackup="true"
 		android:name=".AscentApplication" android:theme="@android:style/Theme.Material.Light">
@@ -46,13 +46,14 @@
 		<activity android:name="AddProjectActivity"></activity>
 		<activity android:name="Top10Activity"></activity>
 		<activity android:name="SummaryActivity"></activity>
+		
 		<activity
-            android:name="com.dropbox.client2.android.AuthActivity"
+            android:name="com.dropbox.core.android.AuthActivity"
             android:configChanges="orientation|keyboard"
-            android:launchMode="singleTask" >
+            android:launchMode="singleTask">
             <intent-filter>
 
-                <!-- Change this to be db- followed by your app key -->
+                <!-- Insert your app key after “db-  ...” -->
                 <data android:scheme="db-ifyag9s8v2ovymw" />
 
                 <action android:name="android.intent.action.VIEW" />
