@@ -12,11 +12,8 @@ import com.dropbox.core.android.Auth;
 
 public abstract class MyActivity extends Activity {
 
-	final static protected String APP_SECRET = "cluryh2l6iqigim";
-    // You don't need to change these, leave them alone.
 	protected static final String ACCOUNT_PREFS_NAME = "prefs";
 	protected static final String ACCESS_KEY_NAME = "ACCESS_KEY";
-	protected static final String ACCESS_SECRET_NAME = "ACCESS_SECRET";
 	protected boolean loggedIn = false;
 	
 
@@ -40,8 +37,7 @@ public abstract class MyActivity extends Activity {
             SharedPreferences prefs = getSharedPreferences(ACCOUNT_PREFS_NAME, 0);
             prefs.edit().putString("access-token", accessToken).apply();
             String key = prefs.getString(ACCESS_KEY_NAME, null);
-            String secret = prefs.getString(ACCESS_SECRET_NAME, null);
-            if (key == null || secret == null || key.length() == 0 || secret.length() == 0) {
+            if (key == null || key.length() == 0) {
             	return;
             }
             
