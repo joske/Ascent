@@ -54,14 +54,17 @@ public class CragListActivity extends MyActivity {
                 new String[] {"name", "country"},
                 new int[] {R.id.nameCell, R.id.countryCell});
         ListView listView = (ListView)this.findViewById(R.id.list);
+        registerForContextMenu(listView);
         listView.setAdapter(adapter);
     }
 
+    @Override
     public void onDestroy() {
         super.onDestroy();
         db.close();
     }
 
+    @Override
     public void onResume() {
         super.onResume();
         cursor.requery();
@@ -74,6 +77,7 @@ public class CragListActivity extends MyActivity {
         startActivityForResult(myIntent, 0);
     }
 
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.add_actionbar, menu);

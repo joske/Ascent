@@ -91,8 +91,7 @@ public class ExportDataActivity extends MyActivity {
         try {
             // structure:
             // routeName;routeGrade;cragName;cragCountry;style;attempts;date;comment;stars
-            File sdcard = Environment.getExternalStorageDirectory();
-            File importFile = new File(sdcard, "ascent-export.csv");
+            File importFile = new File(getFilesDir(), "ascent.csv");
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(importFile), "ISO-8859-1"));
             List<Ascent> ascents = db.getAscents();
             for (Iterator<Ascent> iterator = ascents.iterator(); iterator.hasNext(); count++) {
@@ -162,7 +161,8 @@ public class ExportDataActivity extends MyActivity {
             }
         }).start();
     }
-    
+
+    @Override
     protected void onResume() {
         super.onResume();
         loadAuth();

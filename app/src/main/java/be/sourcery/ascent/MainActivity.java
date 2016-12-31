@@ -127,6 +127,7 @@ public class MainActivity extends MyActivity {
         scoreView.setText("Score: " + db.getScoreLast12Months() + " - All Time: " + db.getScoreAllTime() + " - Year: " + db.getScoreForYear(year));
     }
 
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_actionbar, menu);

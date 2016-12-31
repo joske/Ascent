@@ -890,6 +890,21 @@ public class InternalDB {
         update.execute();
     }
 
+    public void clearData() {
+        String stmt = "delete from projects;";
+        SQLiteStatement update = database.compileStatement(stmt);
+        update.execute();
+        stmt = "delete from ascents;";
+        update = database.compileStatement(stmt);
+        update.execute();
+        stmt = "delete from routes;";
+        update = database.compileStatement(stmt);
+        update.execute();
+        stmt = "delete from crag;";
+        update = database.compileStatement(stmt);
+        update.execute();
+    }
+
     class OpenHelper extends SQLiteOpenHelper {
 
         private static final int DATABASE_VERSION = 10;

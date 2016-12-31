@@ -78,14 +78,13 @@ public class ImportDataActivity extends MyActivity {
         try {
             // structure:
             // routeName;routeGrade;cragName;cragCountry;style;attempts;date;comment;stars
-            File sdcard = Environment.getExternalStorageDirectory();
-            File importFile = new File(sdcard, "ascent.csv");
+            File importFile = new File(getFilesDir(), "ascent.csv");
             FileOutputStream outputStream = new FileOutputStream(importFile);
             FileMetadata info = client.files().downloadBuilder("/ascent.csv").download(outputStream);
             Log.i("DbExampleLog", "The file's rev is: " + info.getRev());
             
             // now we have downoaded from dropbox into the sdcard, we can start parsing this
-            
+            db.clearData();
             BufferedReader r = new BufferedReader(new InputStreamReader(new FileInputStream(importFile), "ISO-8859-1"));
             int count = 0;
             Map<String, Crag> crags = new HashMap<String, Crag>();
@@ -158,9 +157,9 @@ public class ImportDataActivity extends MyActivity {
         }
     }
 
+    @Override
     protected void onResume() {
         super.onResume();
-        loadAuth();
         loadAuth();
         SharedPreferences prefs = getSharedPreferences(ACCOUNT_PREFS_NAME, 0);
         String accessToken = prefs.getString("access-token", null);
