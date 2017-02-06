@@ -22,8 +22,8 @@
 	<string name="importData">Import Data</string>
 	<string name="exportData">Export Data</string>
 	<string name="notMounted">SD card not present or not mounted</string>
-	<string name="exportToFile">Exporting to /sdcard/ascent-export.csv</string>
-	<string name="importFileFound">Found import file /sdcard/ascent.csv</string>
+	<string name="exportToFile">Exporting to /sdcard/ascent-export.csv and Dropbox</string>
+	<string name="importFileFound">Click to import ascents from Dropbox. Note this will clear all current data.</string>
 	<string name="importFileNotFound">Could not find import file /sdcard/ascent.csv</string>
 	<string name="importingData">Importing Data. Please wait…</string>
 	<string name="exportingData">Exporting Data. Please wait…</string>

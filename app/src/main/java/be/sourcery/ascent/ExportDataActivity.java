@@ -52,6 +52,8 @@ public class ExportDataActivity extends MyActivity {
         // Register the onClick listener with the implementation above
         button.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
+                // We create a new AuthSession so that we can use the Dropbox API.
+                Auth.startOAuth2Authentication(getApplicationContext(), getString(R.string.APP_KEY));
                 File sdcard = Environment.getExternalStorageDirectory();
                 File exportFile = new File(sdcard, "ascent-export.csv");
                 if (exportFile.exists()) {
@@ -81,8 +83,6 @@ public class ExportDataActivity extends MyActivity {
             text.setText(R.string.notMounted);
             button.setEnabled(false);
         }
-        // We create a new AuthSession so that we can use the Dropbox API.
-       	Auth.startOAuth2Authentication(getApplicationContext(), getString(R.string.APP_KEY));
     }
     
     protected void exportData() {
@@ -96,17 +96,7 @@ public class ExportDataActivity extends MyActivity {
             List<Ascent> ascents = db.getAscents();
             for (Iterator<Ascent> iterator = ascents.iterator(); iterator.hasNext(); count++) {
                 Ascent ascent = iterator.next();
-                StringBuffer line = new StringBuffer(200);
-                line.append(ascent.getRoute().getName()).append(";");
-                line.append(ascent.getRoute().getGrade()).append(";");
-                line.append(ascent.getRoute().getCrag().getName()).append(";");
-                line.append(ascent.getRoute().getCrag().getCountry()).append(";");
-                line.append(ascent.getStyle()).append(";");
-                line.append(ascent.getAttempts()).append(";");
-                line.append(fmt.format(ascent.getDate())).append(";");
-                line.append(ascent.getComment()).append(";");
-                line.append(ascent.getStars()).append("\r\n");
-                bw.write(line.toString());
+                bw.write(CodecUtil.encode(ascent));
             }
             bw.close();
             
@@ -155,7 +145,11 @@ public class ExportDataActivity extends MyActivity {
         showDialog(ID_DIALOG_PROGRESS);
         new Thread(new Runnable(){
             public void run() {
-                exportData();
+                if (client != null) {
+                    exportData();
+                } else {
+                    setResult(RESULT_CANCELED);
+                }
                 dismissDialog(ID_DIALOG_PROGRESS);
                 finish();
             }

@@ -25,6 +25,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.dropbox.core.DbxRequestConfig;
+import com.dropbox.core.android.Auth;
 import com.dropbox.core.v2.DbxClientV2;
 import com.dropbox.core.v2.files.FileMetadata;
 
@@ -32,7 +33,6 @@ import com.dropbox.core.v2.files.FileMetadata;
 public class ImportDataActivity extends MyActivity {
 
     private static final int ID_DIALOG_PROGRESS = 1;
-    DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
 	private DbxClientV2 client;
 
     public void onCreate(Bundle savedInstanceState) {
@@ -47,6 +47,7 @@ public class ImportDataActivity extends MyActivity {
         // Register the onClick listener with the implementation above
         button.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
+                Auth.startOAuth2Authentication(getApplicationContext(), getString(R.string.APP_KEY));
                 showDialog(ID_DIALOG_PROGRESS);
                 new Thread(new Runnable(){
                     public void run() {
@@ -62,14 +63,6 @@ public class ImportDataActivity extends MyActivity {
         if (Environment.MEDIA_MOUNTED.equals(state)) {
             text.setText(R.string.importFileFound);
             button.setEnabled(true);
-//            File sdcard = Environment.getExternalStorageDirectory();
-//            File importFile = new File(sdcard, "ascent.csv");
-//            if (importFile.exists()) {
-//                // file exists, enable button
-//            } else {
-//                text.setText(R.string.importFileNotFound);
-//                button.setEnabled(false);
-//            }
         }
     }
 
@@ -81,43 +74,18 @@ public class ImportDataActivity extends MyActivity {
             File importFile = new File(getFilesDir(), "ascent.csv");
             FileOutputStream outputStream = new FileOutputStream(importFile);
             FileMetadata info = client.files().downloadBuilder("/ascent.csv").download(outputStream);
-            Log.i("DbExampleLog", "The file's rev is: " + info.getRev());
+            Log.i(ImportDataActivity.class.getName(), "The file's rev is: " + info.getRev());
             
             // now we have downoaded from dropbox into the sdcard, we can start parsing this
             db.clearData();
             BufferedReader r = new BufferedReader(new InputStreamReader(new FileInputStream(importFile), "ISO-8859-1"));
             int count = 0;
-            Map<String, Crag> crags = new HashMap<String, Crag>();
             while (r.ready()) {
                 String line = r.readLine();
-                String[] strings = line.split(";");
-                if (strings.length == 9) {
-                    try {
-                        String routeName = strings[0];
-                        String routeGrade = strings[1];
-                        String cragName = strings[2];
-                        String cragCountry = strings[3];
-                        int style = Integer.parseInt(strings[4]);
-                        int attempts = Integer.parseInt(strings[5]);
-                        Date date = fmt.parse(strings[6]);
-                        String comments = strings[7];
-                        int stars = Integer.parseInt(strings[8]);
-
-                        Crag crag = null;
-                        crag = crags.get(cragName);
-                        if (crag == null) {
-                            // not found, create it
-                            crag = db.addCrag(cragName, cragCountry);
-                            crags.put(cragName, crag);
-                        }
-                        Route route = db.addRoute(routeName, routeGrade, crag);
-                        Ascent ascent = db.addAscent(route, date, attempts, style, comments, stars);
-                        if (ascent != null) {
-                            count++;
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                Ascent ascent = CodecUtil.decode(line);
+                if (ascent != null) {
+                    db.addAscent(ascent);
+                    count++;
                 }
             }
             Intent intent = this.getIntent();

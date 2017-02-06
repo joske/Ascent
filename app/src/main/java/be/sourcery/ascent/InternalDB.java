@@ -55,6 +55,19 @@ public class InternalDB {
         database.close();
     }
 
+    public void addRoute(Ascent ascent) {
+        Crag crag = getCrag(ascent.getRoute().getCrag().getName());
+        if (crag == null) {
+            crag = addCrag(ascent.getRoute().getCrag().getName(), ascent.getRoute().getCrag().getCountry());
+            ascent.getRoute().setCrag(crag);
+        }
+        Route route = getRoute(ascent.getRoute());
+        if (route == null) {
+            route = addRoute(ascent.getRoute().getName(), ascent.getRoute().getGrade(), crag);
+            ascent.setRoute(route);
+        }
+    }
+
     public Route addRoute(String name, String grade, Crag crag) {
         String stmt = "insert into routes (name, grade, crag_id) values (?, ?, ?);";
         SQLiteStatement insert = database.compileStatement(stmt);
@@ -106,6 +119,11 @@ public class InternalDB {
             database.endTransaction();
         }
         return new Ascent(id, route, style, attempts, new Date(), comment, stars, score);
+    }
+
+    public Ascent addAscent(Ascent ascent) {
+        addRoute(ascent);
+        return addAscent(ascent.getRoute(), ascent.getDate(), ascent.getAttempts(), ascent.getStyle(), ascent.getComment(), ascent.getStars());
     }
 
     public Ascent addAscent(Route route, Date date, int attempts, int style, String comment, int stars) {
@@ -323,6 +341,24 @@ public class InternalDB {
         Cursor cursor = database.query("routes", new String[] { "_id", "name", "grade", "crag_id" },
                 "_id = ?", new String[] { "" + id}, null, null, "name desc");
         if (cursor.moveToFirst()) {
+            String name = cursor.getString(1);
+            String grade = cursor.getString(2);
+            long crag_id = cursor.getLong(3);
+            int gradeScore = getGradeScore(grade);
+            c = new Route(id, name, grade, getCrag(crag_id), gradeScore);
+        }
+        if (cursor != null && !cursor.isClosed()) {
+            cursor.close();
+        }
+        return c;
+    }
+
+    public Route getRoute(Route route) {
+        Route c = null;
+        Cursor cursor = database.query("routes", new String[] { "_id", "name", "grade", "crag_id" },
+                "name = ? and crag_id = ?", new String[] { route.getName(), "" + route.getCrag().getId()}, null, null, "_id desc");
+        if (cursor.moveToFirst()) {
+            long id = cursor.getLong(0);
             String name = cursor.getString(1);
             String grade = cursor.getString(2);
             long crag_id = cursor.getLong(3);
