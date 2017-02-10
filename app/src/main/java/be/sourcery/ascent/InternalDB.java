@@ -56,16 +56,16 @@ public class InternalDB {
     }
 
     public void addRoute(Ascent ascent) {
-        Crag crag = getCrag(ascent.getRoute().getCrag().getName());
+        Crag crag = getCrag(ascent.getRoute().getCrag().getName(), ascent.getRoute().getCrag().getCountry());
         if (crag == null) {
             crag = addCrag(ascent.getRoute().getCrag().getName(), ascent.getRoute().getCrag().getCountry());
-            ascent.getRoute().setCrag(crag);
         }
+        ascent.getRoute().setCrag(crag);
         Route route = getRoute(ascent.getRoute());
         if (route == null) {
             route = addRoute(ascent.getRoute().getName(), ascent.getRoute().getGrade(), crag);
-            ascent.setRoute(route);
         }
+        ascent.setRoute(route);
     }
 
     public Route addRoute(String name, String grade, Crag crag) {
@@ -256,7 +256,23 @@ public class InternalDB {
     public Crag getCrag(String searchName) {
         Crag c = null;
         Cursor cursor = database.query("crag", new String[] { "_id", "name", "country" },
-                "name like ? ", new String[] { searchName + "%"}, null, null, "_id desc");
+                "name = ?", new String[] { searchName}, null, null, "_id desc");
+        if (cursor.moveToFirst()) {
+            long id = cursor.getLong(0);
+            String name = cursor.getString(1);
+            String country = cursor.getString(2);
+            c = new Crag(id, name, country);
+        }
+        if (cursor != null && !cursor.isClosed()) {
+            cursor.close();
+        }
+        return c;
+    }
+
+    public Crag getCrag(String searchName, String searchCountry) {
+        Crag c = null;
+        Cursor cursor = database.query("crag", new String[] { "_id", "name", "country" },
+                "name = ? and country = ?", new String[] { searchName, searchCountry}, null, null, "_id desc");
         if (cursor.moveToFirst()) {
             long id = cursor.getLong(0);
             String name = cursor.getString(1);
