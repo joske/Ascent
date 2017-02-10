@@ -1,52 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="be.sourcery.ascent" android:versionCode="1" android:versionName="1.4">
-	<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="25" />
-	<uses-permission android:name="android.permission.INTERNET"/>
-	
-	<application android:icon="@drawable/icon" android:label="@string/app_name" android:allowBackup="true"
-		android:name=".AscentApplication" android:theme="@android:style/Theme.Material.Light">
-		
-		<meta-data android:name="android.app.searchable"
-                   android:resource="@xml/searchable"/>
-        <meta-data android:name="android.app.default_searchable"
-        		   android:value=".SearchAscentsActivity" />
-		
-		<activity android:name=".MainActivity" android:label="@string/app_name">
-			<intent-filter>
-				<action android:name="android.intent.action.MAIN" />
-				<category android:name="android.intent.category.LAUNCHER" />
-			</intent-filter>
-		</activity>
+    package="be.sourcery.ascent"
+    android:versionCode="1"
+    android:versionName="1.5">
 
-		<activity android:name="AddAscentActivity"></activity>
-		<activity android:name=".SearchAscentsActivity">
-			<intent-filter>
-				<action android:name="android.intent.action.SEARCH" />
-			</intent-filter>
-			<meta-data android:name="android.app.searchable"
-                   android:resource="@xml/searchable"/>
-		</activity>
-		<activity android:name="AddCragActivity"></activity>
+    <uses-sdk
+        android:minSdkVersion="21"
+        android:targetSdkVersion="25" />
 
-		<activity android:name="RepeatAscentActivity"></activity>
-		<activity android:name="EditAscentActivity"></activity>
-		<activity android:name="CragListActivity"></activity>
+    <uses-permission android:name="android.permission.INTERNET" />
 
-		<activity android:name="ImportDataActivity"
-			android:configChanges="orientation"></activity>
-		<activity android:name="ExportDataActivity"
-			android:configChanges="orientation"></activity>
-		<activity android:name="ProjectListActivity"></activity>
-		<activity android:name="GradeAscentsActivity"></activity>
-		<activity android:name="ScoreGraphActivity"></activity>
-		<activity android:name="GradeGraphActivity"></activity>
-		<activity android:name="TickProjectActivity"></activity>
-		<activity android:name="AddProjectActivity"></activity>
-		<activity android:name="Top10Activity"></activity>
-		<activity android:name="SummaryActivity"></activity>
-		
-		<activity
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <application
+        android:name=".AscentApplication"
+        android:allowBackup="true"
+        android:icon="@drawable/icon"
+        android:label="@string/app_name"
+        android:theme="@android:style/Theme.Material.Light">
+        <meta-data
+            android:name="android.app.searchable"
+            android:resource="@xml/searchable" />
+        <meta-data
+            android:name="android.app.default_searchable"
+            android:value=".SearchAscentsActivity" />
+
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".AddAscentActivity" />
+        <activity android:name=".SearchAscentsActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
+        <activity android:name=".AddCragActivity" />
+        <activity android:name=".RepeatAscentActivity" />
+        <activity android:name=".EditAscentActivity" />
+        <activity android:name=".CragListActivity" />
+        <activity
+            android:name=".ImportDataActivity"
+            android:configChanges="orientation" />
+        <activity
+            android:name=".ExportDataActivity"
+            android:configChanges="orientation" />
+        <activity android:name=".ProjectListActivity" />
+        <activity android:name=".GradeAscentsActivity" />
+        <activity android:name=".ScoreGraphActivity" />
+        <activity android:name=".GradeGraphActivity" />
+        <activity android:name=".TickProjectActivity" />
+        <activity android:name=".AddProjectActivity" />
+        <activity android:name=".Top10Activity" />
+        <activity android:name=".SummaryActivity" />
+        <activity
             android:name="com.dropbox.core.android.AuthActivity"
             android:configChanges="orientation|keyboard"
             android:launchMode="singleTask">
@@ -61,8 +79,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
 	</application>
 
-
-</manifest> 
+</manifest>

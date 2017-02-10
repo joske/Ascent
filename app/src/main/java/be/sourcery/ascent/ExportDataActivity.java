@@ -53,7 +53,6 @@ public class ExportDataActivity extends MyActivity {
         button.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 // We create a new AuthSession so that we can use the Dropbox API.
-                Auth.startOAuth2Authentication(getApplicationContext(), getString(R.string.APP_KEY));
                 File sdcard = Environment.getExternalStorageDirectory();
                 File exportFile = new File(sdcard, "ascent-export.csv");
                 if (exportFile.exists()) {
@@ -160,12 +159,7 @@ public class ExportDataActivity extends MyActivity {
     protected void onResume() {
         super.onResume();
         loadAuth();
-        SharedPreferences prefs = getSharedPreferences(ACCOUNT_PREFS_NAME, 0);
-        String accessToken = prefs.getString("access-token", null);
-        if (accessToken != null) {
-	        DbxRequestConfig requestConfig = new DbxRequestConfig("ascent");
-	        client = new DbxClientV2(requestConfig, accessToken);
-        }
+        client = getClient();
     }
 
 }

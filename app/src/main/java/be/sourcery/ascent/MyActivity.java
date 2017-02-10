@@ -7,7 +7,9 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Build;
 
+import com.dropbox.core.DbxRequestConfig;
 import com.dropbox.core.android.Auth;
+import com.dropbox.core.v2.DbxClientV2;
 
 
 public abstract class MyActivity extends Activity {
@@ -40,14 +42,20 @@ public abstract class MyActivity extends Activity {
             if (key == null || key.length() == 0) {
             	return;
             }
-            
-            if (key.equals("oauth2:")) {
-            	// If the key is set to "oauth2:", then we can assume the token is for OAuth 2.
-            	this.loggedIn = true;
-            }
+            this.loggedIn = true;
         }
     }
 
+    protected DbxClientV2 getClient() {
+        SharedPreferences prefs = getSharedPreferences(ACCOUNT_PREFS_NAME, 0);
+        String accessToken = prefs.getString("access-token", null);
+        if (accessToken != null) {
+            DbxRequestConfig requestConfig = new DbxRequestConfig("ascent");
+            return new DbxClientV2(requestConfig, accessToken);
+        }
+        Auth.startOAuth2Authentication(getApplicationContext(), getString(R.string.APP_KEY));
+        return null;
+    }
 
     protected void clearKeys() {
         SharedPreferences prefs = getSharedPreferences(ACCOUNT_PREFS_NAME, 0);

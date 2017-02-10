@@ -47,7 +47,6 @@ public class ImportDataActivity extends MyActivity {
         // Register the onClick listener with the implementation above
         button.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                Auth.startOAuth2Authentication(getApplicationContext(), getString(R.string.APP_KEY));
                 showDialog(ID_DIALOG_PROGRESS);
                 new Thread(new Runnable(){
                     public void run() {
@@ -129,12 +128,7 @@ public class ImportDataActivity extends MyActivity {
     protected void onResume() {
         super.onResume();
         loadAuth();
-        SharedPreferences prefs = getSharedPreferences(ACCOUNT_PREFS_NAME, 0);
-        String accessToken = prefs.getString("access-token", null);
-        if (accessToken != null) {
-	        DbxRequestConfig requestConfig = new DbxRequestConfig("ascent");
-	        client = new DbxClientV2(requestConfig, accessToken);
-        }
-    }
+        client = getClient();
+     }
 
 }
