@@ -143,8 +143,8 @@ public class SummaryActivity extends MyActivity {
         AlertDialog dialog = builder.create();
         dialog.show();
         ListView listView = (ListView)dialog.findViewById(R.id.detailList);
-        String[] from = new String[] {"date", "style", "route_grade", "route_name", "comment"};
-        int[] to = new int[] {R.id.dateCell, R.id.styleCell, R.id.gradeCell, R.id.nameCell, R.id.commentCell};
+        String[] from = new String[] {"date", "style", "route_grade", "route_name", "crag_name", "comment"};
+        int[] to = new int[] {R.id.dateCell, R.id.styleCell, R.id.gradeCell, R.id.nameCell, R.id.cragCell, R.id.commentCell};
         final List<Map<String, String>> data = new ArrayList<Map<String, String>>();
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         for (Iterator<Ascent> iterator = ascents.iterator(); iterator.hasNext();) {
@@ -154,6 +154,7 @@ public class SummaryActivity extends MyActivity {
             line.put("style", ascent.getStyleString());
             line.put("route_grade", ascent.getRoute().getGrade());
             line.put("route_name", ascent.getRoute().getName());
+            line.put("crag_name", ascent.getRoute().getCrag().getName());
             line.put("comment", ascent.getComment());
             data.add(line);
         }
