@@ -43,7 +43,6 @@ public class RepeatAscentActivity extends MyActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.repeat_ascent);
         setTitle(R.string.repeatAscent);
-        setupActionBar();
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         Bundle b = this.getIntent().getExtras();
         long ascentId = b.getLong("ascentId");

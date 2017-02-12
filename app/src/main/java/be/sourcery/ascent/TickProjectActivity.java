@@ -43,7 +43,6 @@ public class TickProjectActivity extends MyActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tick_project);
         setTitle(R.string.editAscent);
-        setupActionBar();
         Bundle b = this.getIntent().getExtras();
         long projectId = b.getLong("projectId");
         db = new InternalDB(this);

@@ -20,6 +20,7 @@ package be.sourcery.ascent;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -42,9 +43,16 @@ public class CragListActivity extends MyActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.crag_list);
+        setContentView(R.layout.crag_list_activity);
         setTitle(R.string.crags);
-        setupActionBar();
+        FloatingActionButton FAB = (FloatingActionButton) findViewById(R.id.fab);
+        FAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addCrag();
+            }
+        });
+
         db = new InternalDB(this);
         cursor = db.getCragsCrusor();
         startManagingCursor(cursor);
@@ -75,30 +83,6 @@ public class CragListActivity extends MyActivity {
     private void addCrag() {
         Intent myIntent = new Intent(this, AddCragActivity.class);
         startActivityForResult(myIntent, 0);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.add_actionbar, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                // app icon in action bar clicked; go home
-                Intent intent = new Intent(this, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                return true;
-            case R.id.menu_add:
-                addCrag();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 
     @Override

@@ -70,7 +70,6 @@ public class AddAscentActivity extends MyActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.edit_ascent);
 		setTitle(R.string.addAscent);
-		setupActionBar();
 		Bundle b = this.getIntent().getExtras();
 		long cragId = -1;
 		if (b != null) {

@@ -37,7 +37,6 @@ public class SummaryActivity extends MyActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.summary);
         setTitle(R.string.summary);
-        setupActionBar();
         thisYear = 1900 + new Date().getYear();
         year = thisYear;
         db = new InternalDB(this);

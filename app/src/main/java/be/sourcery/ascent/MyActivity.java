@@ -6,32 +6,30 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Build;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 import com.dropbox.core.DbxRequestConfig;
 import com.dropbox.core.android.Auth;
 import com.dropbox.core.v2.DbxClientV2;
 
 
-public abstract class MyActivity extends Activity {
+public abstract class MyActivity extends AppCompatActivity {
 
 	protected static final String ACCOUNT_PREFS_NAME = "prefs";
 	protected static final String ACCESS_KEY_NAME = "ACCESS_KEY";
 	protected boolean loggedIn = false;
-	
 
-    @TargetApi(11)
-    protected void setupActionBar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            ActionBar actionBar = getActionBar();
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 
-    /**
-     * Shows keeping the access keys returned from Trusted Authenticator in a local
-     * store, rather than storing user name & password, and re-authenticating each
-     * time (which is not to be done, ever).
-     */
+        /**
+         * Shows keeping the access keys returned from Trusted Authenticator in a local
+         * store, rather than storing user name & password, and re-authenticating each
+         * time (which is not to be done, ever).
+         */
     protected void loadAuth() {
      	String accessToken = Auth.getOAuth2Token(); //generate Access Token
         if (accessToken != null) {

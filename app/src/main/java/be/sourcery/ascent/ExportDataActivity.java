@@ -44,7 +44,6 @@ public class ExportDataActivity extends MyActivity {
         
         setContentView(R.layout.import_data);
         setTitle(R.string.exportData);
-        setupActionBar();
         // Capture our button from layout
         TextView text = (TextView)findViewById(R.id.importTitle);
         Button button = (Button)findViewById(R.id.ok);

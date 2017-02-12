@@ -40,7 +40,6 @@ public class AddProjectActivity extends MyActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_project);
         setTitle(R.string.addProject);
-        setupActionBar();
         Bundle b = this.getIntent().getExtras();
         long cragId = -1;
         if (b != null) {

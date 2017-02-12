@@ -37,7 +37,6 @@ public class SearchAscentsActivity extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_ascents);
-        setupActionBar();
         db = new InternalDB(this);
         textView = (TextView) findViewById(R.id.text);
         listView = (ListView) findViewById(android.R.id.list);
@@ -172,14 +171,6 @@ public class SearchAscentsActivity extends ListActivity {
     public void onDestroy() {
         super.onDestroy();
         db.close();
-    }
-
-    @TargetApi(11)
-    protected void setupActionBar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            ActionBar actionBar = getActionBar();
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
     }
 
 }

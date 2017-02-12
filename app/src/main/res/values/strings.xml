@@ -60,6 +60,16 @@
       <item quantity="other">%1$d results for \"%2$s\": </item>
     </plurals>
 
+	<string-array name="activities">
+		<item>Crags</item>
+		<item>Score</item>
+		<item>Grade</item>
+		<item>Top10</item>
+		<item>Overview</item>
+		<item>Import</item>
+		<item>Export</item>
+	</string-array>
+
    	<string-array name="styles">
 		<item>Onsight</item>
 		<item>Flash</item>

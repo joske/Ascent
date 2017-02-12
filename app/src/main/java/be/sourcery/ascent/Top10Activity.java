@@ -28,7 +28,6 @@ public class Top10Activity extends MyActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.top10);
         setTitle(R.string.top10);
-        setupActionBar();
         db = new InternalDB(this);
         Date now = new Date();
         int year = now.getYear() + 1900;

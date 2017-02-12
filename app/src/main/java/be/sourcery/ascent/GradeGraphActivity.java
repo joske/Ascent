@@ -15,7 +15,6 @@ public class GradeGraphActivity extends MyActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.grades);
         setTitle(R.string.grades);
-        setupActionBar();
         getDataset();
     }
 

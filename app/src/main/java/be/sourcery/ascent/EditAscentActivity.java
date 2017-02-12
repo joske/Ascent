@@ -69,7 +69,6 @@ public class EditAscentActivity extends MyActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.edit_ascent);
 		setTitle(R.string.editAscent);
-		setupActionBar();
 		getWindow().setSoftInputMode(
 				WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		Bundle b = this.getIntent().getExtras();

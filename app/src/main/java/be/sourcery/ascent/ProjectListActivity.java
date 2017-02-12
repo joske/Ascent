@@ -28,7 +28,6 @@ public class ProjectListActivity extends MyActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.project_list);
         setTitle(R.string.projects);
-        setupActionBar();
         db = new InternalDB(this);
         cursor = db.getProjectsCursor();
         startManagingCursor(cursor);

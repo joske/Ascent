@@ -35,7 +35,6 @@ public class AddCragActivity extends MyActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_crag);
         setTitle(R.string.addCrag);
-        setupActionBar();
         EditText cragView = (EditText)findViewById(R.id.crag);
         cragView.requestFocus();
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);

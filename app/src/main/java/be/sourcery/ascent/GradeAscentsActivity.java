@@ -23,7 +23,6 @@ public class GradeAscentsActivity extends MyActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        setupActionBar();
         Bundle b = this.getIntent().getExtras();
         String grade = b.getString("grade");
         boolean allTime = b.getBoolean("allTime");

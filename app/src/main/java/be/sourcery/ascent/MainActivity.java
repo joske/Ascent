@@ -29,6 +29,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -64,9 +68,61 @@ public class MainActivity extends MyActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
+        setContentView(R.layout.main_activity);
         setTitle(R.string.latestAscents);
+//        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+//        setSupportActionBar(myToolbar);
         db = new InternalDB(this);
+        FloatingActionButton FAB = (FloatingActionButton) findViewById(R.id.fab);
+        FAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addAscent();
+            }
+        });
+        String[] activities = getResources().getStringArray(R.array.activities);
+        final DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        final ListView mDrawerList = (ListView) findViewById(R.id.left_drawer);
+
+        // Set the adapter for the list view
+        mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, activities));
+        // Set the list's click listener
+        mDrawerList.setOnItemClickListener(new ListView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                switch ((int)id) {
+                    case 0:
+                        cragsList();
+                        mDrawerLayout.closeDrawer(mDrawerList);
+                        break;
+                    case 1:
+                        showScore();
+                        mDrawerLayout.closeDrawer(mDrawerList);
+                        break;
+                    case 2:
+                        showGrades();
+                        mDrawerLayout.closeDrawer(mDrawerList);
+                        break;
+                    case 3:
+                        showTop10();
+                        mDrawerLayout.closeDrawer(mDrawerList);
+                        break;
+                    case 4:
+                        showSummary();
+                        mDrawerLayout.closeDrawer(mDrawerList);
+                        break;
+                    case 5:
+                        importData();
+                        mDrawerLayout.closeDrawer(mDrawerList);
+                        break;
+                    case 6:
+                        exportData();
+                        mDrawerLayout.closeDrawer(mDrawerList);
+                        break;
+                }
+            }
+        });
         populateList();
         update();
     }
@@ -135,8 +191,10 @@ public class MainActivity extends MyActivity {
         // Associate searchable configuration with the SearchView
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
-        ComponentName cn = new ComponentName(this, SearchAscentsActivity.class);
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(cn));
+        if (searchView != null) {
+            ComponentName cn = new ComponentName(this, SearchAscentsActivity.class);
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(cn));
+        }
 
         return true;
     }
@@ -216,36 +274,7 @@ public class MainActivity extends MyActivity {
         if (item.getTitle() != null && "Search".equals(item.getTitle())) {
             return onSearchRequested();
         }
-        switch (item.getItemId()) {
-            case R.id.menu_crags:
-                cragsList();
-                return true;
-            case R.id.menu_import:
-                importData();
-                return true;
-            case R.id.menu_export:
-                exportData();
-                return true;
-            case R.id.menu_add:
-                addAscent();
-                return true;
-            case R.id.menu_score:
-                showScore();
-                return true;
-            case R.id.menu_top10:
-                showTop10();
-                return true;
-            case R.id.menu_summary:
-                showSummary();
-                return true;
-            case R.id.menu_grade:
-                showGrades();
-                return true;
-//            case R.id.menu_projects:
-//                projectsList();
-//                return true;
-        }
-        return false;
+        return super.onOptionsItemSelected(item);
     }
 
     private void showSummary() {

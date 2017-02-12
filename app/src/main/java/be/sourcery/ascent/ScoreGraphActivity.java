@@ -25,7 +25,6 @@ public class ScoreGraphActivity extends MyActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.score);
         setTitle(R.string.score);
-        setupActionBar();
         XYMultipleSeriesDataset dataset = getDataset();
         XYSeries series = dataset.getSeriesAt(0);
         XYMultipleSeriesRenderer renderer = getRenderer(series.getMinX() - 0.5, series.getMaxX() + 0.5, series.getMinY() - 200, series.getMaxY() + 200);

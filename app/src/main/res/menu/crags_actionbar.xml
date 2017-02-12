@@ -1,5 +1,5 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/search"
+    <item android:id="@+id/cragsearch"
           android:title="@string/menu_search"
           android:icon="@drawable/ic_menu_search"
           android:showAsAction="collapseActionView|ifRoom"

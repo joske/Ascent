@@ -39,7 +39,6 @@ public class ImportDataActivity extends MyActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.import_data);
         setTitle(R.string.importData);
-        setupActionBar();
 
         // Capture our button from layout
         TextView text = (TextView)findViewById(R.id.importTitle);
