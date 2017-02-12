@@ -62,8 +62,8 @@
 
 	<string-array name="activities">
 		<item>Crags</item>
-		<item>Score</item>
-		<item>Grade</item>
+		<item>Score Graph</item>
+		<item>Grade Pyramid</item>
 		<item>Top10</item>
 		<item>Overview</item>
 		<item>Import</item>
