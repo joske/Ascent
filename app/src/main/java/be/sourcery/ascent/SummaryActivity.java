@@ -20,7 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Spinner;
-
+import android.widget.TextView;
 
 
 public class SummaryActivity extends MyActivity {
@@ -76,6 +76,7 @@ public class SummaryActivity extends MyActivity {
         ArrayAdapter<String> yearAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, years);
         yearSpinner.setAdapter(yearAdapter);
+        yearSpinner.setEnabled(true);
         yearSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 
             public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long rowId) {
@@ -128,6 +129,10 @@ public class SummaryActivity extends MyActivity {
                 showDetails(grade);
             }
         });
+        TextView countView = (TextView) this.findViewById(R.id.summaryView);
+        Crag cragObject = db.getCrag(crag);
+        int count = db.getCount(crag, year);
+        countView.setText(String.format("Summary for %s : %d ascents", cragObject != null ? cragObject.getName() : "all crags", count));
     }
 
     protected void showDetails(String grade) {

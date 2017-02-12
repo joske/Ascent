@@ -614,7 +614,7 @@ public class InternalDB {
             selectionArgs = new String[] { "" + cragId};
         }
         Cursor cursor = database.query("ascent_routes",
-                new String[] { "_id", "route_id", "route_name", "route_grade", "attempts", "style", "date", "stars", "comment" },
+                new String[] { "_id", "route_id", "route_name", "route_grade", "attempts", "style", "date", "stars", "comment", "crag_name" },
                 whereClause, selectionArgs, null, null, "date desc, _id asc");
         return cursor;
     }
@@ -641,7 +641,7 @@ public class InternalDB {
         return cursor;
     }
 
-    protected int getCount(long cragId, boolean last12Months) {
+    public int getCount(long cragId, boolean last12Months) {
         String whereClause = "style_id <> 7";
         if (last12Months) {
             whereClause += " and (julianday(date('now'))- julianday(date) < 365)";
@@ -651,6 +651,34 @@ public class InternalDB {
             whereClause += " and crag_id = ?";
             selectionArgs = new String[] { "" + cragId};
         }
+        Cursor cursor = database.query("ascent_routes",
+                new String[] { "_id", "date" },
+                whereClause,
+                selectionArgs,
+                null,
+                null,
+                "date desc");
+        int count = cursor.getCount();
+        cursor.close();
+        return count;
+    }
+
+    public int getCount(long cragId, int year) {
+        String whereClause = "style_id <> 7";
+        if (year != -1) {
+            whereClause += " and strftime('%Y', date) = ?";
+        }
+        if (cragId != -1) {
+            whereClause += " and crag_id = ?";
+        }
+        List<String> selectionList = new ArrayList<String>();
+        if (year != -1) {
+            selectionList.add("" + year);
+        }
+        if (cragId != -1) {
+            selectionList.add("" + cragId);
+        }
+        String[] selectionArgs = selectionList.toArray(new String[selectionList.size()]);
         Cursor cursor = database.query("ascent_routes",
                 new String[] { "_id", "date" },
                 whereClause,

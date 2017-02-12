@@ -1,42 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
 	android:orientation="vertical" >
 
-	<LinearLayout
-		android:layout_width="fill_parent"
+	<TableLayout
+		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:paddingBottom="10dp"
 		android:paddingTop="10dp"
 		android:outlineProvider="bounds"
 		android:elevation="5dp"
+		android:shrinkColumns="*"
+		android:stretchColumns="*"
 		android:background="@android:color/white"
 		android:orientation="horizontal" >
+		<TableRow>
+			<TextView
+				android:id="@+id/countView"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:paddingLeft="10dp"
+				android:text="@string/example_ascents"
+				android:textSize="12sp" >
+			</TextView>
 
-		<TextView
-			android:id="@+id/countView"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:paddingRight="20dp"
-			android:text="@string/example_ascents"
-			android:textSize="12sp" >
+			<TextView
+				android:id="@+id/scoreView"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+                android:paddingRight="10dp"
+				android:gravity="right"
+				android:text="@string/example_score"
+				android:textSize="12sp" >
 		</TextView>
-
-		<TextView
-			android:id="@+id/scoreView"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_gravity="right"
-			android:text="@string/example_score"
-			android:textSize="12sp" >
-		</TextView>
-	</LinearLayout>
+		</TableRow>
+	</TableLayout>
 
 	<LinearLayout
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
 		android:paddingTop="10dp"
 		android:elevation="5dp"
 		android:background="@android:color/white"
@@ -47,20 +55,21 @@
 		    android:layout_width="180dp"
 		    android:layout_height="wrap_content"
 		    android:text="@string/crags"
-		    android:textSize="18sp"
+		    android:textSize="18dp"
 		    android:textStyle="bold" >
 
 		</TextView>
 		<Spinner
 			android:id="@+id/crag_spinner"
-			android:layout_width="fill_parent"
-			android:layout_height="fill_parent" />
+            android:textSize="18dp"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent" />
 	</LinearLayout>
 
 	<ListView
 	    android:id="@+id/list"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
 	    android:fastScrollEnabled="true" >
 	</ListView>
 

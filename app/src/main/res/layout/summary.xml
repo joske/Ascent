@@ -4,6 +4,29 @@
 	android:layout_height="fill_parent"
 	android:orientation="vertical" >
 
+	<TableLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:paddingBottom="10dp"
+		android:paddingTop="20dp"
+		android:outlineProvider="bounds"
+		android:elevation="5dp"
+		android:shrinkColumns="*"
+		android:stretchColumns="*"
+		android:background="@android:color/white"
+		android:orientation="horizontal" >
+		<TableRow>
+			<TextView
+				android:id="@+id/summaryView"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:paddingLeft="10dp"
+				android:text="@string/example_summary"
+				android:textSize="18dp" >
+			</TextView>
+		</TableRow>
+	</TableLayout>
+
 	<LinearLayout
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
@@ -23,7 +46,6 @@
 		<Spinner
 			android:id="@+id/year_spinner"
 			android:layout_width="80dp"
-			android:paddingRight="80dp"
 			android:layout_height="fill_parent" />
 
 		<Space android:layout_weight="1" android:layout_width="0dp"
@@ -31,9 +53,10 @@
 
 		<TextView
 		    android:id="@+id/cragsLabel"
-		    android:layout_width="80dp"
+		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 		    android:text="@string/crags"
+            android:paddingRight="20dp"
 		    android:textSize="18sp"
 		    android:textStyle="bold" />
 		<Spinner
@@ -76,8 +99,7 @@
 	<ListView
 		android:id="@+id/list"
 		android:layout_width="fill_parent"
-		android:layout_height="fill_parent"
-		android:fastScrollEnabled="true" >
+		android:layout_height="fill_parent">
 	</ListView>
 
 </LinearLayout>

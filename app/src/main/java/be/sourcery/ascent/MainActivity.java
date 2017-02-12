@@ -27,6 +27,7 @@ import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -60,6 +61,7 @@ public class MainActivity extends MyActivity {
     private CursorAdapter adapter;
     private InternalDB db;
     private ListView listView;
+    ActionBarDrawerToggle mDrawerToggle;
     private Cursor cursor;
     private long crag = -1;
     private List<String> crags;
@@ -70,11 +72,15 @@ public class MainActivity extends MyActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
         setTitle(R.string.latestAscents);
-//        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(myToolbar);
+        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        mToolbar.inflateMenu(R.menu.main_actionbar);
+
         db = new InternalDB(this);
-        FloatingActionButton FAB = (FloatingActionButton) findViewById(R.id.fab);
-        FAB.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 addAscent();
@@ -83,10 +89,7 @@ public class MainActivity extends MyActivity {
         String[] activities = getResources().getStringArray(R.array.activities);
         final DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         final ListView mDrawerList = (ListView) findViewById(R.id.left_drawer);
-
-        // Set the adapter for the list view
         mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, activities));
-        // Set the list's click listener
         mDrawerList.setOnItemClickListener(new ListView.OnItemClickListener() {
 
             @Override
@@ -123,6 +126,24 @@ public class MainActivity extends MyActivity {
                 }
             }
         });
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.drawer_open, R.string.drawer_close) {
+
+            /**
+             * Called when a drawer has settled in a completely closed state.
+             */
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+            }
+
+            /**
+             * Called when a drawer has settled in a completely open state.
+             */
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+            }
+        };
+        mDrawerToggle.syncState();
+
         populateList();
         update();
     }
@@ -169,8 +190,8 @@ public class MainActivity extends MyActivity {
         cursor = db.getAscentsCursor(crag);
         startManagingCursor(cursor);
         adapter = new SimpleCursorAdapter(getApplicationContext(), R.layout.ascent_list_item, cursor,
-                new String[] {"date", "style", "route_grade", "route_name", "comment"},
-                new int[] {R.id.dateCell, R.id.styleCell, R.id.gradeCell, R.id.nameCell, R.id.commentCell},
+                new String[] {"date", "style", "route_grade", "route_name", "crag_name", "comment"},
+                new int[] {R.id.dateCell, R.id.styleCell, R.id.gradeCell, R.id.nameCell, R.id.cragCell, R.id.commentCell},
                 0);
         listView.setAdapter(adapter);
         TextView countView = (TextView) this.findViewById(R.id.countView);
@@ -188,7 +209,6 @@ public class MainActivity extends MyActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_actionbar, menu);
 
-        // Associate searchable configuration with the SearchView
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
         if (searchView != null) {
@@ -276,6 +296,21 @@ public class MainActivity extends MyActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState)
+    {
+        super.onPostCreate(savedInstanceState);
+        mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig)
+    {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
 
     private void showSummary() {
         Intent myIntent = new Intent(this, SummaryActivity.class);
