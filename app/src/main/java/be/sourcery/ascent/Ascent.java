@@ -38,6 +38,8 @@ public class Ascent {
     private String comment;
     private int stars;
     private int score;
+    private boolean modified;
+    private String eightaId;
 
     public Ascent() {
     }
@@ -62,11 +64,9 @@ public class Ascent {
         return id;
     }
 
-
     public void setId(long id) {
         this.id = id;
     }
-
 
     public int getStyle() {
         return style;
@@ -95,21 +95,17 @@ public class Ascent {
         this.style = style;
     }
 
-
     public int getAttempts() {
         return attempts;
     }
-
 
     public void setAttempts(int attempts) {
         this.attempts = attempts;
     }
 
-
     public Date getDate() {
         return date;
     }
-
 
     public void setDate(Date date) {
         this.date = date;
@@ -123,21 +119,17 @@ public class Ascent {
         return route;
     }
 
-
     public String getComment() {
         return comment;
     }
-
 
     public void setComment(String comment) {
         this.comment = comment;
     }
 
-
     public int getStars() {
         return stars;
     }
-
 
     public void setStars(int stars) {
         this.stars = stars;
@@ -155,4 +147,19 @@ public class Ascent {
         return score;
     }
 
+    public String getEightaId() {
+        return eightaId;
+    }
+
+    public void setEightaId(String eightaId) {
+        this.eightaId = eightaId;
+    }
+
+    public boolean isModified() {
+        return modified;
+    }
+
+    public void setModified(boolean modified) {
+        this.modified = modified;
+    }
 }

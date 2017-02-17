@@ -85,8 +85,10 @@ public class EditAscentActivity extends MyActivity {
 		String grade = ascent.getRoute().getGrade();
 		int gradeIndex = gadapter.getPosition(grade);
 		gradeView.setSelection(gradeIndex);
+        EditText sectorView = (EditText) findViewById(R.id.sectorName);
+        sectorView.setText(ascent.getRoute().getSector());
 
-		Spinner s = (Spinner) findViewById(R.id.cragspinner);
+        Spinner s = (Spinner) findViewById(R.id.cragspinner);
 		Cursor cursor = db.getCragsCursor();
 		startManagingCursor(cursor);
 		CursorAdapter ca = new SimpleCursorAdapter(this, R.layout.cragspinner,
@@ -165,13 +167,17 @@ public class EditAscentActivity extends MyActivity {
 				Spinner s = (Spinner) findViewById(R.id.cragspinner);
 				long selectedItemId = s.getSelectedItemId();
 				Crag crag = db.getCrag(selectedItemId);
+				EditText sectorView = (EditText) findViewById(R.id.sectorName);
+				String sector = sectorView.getText().toString();
 				Route r = ascent.getRoute();
 				if (!(r.getName().equals(name))
 						|| !(r.getGrade().equals(grade))
-						|| !(r.getCrag().equals(crag))) {
+						|| !(r.getCrag().equals(crag))
+                        || !(r.getSector().equals(sector))) {
 					r.setName(name);
 					r.setGrade(grade);
 					r.setCrag(crag);
+                    r.setSector(sector);
 					db.updateRoute(r);
 				}
 				int pos = ss.getSelectedItemPosition();
@@ -199,6 +205,7 @@ public class EditAscentActivity extends MyActivity {
 				EditText commentView = (EditText) findViewById(R.id.comment);
 				String comment = commentView.getText().toString();
 				ascent.setComment(comment);
+                ascent.setModified(true);
 				db.updateAscent(ascent);
 				if (ascent != null) {
 					text = "Ascent updated";

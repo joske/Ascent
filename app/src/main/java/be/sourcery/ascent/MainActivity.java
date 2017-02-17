@@ -27,8 +27,11 @@ import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.DrawerLayout;
@@ -57,6 +60,10 @@ public class MainActivity extends MyActivity {
     private static final int EXPORT_DATA_REQUEST = 1;
     private static final int IMPORT_DATA_REQUEST = 2;
     private static final int REPEAT_REQUEST = 3;
+    public static final int EIGHTA_LOGIN = 4;
+
+    protected static final String APP_NAME = "be.sourcery.ascent.Ascent";
+    protected static final String FIRST_TIME = "FIRST_TIME";
 
     private CursorAdapter adapter;
     private InternalDB db;
@@ -65,6 +72,7 @@ public class MainActivity extends MyActivity {
     private Cursor cursor;
     private long crag = -1;
     private List<String> crags;
+    private SharedPreferences prefs;
 
     /** Called when the activity is first created. */
     @Override
@@ -72,6 +80,7 @@ public class MainActivity extends MyActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
         setTitle(R.string.latestAscents);
+        prefs = getSharedPreferences(APP_NAME, MODE_PRIVATE);
         Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -121,6 +130,10 @@ public class MainActivity extends MyActivity {
                         break;
                     case 6:
                         exportData();
+                        mDrawerLayout.closeDrawer(mDrawerList);
+                        break;
+                    case 7:
+                        eighta();
                         mDrawerLayout.closeDrawer(mDrawerList);
                         break;
                 }
@@ -190,8 +203,8 @@ public class MainActivity extends MyActivity {
         cursor = db.getAscentsCursor(crag);
         startManagingCursor(cursor);
         adapter = new SimpleCursorAdapter(getApplicationContext(), R.layout.ascent_list_item, cursor,
-                new String[] {"date", "style", "route_grade", "route_name", "crag_name", "comment"},
-                new int[] {R.id.dateCell, R.id.styleCell, R.id.gradeCell, R.id.nameCell, R.id.cragCell, R.id.commentCell},
+                new String[] {"date", "style", "route_grade", "route_name", "crag_name", "sector", "comment"},
+                new int[] {R.id.dateCell, R.id.styleCell, R.id.gradeCell, R.id.nameCell, R.id.cragCell, R.id.sectorCell, R.id.commentCell},
                 0);
         listView.setAdapter(adapter);
         TextView countView = (TextView) this.findViewById(R.id.countView);
@@ -287,6 +300,15 @@ public class MainActivity extends MyActivity {
 
     public void onResume() {
         super.onResume();
+        ConnectivityManager cm = (ConnectivityManager)getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+        if (prefs.getBoolean(FIRST_TIME, true)) {
+            prefs.edit().putBoolean(FIRST_TIME, false).commit();
+            if (isConnected) {
+                eighta();
+            }
+        }
         update();
     }
 
@@ -312,9 +334,14 @@ public class MainActivity extends MyActivity {
     }
 
 
-    private void showSummary() {
+   private void showSummary() {
         Intent myIntent = new Intent(this, SummaryActivity.class);
         startActivity(myIntent);
+    }
+
+    private void eighta() {
+        Intent myIntent = new Intent(this, EightAActivity.class);
+        startActivityForResult(myIntent, EIGHTA_LOGIN);
     }
 
     private void showScore() {

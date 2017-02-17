@@ -1,10 +1,25 @@
 package be.sourcery.ascent;
 
 import android.util.Log;
+import android.util.Xml;
 
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.IOException;
+import java.io.StringReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import static java.lang.System.in;
 
 /**
  * Created by jos on 06/02/17.
@@ -43,7 +58,7 @@ public class CodecUtil {
                 int stars = Integer.parseInt(strings[8]);
 
                 Crag crag = new Crag(-1, cragName, cragCountry);
-                Route route = new Route(-1, routeName, routeGrade, crag, 0);
+                Route route = new Route(-1, routeName, routeGrade, crag, 0, null);
                 return new Ascent(-1, route, style, attempts, date, comments, stars, 0);
             } catch (Exception e) {
                 Log.e(CodecUtil.class.getName(), e.getMessage(), e);

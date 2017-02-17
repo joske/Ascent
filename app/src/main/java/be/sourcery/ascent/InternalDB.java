@@ -63,40 +63,46 @@ public class InternalDB {
         ascent.getRoute().setCrag(crag);
         Route route = getRoute(ascent.getRoute());
         if (route == null) {
-            route = addRoute(ascent.getRoute().getName(), ascent.getRoute().getGrade(), crag);
+            route = addRoute(ascent.getRoute().getName(), ascent.getRoute().getGrade(), crag, ascent.getRoute().getSector());
         }
         ascent.setRoute(route);
     }
 
-    public Route addRoute(String name, String grade, Crag crag) {
-        String stmt = "insert into routes (name, grade, crag_id) values (?, ?, ?);";
+    public Route addRoute(String name, String grade, Crag crag, String sector) {
+        String stmt = "insert into routes (name, grade, crag_id, sector) values (?, ?, ?, ?);";
         SQLiteStatement insert = database.compileStatement(stmt);
         insert.bindString(1, name);
         insert.bindString(2, grade);
         insert.bindLong(3, crag.getId());
+        if (sector != null) {
+            insert.bindString(4, sector);
+        } else {
+            insert.bindNull(4);
+        }
         long id = insert.executeInsert();
-        Route r = new Route(id, name, grade, crag, getGradeScore(grade));
+        Route r = new Route(id, name, grade, crag, getGradeScore(grade), sector);
         return r;
     }
 
     public void updateRoute(Route r) {
-        String stmt = "update routes set name = ?, grade = ?, crag_id = ? where _id = ?;";
+        String stmt = "update routes set name = ?, grade = ?, crag_id = ?, sector = ? where _id = ?;";
         SQLiteStatement update = database.compileStatement(stmt);
         update.bindString(1, r.getName());
         update.bindString(2, r.getGrade());
         update.bindLong(3, r.getCrag().getId());
         update.bindLong(4, r.getId());
+        update.bindString(5, r.getSector());
         r.setGradeScore(getGradeScore(r.getGrade()));
         update.execute();
     }
 
-    public Ascent addAscent(Project project, Date date, int attempts, int style, String comment, int stars) {
+    public Ascent addAscent(Project project, Date date, int attempts, int style, String comment, int stars, boolean modified, String eighta_id) {
         database.beginTransaction();
         Route route;
         int score;
         long id;
         try {
-            String stmt = "insert into ascents (route_id, attempts, style_id, date, comment, stars, score) values (?, ?, ?, ?, ?, ?, ?);";
+            String stmt = "insert into ascents (route_id, attempts, style_id, date, comment, stars, score, modified, eighta_id) values (?, ?, ?, ?, ?, ?, ?, ?, ?);";
             SQLiteStatement insert = database.compileStatement(stmt);
             route = project.getRoute();
             insert.bindLong(1, route.getId());
@@ -112,6 +118,12 @@ public class InternalDB {
                 score = gradeScore + styleScore;
             }
             insert.bindLong(7, score);
+            insert.bindLong(8, modified ? 1 : 0);
+            if (eighta_id != null) {
+                insert.bindString(9, eighta_id);
+            } else {
+                insert.bindNull(9);
+            }
             id = insert.executeInsert();
             deleteProject(project);
             database.setTransactionSuccessful();
@@ -123,17 +135,17 @@ public class InternalDB {
 
     public Ascent addAscent(Ascent ascent) {
         addRoute(ascent);
-        return addAscent(ascent.getRoute(), ascent.getDate(), ascent.getAttempts(), ascent.getStyle(), ascent.getComment(), ascent.getStars());
+        return addAscent(ascent.getRoute(), ascent.getDate(), ascent.getAttempts(), ascent.getStyle(), ascent.getComment(), ascent.getStars(), ascent.isModified(), ascent.getEightaId());
     }
 
-    public Ascent addAscent(Route route, Date date, int attempts, int style, String comment, int stars) {
-        String stmt = "insert into ascents (route_id, attempts, style_id, date, comment, stars, score) values (?, ?, ?, ?, ?, ?, ?);";
+    public Ascent addAscent(Route route, Date date, int attempts, int style, String comment, int stars, boolean modified, String eightaId) {
+        String stmt = "insert into ascents (route_id, attempts, style_id, date, comment, stars, score, modified, eighta_id) values (?, ?, ?, ?, ?, ?, ?, ?, ?);";
         SQLiteStatement insert = database.compileStatement(stmt);
         insert.bindLong(1, route.getId());
         insert.bindLong(2, attempts);
         insert.bindLong(3, style);
         insert.bindString(4, fmt.format(date));
-        insert.bindString(5, comment);
+        insert.bindString(5, comment != null ? comment : "");
         insert.bindLong(6, stars);
         int totalScore = 0;
         if (style != 5 && style != 6 && style != 7) {
@@ -142,12 +154,14 @@ public class InternalDB {
             totalScore = calculateScore(attempts, style, gradeScore, styleScore);
         }
         insert.bindLong(7, totalScore);
+        insert.bindLong(8, modified ? 1 : 0);
+        insert.bindString(9, eightaId);
         long id =  insert.executeInsert();
         return new Ascent(id, route, style, attempts, new Date(), comment, stars, totalScore);
     }
 
     public void updateAscent(Ascent ascent) {
-        String stmt = "update ascents set attempts = ?, style_id = ?, date = ?, comment = ?, stars = ?, score = ? where _id = ?;";
+        String stmt = "update ascents set attempts = ?, style_id = ?, date = ?, comment = ?, stars = ?, score = ?, modified = ? where _id = ?;";
         SQLiteStatement update = database.compileStatement(stmt);
         int attempts = ascent.getAttempts();
         update.bindLong(1, attempts);
@@ -161,6 +175,7 @@ public class InternalDB {
         int totalScore = calculateScore(attempts, style, gradeScore, styleScore);
         update.bindLong(6, totalScore);
         update.bindLong(7, ascent.getId());
+        update.bindLong(8, ascent.isModified() ? 1 : 0);
         update.execute();
     }
 
@@ -287,7 +302,7 @@ public class InternalDB {
 
     public List<Route> getRoutes() {
         List<Route> list = new ArrayList<Route>();
-        Cursor cursor = database.query("routes", new String[] { "_id", "name", "grade", "crag_id" },
+        Cursor cursor = database.query("routes", new String[] { "_id", "name", "grade", "crag_id", "sector" },
                 null, null, null, null, "_id desc");
         if (cursor.moveToFirst()) {
             do {
@@ -296,7 +311,8 @@ public class InternalDB {
                 String grade = cursor.getString(2);
                 long cragId = cursor.getLong(3);
                 int gradeScore = getGradeScore(grade);
-                Route r = new Route(id, name, grade, getCrag(cragId), gradeScore);
+                String sector = cursor.getString(4);
+                Route r = new Route(id, name, grade, getCrag(cragId), gradeScore, sector);
                 list.add(r);
             } while (cursor.moveToNext());
         }
@@ -308,7 +324,7 @@ public class InternalDB {
 
     public List<Route> getRoutes(Crag crag) {
         List<Route> list = new ArrayList<Route>();
-        Cursor cursor = database.query("routes", new String[] { "_id", "name", "grade" },
+        Cursor cursor = database.query("routes", new String[] { "_id", "name", "grade", "sector"},
                 "crag_id = ?", new String[] { "" + crag.getId()}, null, null, "_id desc");
         if (cursor.moveToFirst()) {
             do {
@@ -316,7 +332,8 @@ public class InternalDB {
                 String name = cursor.getString(1);
                 String grade = cursor.getString(2);
                 int gradeScore = getGradeScore(grade);
-                Route r = new Route(id, name, grade, crag, gradeScore);
+                String sector = cursor.getString(4);
+                Route r = new Route(id, name, grade, crag, gradeScore, sector);
                 list.add(r);
             } while (cursor.moveToNext());
         }
@@ -354,14 +371,15 @@ public class InternalDB {
 
     public Route getRoute(long id) {
         Route c = null;
-        Cursor cursor = database.query("routes", new String[] { "_id", "name", "grade", "crag_id" },
+        Cursor cursor = database.query("routes", new String[] { "_id", "name", "grade", "crag_id", "sector" },
                 "_id = ?", new String[] { "" + id}, null, null, "name desc");
         if (cursor.moveToFirst()) {
             String name = cursor.getString(1);
             String grade = cursor.getString(2);
             long crag_id = cursor.getLong(3);
             int gradeScore = getGradeScore(grade);
-            c = new Route(id, name, grade, getCrag(crag_id), gradeScore);
+            String sector = cursor.getString(4);
+            c = new Route(id, name, grade, getCrag(crag_id), gradeScore, sector);
         }
         if (cursor != null && !cursor.isClosed()) {
             cursor.close();
@@ -371,15 +389,16 @@ public class InternalDB {
 
     public Route getRoute(Route route) {
         Route c = null;
-        Cursor cursor = database.query("routes", new String[] { "_id", "name", "grade", "crag_id" },
+        Cursor cursor = database.query("routes", new String[] { "_id", "name", "grade", "crag_id", "sector" },
                 "name = ? and crag_id = ?", new String[] { route.getName(), "" + route.getCrag().getId()}, null, null, "_id desc");
         if (cursor.moveToFirst()) {
             long id = cursor.getLong(0);
             String name = cursor.getString(1);
             String grade = cursor.getString(2);
             long crag_id = cursor.getLong(3);
+            String sector = cursor.getString(4);
             int gradeScore = getGradeScore(grade);
-            c = new Route(id, name, grade, getCrag(crag_id), gradeScore);
+            c = new Route(id, name, grade, getCrag(crag_id), gradeScore, sector);
         }
         if (cursor != null && !cursor.isClosed()) {
             cursor.close();
@@ -456,7 +475,7 @@ public class InternalDB {
         }
         String[] selectionArgs = selectionList.toArray(new String[selectionList.size()]);
         Cursor cursor = database.query("ascent_routes",
-                new String[] { "_id", "route_id", "attempts", "style_id", "date", "comment", "stars", "score" },
+                new String[] { "_id", "route_id", "attempts", "style_id", "date", "comment", "stars", "score", "modified", "eighta_id" },
                 whereClause, selectionArgs, null, null, "date desc, _id asc");
         if (cursor.moveToFirst()) {
             do {
@@ -467,6 +486,8 @@ public class InternalDB {
                 String date = cursor.getString(4);
                 String comment = cursor.getString(5);
                 int stars = cursor.getInt(6);
+                boolean modified = cursor.getInt(7) == 1;
+                String eighta_id = cursor.getString(8);
                 Ascent a = new Ascent();
                 Route r = getRoute(route_id);
                 a.setId(id);
@@ -476,6 +497,8 @@ public class InternalDB {
                 a.setComment(comment);
                 a.setStars(stars);
                 a.setScore(cursor.getInt(7));
+                a.setModified(modified);
+                a.setEightaId(eighta_id);
                 try {
                     if (date != null) {
                         a.setDate(fmt.parse(date));
@@ -494,7 +517,7 @@ public class InternalDB {
 
     public List<Ascent> getAscents() {
         List<Ascent> list = new ArrayList<Ascent>();
-        Cursor cursor = database.query("ascents", new String[] { "_id", "route_id", "attempts", "style_id", "date", "comment", "stars", "score" },
+        Cursor cursor = database.query("ascents", new String[] { "_id", "route_id", "attempts", "style_id", "date", "comment", "stars", "score", "modified", "eighta_id" },
                 null, null, null, null, "date desc, _id asc");
         if (cursor.moveToFirst()) {
             do {
@@ -514,6 +537,10 @@ public class InternalDB {
                 a.setComment(comment);
                 a.setStars(stars);
                 a.setScore(cursor.getInt(7));
+                boolean modified = cursor.getInt(8) == 1;
+                String eighta_id = cursor.getString(9);
+                a.setModified(modified);
+                a.setEightaId(eighta_id);
                 try {
                     if (date != null) {
                         a.setDate(fmt.parse(date));
@@ -532,7 +559,7 @@ public class InternalDB {
 
     public List<Ascent> getSortedAscentsForLast12Months() {
         List<Ascent> list = new ArrayList<Ascent>();
-        Cursor cursor = database.query("ascent_routes", new String[] { "_id", "route_id", "route_grade", "attempts", "style_id", "date", "comment", "stars", "score" },
+        Cursor cursor = database.query("ascent_routes", new String[] { "_id", "route_id", "route_grade", "attempts", "style_id", "date", "comment", "stars", "score", "modified", "eighta_id" },
                 "julianday(date('now'))- julianday(date) < 365", null, null, null, "route_grade desc");
         if (cursor.moveToFirst()) {
             do {
@@ -552,6 +579,10 @@ public class InternalDB {
                 a.setComment(comment);
                 a.setStars(stars);
                 a.setScore(cursor.getInt(7));
+                boolean modified = cursor.getInt(8) == 1;
+                String eighta_id = cursor.getString(9);
+                a.setModified(modified);
+                a.setEightaId(eighta_id);
                 try {
                     if (date != null) {
                         a.setDate(fmt.parse(date));
@@ -570,7 +601,7 @@ public class InternalDB {
 
     public List<Ascent> getSortedAscents() {
         List<Ascent> list = new ArrayList<Ascent>();
-        Cursor cursor = database.query("ascent_routes", new String[] { "_id", "route_id", "route_grade", "attempts", "style_id", "date", "comment", "stars", "score" },
+        Cursor cursor = database.query("ascent_routes", new String[] { "_id", "route_id", "route_grade", "attempts", "style_id", "date", "comment", "stars", "score", "modified", "eighta_id" },
                 null, null, null, null, "route_grade desc");
         if (cursor.moveToFirst()) {
             do {
@@ -590,6 +621,10 @@ public class InternalDB {
                 a.setComment(comment);
                 a.setStars(stars);
                 a.setScore(cursor.getInt(7));
+                boolean modified = cursor.getInt(8) == 1;
+                String eighta_id = cursor.getString(9);
+                a.setModified(modified);
+                a.setEightaId(eighta_id);
                 try {
                     if (date != null) {
                         a.setDate(fmt.parse(date));
@@ -614,7 +649,7 @@ public class InternalDB {
             selectionArgs = new String[] { "" + cragId};
         }
         Cursor cursor = database.query("ascent_routes",
-                new String[] { "_id", "route_id", "route_name", "route_grade", "attempts", "style", "date", "stars", "comment", "crag_name" },
+                new String[] { "_id", "route_id", "route_name", "route_grade", "attempts", "style", "date", "stars", "comment", "crag_name", "sector" },
                 whereClause, selectionArgs, null, null, "date desc, _id asc");
         return cursor;
     }
@@ -624,20 +659,6 @@ public class InternalDB {
                 new String[] { "_id", "route_id", "route_name", "route_grade", "attempts", "style", "date" },
                 "route_grade = ?" + (allTime ? "" : " and julianday(date('now'))- julianday(date) < 365"),
                 new String[] {grade}, null, null, "date desc, _id asc");
-        return cursor;
-    }
-
-    public Cursor getAscentsCursorForHighestScoredLast12Months() {
-        Cursor cursor = database.query("ascent_routes",
-                new String[] { "_id", "route_id", "route_name", "route_grade", "attempts", "style", "date", "score" },
-                "julianday(date('now'))- julianday(date) < 365", null, null, null, "date desc, score desc",  "10");
-        return cursor;
-    }
-
-    public Cursor getAscentsCursorForLast12Months() {
-        Cursor cursor = database.query("ascent_routes",
-                new String[] { "_id", "route_id", "route_name", "route_grade", "attempts", "style", "date", "score" },
-                "julianday(date('now'))- julianday(date) < 365", null, null, null, "route_grade desc");
         return cursor;
     }
 
@@ -856,7 +877,7 @@ public class InternalDB {
     }
 
     public Cursor searchAscents(String query, long crag_id) {
-        String[] columns = new String[] {  "_id", "route_id", "route_name", "route_grade", "attempts", "style", "date", "stars", "crag_name", "comment"  };
+        String[] columns = new String[] {  "_id", "route_id", "route_name", "route_grade", "attempts", "style", "date", "stars", "crag_name", "sector", "comment"  };
         String selection = "route_name like ?";
         String[] selectionArgs = new String[] { "%" + query + "%"};
         if (crag_id != -1) {
@@ -987,7 +1008,7 @@ public class InternalDB {
 
     class OpenHelper extends SQLiteOpenHelper {
 
-        private static final int DATABASE_VERSION = 10;
+        private static final int DATABASE_VERSION = 11;
         private static final String DATABASE_NAME = "ascent";
 
 
@@ -1006,8 +1027,8 @@ public class InternalDB {
             db.execSQL("insert into styles values (5, 'Repeat', 'Rep', 0);");
             db.execSQL("insert into styles values (6, 'Multipitch', 'MP', 0);");
             db.execSQL("insert into styles values (7, 'Tried', 'AT', 0);");
-            db.execSQL("create table routes (_id integer primary key autoincrement, name text, grade text, crag_id integer);");
-            db.execSQL("create table ascents (_id integer primary key autoincrement, route_id int, date text, attempts int, style_id int, comment string, stars int, score int);");
+            db.execSQL("create table routes (_id integer primary key autoincrement, name text, grade text, crag_id integer, sector text);");
+            db.execSQL("create table ascents (_id integer primary key autoincrement, route_id int, date text, attempts int, style_id int, comment string, stars int, score int, eighta_id text, modified int);");
             db.execSQL("create table projects (_id integer primary key autoincrement, route_id int, attempts int);");
             db.execSQL("create table grades (grade text primary key, score number);");
             db.execSQL("insert into grades values ('3', 150);");
@@ -1045,7 +1066,7 @@ public class InternalDB {
             db.execSQL("insert into grades values ('10b+', 1750);");
             db.execSQL("insert into grades values ('10c', 1800);");
             db.execSQL("insert into grades values ('10c+', 1850);");
-            db.execSQL("create view ascent_routes as select a._id as _id, r._id as route_id, r.name as route_name, r.grade as route_grade, a.attempts as attempts, a.comment as comment, s._id as style_id, s.short_name as style, s.score as style_score, a.stars as stars, a.date as date, r.crag_id as crag_id, a.score as score, g.score as grade_score, c.name as crag_name, c._id as crag_id from ascents a inner join routes r on a.route_id = r._id inner join styles s on a.style_id = s._id inner join grades g on g.grade = r.grade inner join crag c on r.crag_id = c._id;");
+            db.execSQL("create view ascent_routes as select a._id as _id, r._id as route_id, r.name as route_name, r.grade as route_grade, a.attempts as attempts, a.comment as comment, s._id as style_id, s.short_name as style, s.score as style_score, a.stars as stars, a.date as date, r.crag_id as crag_id, a.score as score, g.score as grade_score, c.name as crag_name, c._id as crag_id, a.eighta_id as eighta_id, a.modified as modified, r.sector as sector from ascents a inner join routes r on a.route_id = r._id inner join styles s on a.style_id = s._id inner join grades g on g.grade = r.grade inner join crag c on r.crag_id = c._id;");
             db.execSQL("create view project_routes as select p._id as _id, r.name as route_name, r.grade as route_grade, c.name as crag_name, p.attempts as attempts from projects p inner join routes r on p.route_id = r._id inner join crag c on r.crag_id = c._id;");
         }
 
@@ -1058,6 +1079,13 @@ public class InternalDB {
             if (oldVersion == 9) {
                 db.execSQL("drop view ascent_routes;");
                 db.execSQL("create view ascent_routes as select a._id as _id, r._id as route_id, r.name as route_name, r.grade as route_grade, a.attempts as attempts, a.comment as comment, s._id as style_id, s.short_name as style, s.score as style_score, a.stars as stars, a.date as date, r.crag_id as crag_id, a.score as score, g.score as grade_score, c.name as crag_name, c._id as crag_id from ascents a inner join routes r on a.route_id = r._id inner join styles s on a.style_id = s._id inner join grades g on g.grade = r.grade inner join crag c on r.crag_id = c._id;");
+            }
+            if (oldVersion == 10) {
+                db.execSQL("alter table ascents add column modfied int");
+                db.execSQL("alter table ascents add column eighta_id text");
+                db.execSQL("alter table routes add column sector text");
+                db.execSQL("drop view ascent_routes;");
+                db.execSQL("create view ascent_routes as select a._id as _id, r._id as route_id, r.name as route_name, r.grade as route_grade, a.attempts as attempts, a.comment as comment, s._id as style_id, s.short_name as style, s.score as style_score, a.stars as stars, a.date as date, r.crag_id as crag_id, a.score as score, g.score as grade_score, c.name as crag_name, c._id as crag_id, a.eighta_id as eighta_id, a.modified as modified, r.sector as sector from ascents a inner join routes r on a.route_id = r._id inner join styles s on a.style_id = s._id inner join grades g on g.grade = r.grade inner join crag c on r.crag_id = c._id;");
             }
         }
     }

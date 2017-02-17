@@ -68,6 +68,7 @@
 		<item>Overview</item>
 		<item>Import</item>
 		<item>Export</item>
+		<item>8a.nu</item>
 	</string-array>
 
    	<string-array name="styles">
@@ -122,5 +123,6 @@
     <string name="drawer_open">open</string>
     <string name="drawer_close">close</string>
     <string name="example_summary">Kalymnos: 1000 ascents</string>
+	<string name="sector">Sector</string>
 
 </resources>

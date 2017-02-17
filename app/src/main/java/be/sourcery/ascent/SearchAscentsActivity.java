@@ -77,8 +77,8 @@ public class SearchAscentsActivity extends ListActivity {
 
             // Create a simple cursor adapter for the definitions and apply them to the ListView
             final SimpleCursorAdapter adapter = new SimpleCursorAdapter(getApplicationContext(), R.layout.ascent_list_item, cursor,
-                    new String[] {"date", "style", "route_grade", "route_name", "crag_name", "comment"},
-                    new int[] {R.id.dateCell, R.id.styleCell, R.id.gradeCell, R.id.nameCell, R.id.cragCell, R.id.commentCell},
+                    new String[] {"date", "style", "route_grade", "route_name", "crag_name", "sector", "comment"},
+                    new int[] {R.id.dateCell, R.id.styleCell, R.id.gradeCell, R.id.nameCell, R.id.cragCell, R.id.sectorCell, R.id.commentCell},
                     0);
             listView.setAdapter(adapter);
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

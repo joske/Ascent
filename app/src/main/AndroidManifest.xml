@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="be.sourcery.ascent"
-    android:versionCode="1"
-    android:versionName="1.6">
+    android:versionCode="2"
+    android:versionName="2.0">
 
     <uses-sdk
         android:minSdkVersion="16"
@@ -13,6 +13,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:name=".AscentApplication"
@@ -64,6 +65,7 @@
         <activity android:name=".AddProjectActivity" />
         <activity android:name=".Top10Activity" />
         <activity android:name=".SummaryActivity" />
+        <activity android:name=".EightAActivity" />
         <activity
             android:name="com.dropbox.core.android.AuthActivity"
             android:configChanges="orientation|keyboard"

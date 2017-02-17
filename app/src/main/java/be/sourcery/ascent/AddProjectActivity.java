@@ -72,7 +72,7 @@ public class AddProjectActivity extends MyActivity {
                 Spinner s = (Spinner) findViewById(R.id.cragspinner);
                 long selectedItemId = s.getSelectedItemId();
                 Crag crag = db.getCrag(selectedItemId);
-                Route r = db.addRoute(name, grade, crag);
+                Route r = db.addRoute(name, grade, crag, null);
                 Project project = db.addProject(r, 0);
                 if (project != null) {
                     text = "Project added";

@@ -137,7 +137,8 @@ public class AddAscentActivity extends MyActivity {
 				Spinner s = (Spinner) findViewById(R.id.cragspinner);
 				long selectedItemId = s.getSelectedItemId();
 				Crag crag = db.getCrag(selectedItemId);
-				Route r = db.addRoute(name, grade, crag);
+                EditText sectorView = (EditText) findViewById(R.id.sectorName);
+                Route r = db.addRoute(name, grade, crag, sectorView.getText().toString());
 				if (r != null) {
 					text = "Route added";
 				}
@@ -165,7 +166,7 @@ public class AddAscentActivity extends MyActivity {
 				EditText commentView = (EditText) findViewById(R.id.comment);
 				String comment = commentView.getText().toString();
 				Ascent ascent = db.addAscent(r, date, attempts, pos + 1,
-						comment, stars);
+						comment, stars, true, null);
 				if (ascent != null) {
 					text = "Ascent added";
 				}

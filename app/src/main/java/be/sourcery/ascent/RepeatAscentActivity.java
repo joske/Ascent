@@ -82,7 +82,7 @@ public class RepeatAscentActivity extends MyActivity {
                 }
                 EditText commentView = (EditText)findViewById(R.id.comment);
                 String comment = commentView.getText().toString();
-                db.addAscent(origAscent.getRoute(), date, 1, Ascent.STYLE_REPEAT, comment, origAscent.getStars());
+                db.addAscent(origAscent.getRoute(), date, 1, Ascent.STYLE_REPEAT, comment, origAscent.getStars(), true, null);
 
                 setResult(RESULT_OK);
                 Toast.makeText(RepeatAscentActivity.this, "Ascent added", Toast.LENGTH_SHORT).show();

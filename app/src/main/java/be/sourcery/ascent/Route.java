@@ -25,46 +25,41 @@ public class Route {
     private Crag crag;
     private String grade;
     private int score;
+    private String sector;
 
-    public Route(long id, String name, String grade, Crag crag, int score) {
+    public Route(long id, String name, String grade, Crag crag, int score, String sector) {
         super();
         this.id = id;
         this.name = name;
         this.crag = crag;
         this.grade = grade;
         this.score = score;
+        this.sector = sector;
     }
-
 
     public long getId() {
         return id;
     }
 
-
     public void setId(long id) {
         this.id = id;
     }
-
 
     public String getName() {
         return name;
     }
 
-
     public void setName(String name) {
         this.name = name;
     }
-
 
     public Crag getCrag() {
         return crag;
     }
 
-
     public void setCrag(Crag crag) {
         this.crag = crag;
     }
-
 
     public String getGrade() {
         return grade;
@@ -86,4 +81,11 @@ public class Route {
         return name + " " + grade + " (" + crag + ")";
     }
 
+    public String getSector() {
+        return sector;
+    }
+
+    public void setSector(String sector) {
+        this.sector = sector;
+    }
 }

@@ -97,7 +97,7 @@ public class TickProjectActivity extends MyActivity {
                 RatingBar starsView = (RatingBar)findViewById(R.id.stars);
                 EditText commentView = (EditText)findViewById(R.id.comment);
                 String comment = commentView.getText().toString();
-                db.addAscent(project, date, attempts, 3, comment, (int)starsView.getRating());
+                db.addAscent(project, date, attempts, 3, comment, (int)starsView.getRating(), true, null);
                 text = "Ascent added";
 
                 if (text != null) {

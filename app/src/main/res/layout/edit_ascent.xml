@@ -40,7 +40,7 @@
 
             <TextView
                 android:id="@+id/craglabel"
-                android:layout_width="105dp"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:text="@string/crag"
                 android:textSize="18sp"
@@ -48,17 +48,35 @@
 
             <Spinner
                 android:id="@+id/cragspinner"
-                android:layout_width="200dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:prompt="@string/crag" />
+                android:textSize="18sp"/>
+        </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
             <TextView
-                android:id="@+id/dateDisplay"
-                android:layout_width="wrap_content"
+                android:id="@+id/sectorlabel"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
+                android:text="@string/sector"
                 android:textSize="18sp"
                 android:textStyle="bold" />
+            <EditText
+                android:id="@+id/sectorName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:inputType="textCapWords"
+                android:textSize="18sp" />
         </LinearLayout>
+        <TextView
+            android:id="@+id/dateDisplay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="fill_parent"
