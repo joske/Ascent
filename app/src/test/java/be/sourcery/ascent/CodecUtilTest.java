@@ -31,7 +31,7 @@ public class CodecUtilTest {
         Calendar calendar = new GregorianCalendar();
         calendar.set(2017, 1, 6);
         Date date = calendar.getTime();
-        Ascent ascent = new Ascent(-1, new Route(-1, "Foo", "7b", new Crag(-1, "Freyr", "Belgium"), 0), Ascent.STYLE_ONSIGHT, 1, date, "cool", 3, 0);
+        Ascent ascent = new Ascent(-1, new Route(-1, "Foo", "7b", new Crag(-1, "Freyr", "Belgium"), 0, "Pucelles"), Ascent.STYLE_ONSIGHT, 1, date, "cool", 3, 0);
         String encoded = CodecUtil.encode(ascent);
         assertEquals("Foo\t7b\tFreyr\tBelgium\t1\t1\t2017-02-06\tcool\t3\r\n", encoded);
     }
@@ -41,7 +41,7 @@ public class CodecUtilTest {
         Calendar calendar = new GregorianCalendar();
         calendar.set(2017, 1, 6);
         Date date = calendar.getTime();
-        Ascent ascent = new Ascent(-1, new Route(-1, "Foo", "7b", new Crag(-1, "Freyr", "Belgium"), 0), Ascent.STYLE_ONSIGHT, 1, date, "cool ;-)", 3, 0);
+        Ascent ascent = new Ascent(-1, new Route(-1, "Foo", "7b", new Crag(-1, "Freyr", "Belgium"), 0, "Pucelles"), Ascent.STYLE_ONSIGHT, 1, date, "cool ;-)", 3, 0);
         String encoded = CodecUtil.encode(ascent);
         assertEquals("Foo\t7b\tFreyr\tBelgium\t1\t1\t2017-02-06\tcool ;-)\t3\r\n", encoded);
     }
