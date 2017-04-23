@@ -65,7 +65,7 @@
         <activity android:name=".AddProjectActivity" />
         <activity android:name=".Top10Activity" />
         <activity android:name=".SummaryActivity" />
-        <activity android:name=".EightAActivity" />
+        <activity android:name=".EightALoginActivity" />
         <activity
             android:name="com.dropbox.core.android.AuthActivity"
             android:configChanges="orientation|keyboard"

@@ -34,6 +34,7 @@ public class CodecUtil {
         line.append(ascent.getRoute().getName()).append("\t");
         line.append(ascent.getRoute().getGrade()).append("\t");
         line.append(ascent.getRoute().getCrag().getName()).append("\t");
+        line.append(ascent.getRoute().getSector()).append("\t");
         line.append(ascent.getRoute().getCrag().getCountry()).append("\t");
         line.append(ascent.getStyle()).append("\t");
         line.append(ascent.getAttempts()).append("\t");
@@ -45,20 +46,21 @@ public class CodecUtil {
 
     public static Ascent decode(String line) {
         String[] strings = line.split("\t");
-        if (strings.length == 9) {
+        if (strings.length == 10) {
             try {
                 String routeName = strings[0];
                 String routeGrade = strings[1];
                 String cragName = strings[2];
-                String cragCountry = strings[3];
-                int style = Integer.parseInt(strings[4]);
-                int attempts = Integer.parseInt(strings[5]);
-                Date date = fmt.parse(strings[6]);
-                String comments = strings[7];
-                int stars = Integer.parseInt(strings[8]);
+                String sector = strings[3];
+                String cragCountry = strings[4];
+                int style = Integer.parseInt(strings[5]);
+                int attempts = Integer.parseInt(strings[6]);
+                Date date = fmt.parse(strings[7]);
+                String comments = strings[8];
+                int stars = Integer.parseInt(strings[9]);
 
                 Crag crag = new Crag(-1, cragName, cragCountry);
-                Route route = new Route(-1, routeName, routeGrade, crag, 0, null);
+                Route route = new Route(-1, routeName, routeGrade, crag, 0, sector);
                 return new Ascent(-1, route, style, attempts, date, comments, stars, 0);
             } catch (Exception e) {
                 Log.e(CodecUtil.class.getName(), e.getMessage(), e);
@@ -69,7 +71,4 @@ public class CodecUtil {
         return null;
     }
 
-    private static String encode(String plain) {
-        return plain.replaceAll(";", "\\;");
-    }
 }

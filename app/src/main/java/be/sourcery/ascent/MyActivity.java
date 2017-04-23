@@ -16,8 +16,10 @@ import com.dropbox.core.v2.DbxClientV2;
 
 public abstract class MyActivity extends AppCompatActivity {
 
-	protected static final String ACCOUNT_PREFS_NAME = "prefs";
 	protected static final String ACCESS_KEY_NAME = "ACCESS_KEY";
+    public static final String USER_ID = "userId";
+    public static final String SESSION_ID = "sessionId";
+    protected static final String APP_NAME = "be.sourcery.ascent.Ascent";
 	protected boolean loggedIn = false;
 
     @Override
@@ -34,7 +36,7 @@ public abstract class MyActivity extends AppCompatActivity {
      	String accessToken = Auth.getOAuth2Token(); //generate Access Token
         if (accessToken != null) {
             //Store accessToken in SharedPreferences
-            SharedPreferences prefs = getSharedPreferences(ACCOUNT_PREFS_NAME, 0);
+            SharedPreferences prefs = getSharedPreferences(APP_NAME, MODE_PRIVATE);
             prefs.edit().putString("access-token", accessToken).apply();
             String key = prefs.getString(ACCESS_KEY_NAME, null);
             if (key == null || key.length() == 0) {
@@ -45,7 +47,7 @@ public abstract class MyActivity extends AppCompatActivity {
     }
 
     protected DbxClientV2 getClient() {
-        SharedPreferences prefs = getSharedPreferences(ACCOUNT_PREFS_NAME, 0);
+        SharedPreferences prefs = getSharedPreferences(APP_NAME, MODE_PRIVATE);
         String accessToken = prefs.getString("access-token", null);
         if (accessToken != null) {
             DbxRequestConfig requestConfig = new DbxRequestConfig("ascent");
@@ -56,7 +58,7 @@ public abstract class MyActivity extends AppCompatActivity {
     }
 
     protected void clearKeys() {
-        SharedPreferences prefs = getSharedPreferences(ACCOUNT_PREFS_NAME, 0);
+        SharedPreferences prefs = getSharedPreferences(APP_NAME, MODE_PRIVATE);
         Editor edit = prefs.edit();
         edit.clear();
         edit.commit();

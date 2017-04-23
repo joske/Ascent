@@ -91,7 +91,7 @@ public class ExportDataActivity extends MyActivity {
             // routeName;routeGrade;cragName;cragCountry;style;attempts;date;comment;stars
             File importFile = new File(getFilesDir(), "ascent.csv");
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(importFile), "ISO-8859-1"));
-            List<Ascent> ascents = db.getAscents();
+            List<Ascent> ascents = db.getAscents(false);
             for (Iterator<Ascent> iterator = ascents.iterator(); iterator.hasNext(); count++) {
                 Ascent ascent = iterator.next();
                 bw.write(CodecUtil.encode(ascent));

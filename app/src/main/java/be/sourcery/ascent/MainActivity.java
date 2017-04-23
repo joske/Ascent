@@ -32,6 +32,7 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.DrawerLayout;
@@ -55,6 +56,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import be.sourcery.ascent.eighta.EightA;
+
 public class MainActivity extends MyActivity {
 
     private static final int EXPORT_DATA_REQUEST = 1;
@@ -62,7 +65,6 @@ public class MainActivity extends MyActivity {
     private static final int REPEAT_REQUEST = 3;
     public static final int EIGHTA_LOGIN = 4;
 
-    protected static final String APP_NAME = "be.sourcery.ascent.Ascent";
     protected static final String FIRST_TIME = "FIRST_TIME";
 
     private CursorAdapter adapter;
@@ -133,7 +135,7 @@ public class MainActivity extends MyActivity {
                         mDrawerLayout.closeDrawer(mDrawerList);
                         break;
                     case 7:
-                        eighta();
+                        eighASync();
                         mDrawerLayout.closeDrawer(mDrawerList);
                         break;
                 }
@@ -303,10 +305,9 @@ public class MainActivity extends MyActivity {
         ConnectivityManager cm = (ConnectivityManager)getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
-        if (prefs.getBoolean(FIRST_TIME, true)) {
-            prefs.edit().putBoolean(FIRST_TIME, false).commit();
+        if (prefs.getString(USER_ID, null) == null) {
             if (isConnected) {
-                eighta();
+                eightALogin();
             }
         }
         update();
@@ -337,10 +338,36 @@ public class MainActivity extends MyActivity {
    private void showSummary() {
         Intent myIntent = new Intent(this, SummaryActivity.class);
         startActivity(myIntent);
+   }
+
+    private void eighASync() {
+        SharedPreferences prefs = getSharedPreferences(APP_NAME, MODE_PRIVATE);
+        if (prefs.getString(USER_ID, null) == null) {
+            eightALogin();
+        }
+        if (prefs.getString(USER_ID, null) != null) {
+            new SyncTask().execute();
+        }
     }
 
-    private void eighta() {
-        Intent myIntent = new Intent(this, EightAActivity.class);
+    class SyncTask extends AsyncTask<Void, Void, Long> {
+        @Override
+        protected Long doInBackground(Void... params) {
+            EightA eightA = new EightA(prefs.getString(USER_ID, null), prefs.getString(SESSION_ID, null));
+            long added = eightA.importData(getBaseContext());
+//            List<Ascent> ascents = db.getAscents(true);
+//            eightA.pushAscents(ascents);
+            return added;
+        }
+
+        protected void onPostExecute(Long added) {
+            Toast.makeText(getApplicationContext(), String.format("Successfully imported %d", added), Toast.LENGTH_LONG);
+            setResult(RESULT_OK);
+        }
+    }
+
+    private void eightALogin() {
+        Intent myIntent = new Intent(this, EightALoginActivity.class);
         startActivityForResult(myIntent, EIGHTA_LOGIN);
     }
 

@@ -96,6 +96,21 @@ public class InternalDB {
         update.execute();
     }
 
+    public boolean isModified() {
+        String stmt = "select count(*) from ascent_routes where modified = 1;";
+        SQLiteStatement select = database.compileStatement(stmt);
+        long output = select.simpleQueryForLong();
+        return output >= 1;
+    }
+
+    public boolean contains(String id) {
+        String stmt = "select count(*) from ascent_routes where eighta_id = ?;";
+        SQLiteStatement select = database.compileStatement(stmt);
+        select.bindString(1, id);
+        long output = select.simpleQueryForLong();
+        return output >= 1;
+    }
+
     public Ascent addAscent(Project project, Date date, int attempts, int style, String comment, int stars, boolean modified, String eighta_id) {
         database.beginTransaction();
         Route route;
@@ -155,7 +170,11 @@ public class InternalDB {
         }
         insert.bindLong(7, totalScore);
         insert.bindLong(8, modified ? 1 : 0);
-        insert.bindString(9, eightaId);
+        if (eightaId != null) {
+            insert.bindString(9, eightaId);
+        } else {
+            insert.bindNull(9);
+        }
         long id =  insert.executeInsert();
         return new Ascent(id, route, style, attempts, new Date(), comment, stars, totalScore);
     }
@@ -515,40 +534,42 @@ public class InternalDB {
         return list;
     }
 
-    public List<Ascent> getAscents() {
+    public List<Ascent> getAscents(boolean onlyModified) {
         List<Ascent> list = new ArrayList<Ascent>();
         Cursor cursor = database.query("ascents", new String[] { "_id", "route_id", "attempts", "style_id", "date", "comment", "stars", "score", "modified", "eighta_id" },
                 null, null, null, null, "date desc, _id asc");
         if (cursor.moveToFirst()) {
             do {
-                long id = cursor.getLong(0);
-                long route_id = cursor.getLong(1);
-                int attempts = cursor.getInt(2);
-                int style = cursor.getInt(3);
-                String date = cursor.getString(4);
-                String comment = cursor.getString(5);
-                int stars = cursor.getInt(6);
-                Ascent a = new Ascent();
-                Route r = getRoute(route_id);
-                a.setId(id);
-                a.setRoute(r);
-                a.setStyle(style);
-                a.setAttempts(attempts);
-                a.setComment(comment);
-                a.setStars(stars);
-                a.setScore(cursor.getInt(7));
                 boolean modified = cursor.getInt(8) == 1;
                 String eighta_id = cursor.getString(9);
-                a.setModified(modified);
-                a.setEightaId(eighta_id);
-                try {
-                    if (date != null) {
-                        a.setDate(fmt.parse(date));
+                if (modified || eighta_id == null || !onlyModified) {
+                    long id = cursor.getLong(0);
+                    long route_id = cursor.getLong(1);
+                    int attempts = cursor.getInt(2);
+                    int style = cursor.getInt(3);
+                    String date = cursor.getString(4);
+                    String comment = cursor.getString(5);
+                    int stars = cursor.getInt(6);
+                    Ascent a = new Ascent();
+                    Route r = getRoute(route_id);
+                    a.setId(id);
+                    a.setRoute(r);
+                    a.setStyle(style);
+                    a.setAttempts(attempts);
+                    a.setComment(comment);
+                    a.setStars(stars);
+                    a.setScore(cursor.getInt(7));
+                    a.setModified(modified);
+                    a.setEightaId(eighta_id);
+                    try {
+                        if (date != null) {
+                            a.setDate(fmt.parse(date));
+                        }
+                    } catch (ParseException e) {
+                        e.printStackTrace();
                     }
-                } catch (ParseException e) {
-                    e.printStackTrace();
+                    list.add(a);
                 }
-                list.add(a);
             } while (cursor.moveToNext());
         }
         if (cursor != null && !cursor.isClosed()) {

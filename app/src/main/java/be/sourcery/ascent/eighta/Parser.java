@@ -203,67 +203,43 @@ public class Parser {
         }
     }
 
-//    private String c(XmlPullParser xmlPullParser) throws IOException, XmlPullParserException {
-//        if (!xmlPullParser.getName().equals("Code")) {
-//            return null;
-//        }
-//        String text;
-//        xmlPullParser.require(2, null, "Code");
-//        if (xmlPullParser.next() == 4) {
-//            text = xmlPullParser.getText();
-//            xmlPullParser.nextTag();
-//        } else {
-//            text = null;
-//        }
-//        xmlPullParser.require(3, null, "Code");
-//        return text;
-//    }
-//
-//    public String a(StringReader stringReader) {
-//        String str;
-//        XmlPullParser newPullParser = Xml.newPullParser();
-//        try {
-//            newPullParser.setFeature("http://xmlpull.org/v1/doc/features.html#process-namespaces", false);
-//            newPullParser.setInput(stringReader);
-//            newPullParser.nextTag();
-//            newPullParser.require(2, null, "Result");
-//            str = null;
-//            while (newPullParser.next() != 3) {
-//                try {
-//                    if (newPullParser.getEventType() == 2) {
-//                        str = c(newPullParser);
-//                    }
-//                } catch (XmlPullParserException e) {
-//                    e = e;
-//                } catch (IOException e2) {
-//                    e = e2;
-//                } catch (ParseException e3) {
-//                    e = e3;
-//                }
-//            }
-//        } catch (XmlPullParserException e4) {
-//            XmlPullParserException e5;
-//            XmlPullParserException xmlPullParserException = e4;
-//            str = null;
-//            e5 = xmlPullParserException;
-//            e5.printStackTrace();
-//            return str;
-//        } catch (IOException e6) {
-//            IOException e7;
-//            IOException iOException = e6;
-//            str = null;
-//            e7 = iOException;
-//            e7.printStackTrace();
-//            return str;
-//        } catch (ParseException e8) {
-//            ParseException e9;
-//            ParseException parseException = e8;
-//            str = null;
-//            e9 = parseException;
-//            e9.printStackTrace();
-//            return str;
-//        }
-//        return str;
-//    }
-//
+    private String readCode(XmlPullParser xmlPullParser) throws IOException, XmlPullParserException {
+        if (!xmlPullParser.getName().equals("Code")) {
+            return null;
+        }
+        String text;
+        xmlPullParser.require(XmlPullParser.START_TAG, null, "Code");
+        if (xmlPullParser.next() == XmlPullParser.TEXT) {
+            text = xmlPullParser.getText();
+            xmlPullParser.nextTag();
+        } else {
+            text = null;
+        }
+        xmlPullParser.require(XmlPullParser.END_TAG, null, "Code");
+        return text;
+    }
+
+    public String readResult(StringReader stringReader) {
+        String str = null;
+        XmlPullParser newPullParser = Xml.newPullParser();
+        try {
+            newPullParser.setFeature("http://xmlpull.org/v1/doc/features.html#process-namespaces", false);
+            newPullParser.setInput(stringReader);
+            newPullParser.nextTag();
+            newPullParser.require(XmlPullParser.START_TAG, null, "Result");
+            while (newPullParser.next() != XmlPullParser.END_TAG) {
+                try {
+                    if (newPullParser.getEventType() == XmlPullParser.START_TAG) {
+                        str = readCode(newPullParser);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return str;
+    }
+
 }
