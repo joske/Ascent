@@ -357,6 +357,7 @@ public class MainActivity extends MyActivity {
             long added = eightA.importData(getBaseContext());
 //            List<Ascent> ascents = db.getAscents(true);
 //            eightA.pushAscents(ascents);
+            update();
             return added;
         }
 

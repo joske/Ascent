@@ -22,6 +22,7 @@ public class EightAAscent {
     private String countryCode;
     private String comment;
     private String id;
+    private String note;
 
     public String getSector() {
         return this.sector;
@@ -134,5 +135,13 @@ public class EightAAscent {
 
     public String getId() {
         return id;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public String getNote() {
+        return this.note;
     }
 }

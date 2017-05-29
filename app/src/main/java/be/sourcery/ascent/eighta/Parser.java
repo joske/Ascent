@@ -176,6 +176,13 @@ public class Parser {
                         xmlPullParser.nextTag();
                     }
                     xmlPullParser.require(XmlPullParser.END_TAG, null, "Id");
+                } else if (name.equals("Note")) {
+                    xmlPullParser.require(XmlPullParser.START_TAG, null, "Note");
+                    if (xmlPullParser.next() == XmlPullParser.TEXT) {
+                        ascent.setNote(xmlPullParser.getText());
+                        xmlPullParser.nextTag();
+                    }
+                    xmlPullParser.require(XmlPullParser.END_TAG, null, "Note");
                 } else {
                     readUninteresting(xmlPullParser);
                 }

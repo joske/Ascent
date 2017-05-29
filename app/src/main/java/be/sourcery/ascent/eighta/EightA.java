@@ -241,7 +241,8 @@ public class EightA {
         if (route == null) {
             route = db.addRoute(ascent.getName(), translateGrade(ascent.getGrade()), crag, ascent.getSector());
         }
-        Ascent newAscent = db.addAscent(route, ascent.getDate(), 0, translateStyle(ascent.getObjectClass(), ascent.isRepeat(), ascent.getStyle()), ascent.getComment(), ascent.getRating(), false, ascent.getId());
+        int attempts = ascent != null && ascent.getNote().equals("2") ? 2: 1;
+        Ascent newAscent = db.addAscent(route, ascent.getDate(), attempts, translateStyle(ascent.getObjectClass(), ascent.isRepeat(), ascent.getStyle()), ascent.getComment(), ascent.getRating(), false, ascent.getId());
         return newAscent;
     }
 
