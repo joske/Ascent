@@ -346,24 +346,39 @@ public class MainActivity extends MyActivity {
             eightALogin();
         }
         if (prefs.getString(USER_ID, null) != null) {
-            new SyncTask().execute();
+            new SyncTask(new AsyncResponse() {
+                public void onDone(Long added) {
+                    Toast.makeText(getApplicationContext(), String.format("Successfully imported %d", added), Toast.LENGTH_LONG);
+                    update();
+                }
+            }).execute();
         }
     }
 
+    interface AsyncResponse {
+        public void onDone(Long added);
+    }
+
     class SyncTask extends AsyncTask<Void, Void, Long> {
+
+        private AsyncResponse delegate = null;
+
+        public SyncTask(AsyncResponse delegate) {
+            this.delegate = delegate;
+        }
+
         @Override
         protected Long doInBackground(Void... params) {
             EightA eightA = new EightA(prefs.getString(USER_ID, null), prefs.getString(SESSION_ID, null));
             long added = eightA.importData(getBaseContext());
 //            List<Ascent> ascents = db.getAscents(true);
 //            eightA.pushAscents(ascents);
-            update();
             return added;
         }
 
         protected void onPostExecute(Long added) {
-            Toast.makeText(getApplicationContext(), String.format("Successfully imported %d", added), Toast.LENGTH_LONG);
             setResult(RESULT_OK);
+            delegate.onDone(added);
         }
     }
 
