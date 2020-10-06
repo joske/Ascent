@@ -71,7 +71,7 @@ public class EightA {
     }
 
     private void pushAscents(EightAAscent[] ascents) {
-        String format = "http://www.8a.nu/API/AddAscent.aspx?UserId={0}&AscentType={1}&AscentGrade={2}&AscentStyle={3}&AscentDate={4}&AscentName={5}&AscentCragName={6}&CragCountryCode={8}";
+        String format = "https://www.8a.nu/API/AddAscent.aspx?UserId={0}&AscentType={1}&AscentGrade={2}&AscentStyle={3}&AscentDate={4}&AscentName={5}&AscentCragName={6}&CragCountryCode={8}";
         for (EightAAscent ascent : ascents) {
             String url = MessageFormat.format(format, userId, 1, ascent.getStyle(), Grades.convertFrenchTo8a(ascent.getGrade()), ascent.getStyle(), ascent.getDate(), ascent.getName(), ascent.getCrag(), ascent.getCountryCode());
             if (ascent.getSector() != null) {
@@ -97,12 +97,12 @@ public class EightA {
 
     private String getRoutesURL() {
         assert userId != null;
-        return String.format("http://www.8a.nu/scorecard/xml/%s_routes.xml", userId);
+        return String.format("https://www.8a.nu/scorecard/xml/%s_routes.xml", userId);
     }
 
     private String getBoulderURL() {
         assert userId != null;
-        return String.format("http://www.8a.nu/scorecard/xml/%s_boulders.xml", userId);
+        return String.format("https://www.8a.nu/scorecard/xml/%s_boulders.xml", userId);
     }
 
     private void pushAscent(String url) {
@@ -192,7 +192,7 @@ public class EightA {
     }
 
     private String createLoginURL(String email) {
-        StringBuilder stringBuilder = new StringBuilder("http://www.8a.nu/API/AuthenticateUser.aspx?UserEmail=");
+        StringBuilder stringBuilder = new StringBuilder("https://www.8a.nu/API/AuthenticateUser.aspx?UserEmail=");
         stringBuilder.append(email);
         stringBuilder.append("&SessionId=");
         stringBuilder.append(sessionId);

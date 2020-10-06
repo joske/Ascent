@@ -341,18 +341,18 @@ public class MainActivity extends MyActivity {
    }
 
     private void eighASync() {
-        SharedPreferences prefs = getSharedPreferences(APP_NAME, MODE_PRIVATE);
-        if (prefs.getString(USER_ID, null) == null) {
-            eightALogin();
-        }
-        if (prefs.getString(USER_ID, null) != null) {
-            new SyncTask(new AsyncResponse() {
-                public void onDone(Long added) {
-                    Toast.makeText(getApplicationContext(), String.format("Successfully imported %d", added), Toast.LENGTH_LONG);
-                    update();
-                }
-            }).execute();
-        }
+//        SharedPreferences prefs = getSharedPreferences(APP_NAME, MODE_PRIVATE);
+//        if (prefs.getString(USER_ID, null) == null) {
+//            eightALogin();
+//        }
+//        if (prefs.getString(USER_ID, null) != null) {
+//            new SyncTask(new AsyncResponse() {
+//                public void onDone(Long added) {
+//                    Toast.makeText(getApplicationContext(), String.format("Successfully imported %d", added), Toast.LENGTH_LONG);
+//                    update();
+//                }
+//            }).execute();
+//        }
     }
 
     interface AsyncResponse {
@@ -383,8 +383,8 @@ public class MainActivity extends MyActivity {
     }
 
     private void eightALogin() {
-        Intent myIntent = new Intent(this, EightALoginActivity.class);
-        startActivityForResult(myIntent, EIGHTA_LOGIN);
+//        Intent myIntent = new Intent(this, EightALoginActivity.class);
+//        startActivityForResult(myIntent, EIGHTA_LOGIN);
     }
 
     private void showScore() {
