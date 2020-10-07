@@ -25,19 +25,10 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.dropbox.core.DbxRequestConfig;
-import com.dropbox.core.android.Auth;
-import com.dropbox.core.v2.DbxClientV2;
-import com.dropbox.core.v2.files.DbxUserFilesRequests;
-import com.dropbox.core.v2.files.FileMetadata;
-import com.dropbox.core.v2.files.WriteMode;
-
-
 public class ExportDataActivity extends MyActivity {
 
     private static final int ID_DIALOG_PROGRESS = 1;
     DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
-	private DbxClientV2 client;
     
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,6 +78,7 @@ public class ExportDataActivity extends MyActivity {
         InternalDB db = new InternalDB(this);
         int count = 0;
         try {
+            File sdcard = Environment.getExternalStorageDirectory();
             // structure:
             // routeName;routeGrade;cragName;cragCountry;style;attempts;date;comment;stars
             File importFile = new File(getFilesDir(), "ascent.csv");
@@ -98,13 +90,8 @@ public class ExportDataActivity extends MyActivity {
             }
             bw.close();
             
-            DbxUserFilesRequests files = client.files();
-            FileInputStream inputStream = new FileInputStream(importFile);
-            FileMetadata response = files.uploadBuilder("/ascent.csv").withMode(WriteMode.OVERWRITE).uploadAndFinish(inputStream);
-            Log.i("DbExampleLog", "The uploaded file's rev is: " + response.getRev());
             Intent intent = this.getIntent();
             intent.putExtra("count", count);
-            intent.putExtra("rev", response.getRev());
             setResult(RESULT_OK, intent);
         } catch (Exception e) {
             setResult(RESULT_CANCELED);
@@ -143,22 +130,11 @@ public class ExportDataActivity extends MyActivity {
         showDialog(ID_DIALOG_PROGRESS);
         new Thread(new Runnable(){
             public void run() {
-                if (client != null) {
-                    exportData();
-                } else {
-                    setResult(RESULT_CANCELED);
-                }
+                exportData();
                 dismissDialog(ID_DIALOG_PROGRESS);
                 finish();
             }
         }).start();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        loadAuth();
-        client = getClient();
     }
 
 }

@@ -9,11 +9,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import com.dropbox.core.DbxRequestConfig;
-import com.dropbox.core.android.Auth;
-import com.dropbox.core.v2.DbxClientV2;
-
-
 public abstract class MyActivity extends AppCompatActivity {
 
 	protected static final String ACCESS_KEY_NAME = "ACCESS_KEY";
@@ -25,36 +20,6 @@ public abstract class MyActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
-
-        /**
-         * Shows keeping the access keys returned from Trusted Authenticator in a local
-         * store, rather than storing user name & password, and re-authenticating each
-         * time (which is not to be done, ever).
-         */
-    protected void loadAuth() {
-     	String accessToken = Auth.getOAuth2Token(); //generate Access Token
-        if (accessToken != null) {
-            //Store accessToken in SharedPreferences
-            SharedPreferences prefs = getSharedPreferences(APP_NAME, MODE_PRIVATE);
-            prefs.edit().putString("access-token", accessToken).apply();
-            String key = prefs.getString(ACCESS_KEY_NAME, null);
-            if (key == null || key.length() == 0) {
-            	return;
-            }
-            this.loggedIn = true;
-        }
-    }
-
-    protected DbxClientV2 getClient() {
-        SharedPreferences prefs = getSharedPreferences(APP_NAME, MODE_PRIVATE);
-        String accessToken = prefs.getString("access-token", null);
-        if (accessToken != null) {
-            DbxRequestConfig requestConfig = new DbxRequestConfig("ascent");
-            return new DbxClientV2(requestConfig, accessToken);
-        }
-        Auth.startOAuth2Authentication(getApplicationContext(), getString(R.string.APP_KEY));
-        return null;
     }
 
     protected void clearKeys() {

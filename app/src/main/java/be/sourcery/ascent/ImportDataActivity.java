@@ -23,17 +23,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
-
-import com.dropbox.core.DbxRequestConfig;
-import com.dropbox.core.android.Auth;
-import com.dropbox.core.v2.DbxClientV2;
-import com.dropbox.core.v2.files.FileMetadata;
-
+import android.widget.Toast;
+import android.content.pm.PackageManager;
 
 public class ImportDataActivity extends MyActivity {
 
     private static final int ID_DIALOG_PROGRESS = 1;
-	private DbxClientV2 client;
+    private static final int REQUEST_CODE = 1;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,21 +56,18 @@ public class ImportDataActivity extends MyActivity {
 
         if (Environment.MEDIA_MOUNTED.equals(state)) {
             text.setText(R.string.importFileFound);
-            button.setEnabled(true);
+            requestPermissions(new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_CODE);
         }
     }
 
     protected void importData() {
         InternalDB db = new InternalDB(this);
         try {
+            File sdcard = Environment.getExternalStorageDirectory();
             // structure:
             // routeName;routeGrade;cragName;cragCountry;style;attempts;date;comment;stars
-            File importFile = new File(getFilesDir(), "ascent.csv");
-            FileOutputStream outputStream = new FileOutputStream(importFile);
-            FileMetadata info = client.files().downloadBuilder("/ascent.csv").download(outputStream);
-            Log.i(ImportDataActivity.class.getName(), "The file's rev is: " + info.getRev());
+            File importFile = new File(sdcard, "ascent.csv");
             
-            // now we have downoaded from dropbox into the sdcard, we can start parsing this
             db.clearData();
             BufferedReader r = new BufferedReader(new InputStreamReader(new FileInputStream(importFile), "ISO-8859-1"));
             int count = 0;
@@ -90,11 +83,29 @@ public class ImportDataActivity extends MyActivity {
             intent.putExtra("count", count);
             setResult(RESULT_OK, intent);
         } catch (Exception e) {
+            Log.e(this.getClass().getName(), e.getMessage());
             setResult(RESULT_CANCELED);
         } finally {
             db.close();
         }
 
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CODE:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(ImportDataActivity.this, "SD access granted", Toast.LENGTH_SHORT).show();
+                    Button button = (Button)findViewById(R.id.ok);
+                    button.setEnabled(true);
+                } else {
+                    Toast.makeText(ImportDataActivity.this, "WRITE_CONTACTS Denied", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
     }
 
     @Override
@@ -122,12 +133,5 @@ public class ImportDataActivity extends MyActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        loadAuth();
-        client = getClient();
-     }
 
 }
