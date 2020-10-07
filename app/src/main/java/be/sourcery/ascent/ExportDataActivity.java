@@ -24,12 +24,15 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.content.pm.PackageManager;
 
 public class ExportDataActivity extends MyActivity {
 
     private static final int ID_DIALOG_PROGRESS = 1;
     DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
-    
+    private static final int REQUEST_CODE = 1;
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
@@ -67,7 +70,7 @@ public class ExportDataActivity extends MyActivity {
         String state = Environment.getExternalStorageState();
         if (Environment.MEDIA_MOUNTED.equals(state)) {
             text.setText(R.string.exportToFile);
-            button.setEnabled(true);
+            requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE);
         } else {
             text.setText(R.string.notMounted);
             button.setEnabled(false);
@@ -81,7 +84,7 @@ public class ExportDataActivity extends MyActivity {
             File sdcard = Environment.getExternalStorageDirectory();
             // structure:
             // routeName;routeGrade;cragName;cragCountry;style;attempts;date;comment;stars
-            File importFile = new File(getFilesDir(), "ascent.csv");
+            File importFile = new File(sdcard, "ascent-export.csv");
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(importFile), "ISO-8859-1"));
             List<Ascent> ascents = db.getAscents(false);
             for (Iterator<Ascent> iterator = ascents.iterator(); iterator.hasNext(); count++) {
@@ -94,6 +97,7 @@ public class ExportDataActivity extends MyActivity {
             intent.putExtra("count", count);
             setResult(RESULT_OK, intent);
         } catch (Exception e) {
+            Log.e(this.getClass().getName(), e.getMessage());
             setResult(RESULT_CANCELED);
         } finally {
             db.close();
@@ -135,6 +139,23 @@ public class ExportDataActivity extends MyActivity {
                 finish();
             }
         }).start();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CODE:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(ExportDataActivity.this, "SD access granted", Toast.LENGTH_SHORT).show();
+                    Button button = (Button)findViewById(R.id.ok);
+                    button.setEnabled(true);
+                } else {
+                    Toast.makeText(ExportDataActivity.this, "SD access granted", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
     }
 
 }
