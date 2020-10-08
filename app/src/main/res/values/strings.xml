@@ -68,7 +68,7 @@
 		<item>Overview</item>
 		<item>Import</item>
 		<item>Export</item>
-		<item>8a.nu</item>
+<!--		<item>8a.nu</item>-->
 	</string-array>
 
    	<string-array name="styles">

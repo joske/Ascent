@@ -20,7 +20,7 @@ public class GradeGraphActivity extends MyActivity {
 
     private void getDataset() {
         InternalDB db = new InternalDB(this);
-        addGrades(db,(GradeView) findViewById( R.id.gradeView), false);
+        addGrades(db,(GradeView) findViewById( R.id.gradeView), true);
         db.close();
     }
 

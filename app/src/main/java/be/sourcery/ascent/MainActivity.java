@@ -134,10 +134,10 @@ public class MainActivity extends MyActivity {
                         exportData();
                         mDrawerLayout.closeDrawer(mDrawerList);
                         break;
-                    case 7:
-                        eighASync();
-                        mDrawerLayout.closeDrawer(mDrawerList);
-                        break;
+//                    case 7:
+//                        eighASync();
+//                        mDrawerLayout.closeDrawer(mDrawerList);
+//                        break;
                 }
             }
         });
