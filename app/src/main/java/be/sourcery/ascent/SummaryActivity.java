@@ -137,7 +137,7 @@ public class SummaryActivity extends MyActivity {
         List<Ascent> ascents = db.getAscents(grade, year, crag);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
-        builder.setView(inflater.inflate(R.layout.summary_detail, null));
+        builder.setView(R.layout.summary_detail);
         AlertDialog dialog = builder.create();
         dialog.show();
         ListView listView = dialog.findViewById(R.id.detailList);
