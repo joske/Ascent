@@ -35,7 +35,7 @@ public class ProjectListActivity extends MyActivity {
                 new String[] {"route_name", "route_grade", "crag_name", "attempts"},
                 new int[] {R.id.nameCell, R.id.gradeCell, R.id.cragCell, R.id.attemptsCell});
 
-        listView = (ListView)this.findViewById(R.id.list);
+        listView = this.findViewById(R.id.list);
         listView.setAdapter(adapter);
         registerForContextMenu(listView);
     }
@@ -102,7 +102,7 @@ public class ProjectListActivity extends MyActivity {
     private void update() {
         cursor.requery();
         adapter.notifyDataSetChanged();
-        TextView countView = (TextView) this.findViewById(R.id.countView);
+        TextView countView = this.findViewById(R.id.countView);
         countView.setText(cursor.getCount() + " projects in DB");
     }
 

@@ -36,8 +36,8 @@ public class SearchAscentsActivity extends ListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_ascents);
         db = new InternalDB(this);
-        textView = (TextView) findViewById(R.id.text);
-        listView = (ListView) findViewById(android.R.id.list);
+        textView = findViewById(R.id.text);
+        listView = findViewById(android.R.id.list);
         registerForContextMenu(listView);
         // Get the intent, verify the action and get the query
         Intent intent = getIntent();
@@ -64,13 +64,13 @@ public class SearchAscentsActivity extends ListActivity {
         cursor = db.searchAscents(query, crag_id);
         if (cursor == null) {
             // There are no results
-            textView.setText(getString(R.string.no_results, new Object[] {query}));
+            textView.setText(getString(R.string.no_results, query));
         } else {
             startManagingCursor(cursor);
             // Display the number of results
             int count = cursor.getCount();
             String countString = getResources().getQuantityString(R.plurals.search_results,
-                    count, new Object[] {count, query});
+                    count, count, query);
             textView.setText(countString);
 
             // Create a simple cursor adapter for the definitions and apply them to the ListView

@@ -31,34 +31,34 @@ public class Top10Activity extends MyActivity {
         db = new InternalDB(this);
         Date now = new Date();
         int year = now.getYear() + 1900;
-        TextView thisYearScore = (TextView)this.findViewById(R.id.thisYearText);
+        TextView thisYearScore = this.findViewById(R.id.thisYearText);
         thisYearScore.setText("Score so far this year - "+ db.getScoreForYear(year));
         cursorYear = db.getTop10ForYear(year);
         startManagingCursor(cursorYear);
         adapterYear = new SimpleCursorAdapter(getApplicationContext(), R.layout.top10_ascent_list_item, cursorYear,
                 new String[] {"date", "style", "route_grade", "route_name", "score"},
                 new int[] {R.id.dateCell, R.id.styleCell, R.id.gradeCell, R.id.nameCell, R.id.scoreCell});
-        ListView listView = (ListView)this.findViewById(R.id.thisYearList);
+        ListView listView = this.findViewById(R.id.thisYearList);
         listView.setAdapter(adapterYear);
 
-        TextView twelveMonthScore = (TextView)this.findViewById(R.id.twelveMonthText);
+        TextView twelveMonthScore = this.findViewById(R.id.twelveMonthText);
         twelveMonthScore.setText("Score last 12 months - " + db.getScoreLast12Months());
         cursor12Months = db.getTop10TwelveMonths();
         startManagingCursor(cursor12Months);
         adapter12Months = new SimpleCursorAdapter(getApplicationContext(), R.layout.top10_ascent_list_item, cursor12Months,
                 new String[] {"date", "style", "route_grade", "route_name", "score"},
                 new int[] {R.id.dateCell, R.id.styleCell, R.id.gradeCell, R.id.nameCell, R.id.scoreCell});
-        ListView listView2 = (ListView)this.findViewById(R.id.twelveMonthList);
+        ListView listView2 = this.findViewById(R.id.twelveMonthList);
         listView2.setAdapter(adapter12Months);
 
-        TextView allTimeScore = (TextView)this.findViewById(R.id.allTimeText);
+        TextView allTimeScore = this.findViewById(R.id.allTimeText);
         allTimeScore.setText("Score all time - " + db.getScoreAllTime());
         cursorAllTime = db.getTop10AllTime();
         startManagingCursor(cursorAllTime);
         adapterAllTime = new SimpleCursorAdapter(getApplicationContext(), R.layout.top10_ascent_list_item, cursorAllTime,
                 new String[] {"date", "style", "route_grade", "route_name", "score"},
                 new int[] {R.id.dateCell, R.id.styleCell, R.id.gradeCell, R.id.nameCell, R.id.scoreCell});
-        ListView listView3 = (ListView)this.findViewById(R.id.allTimeList);
+        ListView listView3 = this.findViewById(R.id.allTimeList);
         listView3.setAdapter(adapterAllTime);
     }
 

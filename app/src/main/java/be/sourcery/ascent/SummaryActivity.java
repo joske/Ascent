@@ -46,7 +46,7 @@ public class SummaryActivity extends MyActivity {
         for (Crag crag : allCrags) {
             crags.add(crag.getName());
         }
-        Spinner cragSpinner = (Spinner) findViewById(R.id.crag_spinner);
+        Spinner cragSpinner = findViewById(R.id.crag_spinner);
         cragSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 
             public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long rowId) {
@@ -65,7 +65,7 @@ public class SummaryActivity extends MyActivity {
         ArrayAdapter ca = new ArrayAdapter(this, android.R.layout.simple_spinner_item, crags);
         cragSpinner.setAdapter(ca);
         cragSpinner.setEnabled(true);
-        Spinner yearSpinner = (Spinner) findViewById(R.id.year_spinner);
+        Spinner yearSpinner = findViewById(R.id.year_spinner);
         int firstYear = db.getFirstYear();
         List<String> years = new ArrayList<>();
         years.add("*");
@@ -97,7 +97,7 @@ public class SummaryActivity extends MyActivity {
     private void updateView() {
         Map<String, Integer> summaryDoneForYear = db.getSummaryDoneForYear(year, crag);
         Map<String, Integer> summaryTriedForYear = db.getSummaryTriedForYear(year, crag);
-        ListView listView = (ListView)this.findViewById(R.id.list);
+        ListView listView = this.findViewById(R.id.list);
         String[] from = new String[] {"grade", "done", "tried"};
         int[] to = new int[] { R.id.gradeColumn, R.id.doneColumn, R.id.triedColumn};
         final List<Map<String, String>> data = new ArrayList<>();
@@ -127,7 +127,7 @@ public class SummaryActivity extends MyActivity {
                 showDetails(grade);
             }
         });
-        TextView countView = (TextView) this.findViewById(R.id.summaryView);
+        TextView countView = this.findViewById(R.id.summaryView);
         Crag cragObject = db.getCrag(crag);
         int count = db.getCount(crag, year);
         countView.setText(String.format("Summary for %s : %d ascents", cragObject != null ? cragObject.getName() : "all crags", count));
@@ -140,7 +140,7 @@ public class SummaryActivity extends MyActivity {
         builder.setView(inflater.inflate(R.layout.summary_detail, null));
         AlertDialog dialog = builder.create();
         dialog.show();
-        ListView listView = (ListView)dialog.findViewById(R.id.detailList);
+        ListView listView = dialog.findViewById(R.id.detailList);
         String[] from = new String[] {"date", "style", "route_grade", "route_name", "crag_name", "sector", "comment"};
         int[] to = new int[] {R.id.dateCell, R.id.styleCell, R.id.gradeCell, R.id.nameCell, R.id.cragCell, R.id.sectorCell, R.id.commentCell};
         final List<Map<String, String>> data = new ArrayList<>();

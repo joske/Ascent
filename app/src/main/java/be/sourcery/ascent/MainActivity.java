@@ -83,14 +83,14 @@ public class MainActivity extends MyActivity {
         setContentView(R.layout.main_activity);
         setTitle(R.string.latestAscents);
         prefs = getSharedPreferences(APP_NAME, MODE_PRIVATE);
-        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         mToolbar.inflateMenu(R.menu.main_actionbar);
 
         db = new InternalDB(this);
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -98,8 +98,8 @@ public class MainActivity extends MyActivity {
             }
         });
         String[] activities = getResources().getStringArray(R.array.activities);
-        final DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        final ListView mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        final DrawerLayout mDrawerLayout = findViewById(R.id.drawer_layout);
+        final ListView mDrawerList = findViewById(R.id.left_drawer);
         mDrawerList.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_list_item, activities));
         mDrawerList.setOnItemClickListener(new ListView.OnItemClickListener() {
 
@@ -170,7 +170,7 @@ public class MainActivity extends MyActivity {
         for (Crag crag : allCrags) {
             crags.add(crag.getName());
         }
-        Spinner cragSpinner = (Spinner) findViewById(R.id.crag_spinner);
+        Spinner cragSpinner = findViewById(R.id.crag_spinner);
         cragSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 
             public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long rowId) {
@@ -189,7 +189,7 @@ public class MainActivity extends MyActivity {
         ArrayAdapter ca = new ArrayAdapter(this, android.R.layout.simple_spinner_item, crags);
         cragSpinner.setAdapter(ca);
         cragSpinner.setEnabled(true);
-        listView = (ListView)this.findViewById(R.id.list);
+        listView = this.findViewById(R.id.list);
         registerForContextMenu(listView);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> arg0, View view, int position, long row) {
@@ -208,11 +208,11 @@ public class MainActivity extends MyActivity {
                 new int[] {R.id.dateCell, R.id.styleCell, R.id.gradeCell, R.id.nameCell, R.id.cragCell, R.id.sectorCell, R.id.commentCell},
                 0);
         listView.setAdapter(adapter);
-        TextView countView = (TextView) this.findViewById(R.id.countView);
+        TextView countView = this.findViewById(R.id.countView);
         int count12 = db.getCountLast12Months(crag);
         int count = db.getCountAllTime(crag);
         countView.setText("Ascents: " + count + " - 12M: " + count12);
-        TextView scoreView = (TextView) this.findViewById(R.id.scoreView);
+        TextView scoreView = this.findViewById(R.id.scoreView);
         Date now = new Date();
         int year = now.getYear() + 1900;
         scoreView.setText("Score: " + db.getScoreLast12Months() + " - All Time: " + db.getScoreAllTime() + " - Year: " + db.getScoreForYear(year));
@@ -355,7 +355,7 @@ public class MainActivity extends MyActivity {
     }
 
     interface AsyncResponse {
-        public void onDone(Long added);
+        void onDone(Long added);
     }
 
     class SyncTask extends AsyncTask<Void, Void, Long> {

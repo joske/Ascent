@@ -29,7 +29,7 @@ public class ScoreGraphActivity extends MyActivity {
         XYSeries series = dataset.getSeriesAt(0);
         XYMultipleSeriesRenderer renderer = getRenderer(series.getMinX() - 0.5, series.getMaxX() + 0.5, series.getMinY() - 200, series.getMaxY() + 200);
         GraphicalView chartView = ChartFactory.getLineChartView(this, dataset, renderer);
-        LinearLayout layout = (LinearLayout) findViewById(R.id.chart);
+        LinearLayout layout = findViewById(R.id.chart);
         layout.addView(chartView);
     }
 

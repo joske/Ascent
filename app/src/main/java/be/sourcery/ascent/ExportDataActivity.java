@@ -38,8 +38,8 @@ public class ExportDataActivity extends MyActivity {
         setContentView(R.layout.import_data);
         setTitle(R.string.exportData);
         // Capture our button from layout
-        TextView text = (TextView)findViewById(R.id.importTitle);
-        Button button = (Button)findViewById(R.id.ok);
+        TextView text = findViewById(R.id.importTitle);
+        Button button = findViewById(R.id.ok);
         button.setText(R.string.exportButton);
         // Register the onClick listener with the implementation above
         button.setOnClickListener(new OnClickListener() {
@@ -146,7 +146,7 @@ public class ExportDataActivity extends MyActivity {
             case REQUEST_CODE:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(ExportDataActivity.this, "SD access granted", Toast.LENGTH_SHORT).show();
-                    Button button = (Button)findViewById(R.id.ok);
+                    Button button = findViewById(R.id.ok);
                     button.setEnabled(true);
                 } else {
                     Toast.makeText(ExportDataActivity.this, "SD access granted", Toast.LENGTH_SHORT).show();

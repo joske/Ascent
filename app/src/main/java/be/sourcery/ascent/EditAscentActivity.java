@@ -75,9 +75,9 @@ public class EditAscentActivity extends MyActivity {
 		long ascentId = b.getLong("ascentId");
 		db = new InternalDB(this);
 		ascent = db.getAscent(ascentId);
-		EditText routeView = (EditText) this.findViewById(R.id.routename);
+		EditText routeView = this.findViewById(R.id.routename);
 		routeView.setText(ascent.getRoute().getName());
-		Spinner gradeView = (Spinner) findViewById(R.id.gradespinner);
+		Spinner gradeView = findViewById(R.id.gradespinner);
 		ArrayAdapter gadapter = ArrayAdapter.createFromResource(this,
 				R.array.grades, android.R.layout.simple_spinner_item);
 		gadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -85,10 +85,10 @@ public class EditAscentActivity extends MyActivity {
 		String grade = ascent.getRoute().getGrade();
 		int gradeIndex = gadapter.getPosition(grade);
 		gradeView.setSelection(gradeIndex);
-        EditText sectorView = (EditText) findViewById(R.id.sectorName);
+        EditText sectorView = findViewById(R.id.sectorName);
         sectorView.setText(ascent.getRoute().getSector());
 
-        Spinner s = (Spinner) findViewById(R.id.cragspinner);
+        Spinner s = findViewById(R.id.cragspinner);
 		Cursor cursor = db.getCragsCursor();
 		startManagingCursor(cursor);
 		CursorAdapter ca = new SimpleCursorAdapter(this, R.layout.cragspinner,
@@ -101,12 +101,12 @@ public class EditAscentActivity extends MyActivity {
 			s.setSelection(selection);
 		}
 
-		TextView dateDisplay = (TextView) findViewById(R.id.dateDisplay);
+		TextView dateDisplay = findViewById(R.id.dateDisplay);
 		Date date = ascent.getDate();
 		String dateString = fmt.format(date);
 		dateDisplay.setText(dateString);
 		cal.setTime(date);
-		ss = (Spinner) findViewById(R.id.stylespinner);
+		ss = findViewById(R.id.stylespinner);
 		ArrayAdapter adapter = ArrayAdapter.createFromResource(this,
 				R.array.styles, android.R.layout.simple_spinner_item);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -116,7 +116,7 @@ public class EditAscentActivity extends MyActivity {
 
 			public void onItemSelected(AdapterView<?> arg0, View arg1,
 					int arg2, long rowId) {
-				EditText attemptsView = (EditText) findViewById(R.id.attempts);
+				EditText attemptsView = findViewById(R.id.attempts);
 				if (rowId == 2 || rowId == 6) {
 					// redpoint or tried
 					attemptsView.setEnabled(true);
@@ -135,39 +135,39 @@ public class EditAscentActivity extends MyActivity {
 			}
 		});
 
-		TextView dateButton = (TextView) findViewById(R.id.dateDisplay);
+		TextView dateButton = findViewById(R.id.dateDisplay);
 		dateButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				showDialog(DATE_DIALOG_ID);
 			}
 		});
 
-		EditText commentsView = (EditText) findViewById(R.id.comment);
+		EditText commentsView = findViewById(R.id.comment);
 		commentsView.setText(ascent.getComment());
-		EditText attemptsView = (EditText) findViewById(R.id.attempts);
+		EditText attemptsView = findViewById(R.id.attempts);
 		attemptsView.setText("" + ascent.getAttempts());
-		RatingBar starsView = (RatingBar) findViewById(R.id.stars);
+		RatingBar starsView = findViewById(R.id.stars);
 		starsView.setRating(ascent.getStars());
 
-		Button cancel = (Button) findViewById(R.id.cancel);
+		Button cancel = findViewById(R.id.cancel);
 		cancel.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				setResult(RESULT_CANCELED);
 				finish();
 			}
 		});
-		Button button = (Button) findViewById(R.id.ok);
+		Button button = findViewById(R.id.ok);
 		button.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				String text = null;
-				EditText routeNameView = (EditText) findViewById(R.id.routename);
+				EditText routeNameView = findViewById(R.id.routename);
 				String name = routeNameView.getText().toString();
-				Spinner gradeView = (Spinner) findViewById(R.id.gradespinner);
+				Spinner gradeView = findViewById(R.id.gradespinner);
 				String grade = gradeView.getSelectedItem().toString();
-				Spinner s = (Spinner) findViewById(R.id.cragspinner);
+				Spinner s = findViewById(R.id.cragspinner);
 				long selectedItemId = s.getSelectedItemId();
 				Crag crag = db.getCrag(selectedItemId);
-				EditText sectorView = (EditText) findViewById(R.id.sectorName);
+				EditText sectorView = findViewById(R.id.sectorName);
 				String sector = sectorView.getText().toString();
 				Route r = ascent.getRoute();
 				if (!(r.getName().equals(name))
@@ -182,7 +182,7 @@ public class EditAscentActivity extends MyActivity {
 				}
 				int pos = ss.getSelectedItemPosition();
 				ascent.setStyle(pos + 1);
-				EditText attemptsView = (EditText) findViewById(R.id.attempts);
+				EditText attemptsView = findViewById(R.id.attempts);
 				String string = attemptsView.getText().toString();
 				int attempts = 1;
 				if (string != null) {
@@ -192,7 +192,7 @@ public class EditAscentActivity extends MyActivity {
 					} catch (NumberFormatException e) {
 					}
 				}
-				TextView dateDisplay = (TextView) findViewById(R.id.dateDisplay);
+				TextView dateDisplay = findViewById(R.id.dateDisplay);
 				String dateString = dateDisplay.getText().toString();
 				Date date = new Date();
 				try {
@@ -200,9 +200,9 @@ public class EditAscentActivity extends MyActivity {
 					ascent.setDate(date);
 				} catch (ParseException e) {
 				}
-				RatingBar starsView = (RatingBar) findViewById(R.id.stars);
+				RatingBar starsView = findViewById(R.id.stars);
 				ascent.setStars((int) starsView.getRating());
-				EditText commentView = (EditText) findViewById(R.id.comment);
+				EditText commentView = findViewById(R.id.comment);
 				String comment = commentView.getText().toString();
 				ascent.setComment(comment);
                 ascent.setModified(true);
@@ -244,7 +244,7 @@ public class EditAscentActivity extends MyActivity {
 	}
 
 	private void updateDisplay() {
-		TextView dateDisplay = (TextView) findViewById(R.id.dateDisplay);
+		TextView dateDisplay = findViewById(R.id.dateDisplay);
 		String dateString = fmt.format(cal.getTime());
 		dateDisplay.setText(dateString);
 	}

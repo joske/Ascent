@@ -35,18 +35,18 @@ public class AddCragActivity extends MyActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_crag);
         setTitle(R.string.addCrag);
-        EditText cragView = (EditText)findViewById(R.id.crag);
+        EditText cragView = findViewById(R.id.crag);
         cragView.requestFocus();
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         db = new InternalDB(this);
         // Capture our button from layout
-        Button button = (Button)findViewById(R.id.ok);
+        Button button = findViewById(R.id.ok);
         // Register the onClick listener with the implementation above
         button.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                EditText cragView = (EditText)findViewById(R.id.crag);
+                EditText cragView = findViewById(R.id.crag);
                 String name = cragView.getText().toString();
-                EditText countryView = (EditText)findViewById(R.id.country);
+                EditText countryView = findViewById(R.id.country);
                 String country = countryView.getText().toString();
                 db.addCrag(name, country);
                 setResult(RESULT_OK);

@@ -44,7 +44,7 @@ public class CragListActivity extends MyActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.crag_list_activity);
         setTitle(R.string.crags);
-        FloatingActionButton FAB = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton FAB = findViewById(R.id.fab);
         FAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,12 +55,12 @@ public class CragListActivity extends MyActivity {
         db = new InternalDB(this);
         cursor = db.getCragsCrusor();
         startManagingCursor(cursor);
-        TextView countView = (TextView) this.findViewById(R.id.countView);
+        TextView countView = this.findViewById(R.id.countView);
         countView.setText(cursor.getCount() + " crags in DB");
         adapter = new SimpleCursorAdapter(getApplicationContext(), R.layout.crag_item, cursor,
                 new String[] {"name", "country"},
                 new int[] {R.id.nameCell, R.id.countryCell});
-        ListView listView = (ListView)this.findViewById(R.id.list);
+        ListView listView = this.findViewById(R.id.list);
         registerForContextMenu(listView);
         listView.setAdapter(adapter);
     }
@@ -75,7 +75,7 @@ public class CragListActivity extends MyActivity {
     public void onResume() {
         super.onResume();
         cursor.requery();
-        TextView countView = (TextView) this.findViewById(R.id.countView);
+        TextView countView = this.findViewById(R.id.countView);
         countView.setText(cursor.getCount() + " crags in DB");
     }
 

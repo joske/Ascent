@@ -48,39 +48,39 @@ public class RepeatAscentActivity extends MyActivity {
         long ascentId = b.getLong("ascentId");
         db = new InternalDB(this);
         origAscent = db.getAscent(ascentId);
-        TextView routeView = (TextView) this.findViewById(R.id.route);
+        TextView routeView = this.findViewById(R.id.route);
         routeView.setText(origAscent.getRoute().getName() + " " + origAscent.getRoute().getGrade() + " (" + origAscent.getRoute().getCrag().getName() + ")");
 
-        TextView dateDisplay = (TextView)findViewById(R.id.dateDisplay);
+        TextView dateDisplay = findViewById(R.id.dateDisplay);
         Date date = new Date();
         String dateString = fmt.format(date);
         dateDisplay.setText(dateString);
         cal.setTime(date);
-        Button dateButton = (Button)findViewById(R.id.pickDate);
+        Button dateButton = findViewById(R.id.pickDate);
         dateButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 showDialog(DATE_DIALOG_ID);
             }
         });
 
-        Button cancel = (Button)findViewById(R.id.cancel);
+        Button cancel = findViewById(R.id.cancel);
         cancel.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 setResult(RESULT_CANCELED);
                 finish();
             }
         });
-        Button button = (Button)findViewById(R.id.ok);
+        Button button = findViewById(R.id.ok);
         button.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                TextView dateDisplay = (TextView)findViewById(R.id.dateDisplay);
+                TextView dateDisplay = findViewById(R.id.dateDisplay);
                 String dateString = dateDisplay.getText().toString();
                 Date date = new Date();
                 try {
                     date = fmt.parse(dateString);
                 } catch (ParseException e) {
                 }
-                EditText commentView = (EditText)findViewById(R.id.comment);
+                EditText commentView = findViewById(R.id.comment);
                 String comment = commentView.getText().toString();
                 db.addAscent(origAscent.getRoute(), date, 1, Ascent.STYLE_REPEAT, comment, origAscent.getStars(), true, null);
 
@@ -103,7 +103,7 @@ public class RepeatAscentActivity extends MyActivity {
     }
 
     private void updateDisplay() {
-        TextView dateDisplay = (TextView)findViewById(R.id.dateDisplay);
+        TextView dateDisplay = findViewById(R.id.dateDisplay);
         String dateString = fmt.format(cal.getTime());
         dateDisplay.setText(dateString);
     }

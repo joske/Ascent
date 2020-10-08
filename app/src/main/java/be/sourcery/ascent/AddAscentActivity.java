@@ -76,7 +76,7 @@ public class AddAscentActivity extends MyActivity {
 			cragId = b.getLong("cragId");
 		}
 		db = new InternalDB(this);
-		Spinner s = (Spinner) findViewById(R.id.cragspinner);
+		Spinner s = findViewById(R.id.cragspinner);
 		Cursor cursor = db.getCragsCursor();
 		startManagingCursor(cursor);
 		CursorAdapter ca = new SimpleCursorAdapter(this, R.layout.cragspinner,
@@ -87,17 +87,17 @@ public class AddAscentActivity extends MyActivity {
 		if (cragId != -1) {
 			s.setSelection(selection);
 		}
-		Spinner gs = (Spinner) findViewById(R.id.gradespinner);
+		Spinner gs = findViewById(R.id.gradespinner);
 		ArrayAdapter gadapter = ArrayAdapter.createFromResource(this,
 				R.array.grades, android.R.layout.simple_spinner_item);
 		gadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		gs.setAdapter(gadapter);
-		Spinner ss = (Spinner) findViewById(R.id.stylespinner);
+		Spinner ss = findViewById(R.id.stylespinner);
 		ss.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			public void onItemSelected(AdapterView<?> arg0, View arg1,
 					int arg2, long rowId) {
-				EditText attemptsView = (EditText) findViewById(R.id.attempts);
+				EditText attemptsView = findViewById(R.id.attempts);
 				if (rowId == 2 || rowId == 6) {
 					// redpoint or tried
 					attemptsView.setEnabled(true);
@@ -119,33 +119,33 @@ public class AddAscentActivity extends MyActivity {
 				R.array.styles, android.R.layout.simple_spinner_item);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		ss.setAdapter(adapter);
-		Button cancel = (Button) findViewById(R.id.cancel);
+		Button cancel = findViewById(R.id.cancel);
 		cancel.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				setResult(RESULT_CANCELED);
 				finish();
 			}
 		});
-		Button button = (Button) findViewById(R.id.ok);
+		Button button = findViewById(R.id.ok);
 		button.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				String text = null;
-				EditText routeNameView = (EditText) findViewById(R.id.routename);
+				EditText routeNameView = findViewById(R.id.routename);
 				String name = routeNameView.getText().toString();
-				Spinner gradeView = (Spinner) findViewById(R.id.gradespinner);
+				Spinner gradeView = findViewById(R.id.gradespinner);
 				String grade = gradeView.getSelectedItem().toString();
-				Spinner s = (Spinner) findViewById(R.id.cragspinner);
+				Spinner s = findViewById(R.id.cragspinner);
 				long selectedItemId = s.getSelectedItemId();
 				Crag crag = db.getCrag(selectedItemId);
-                EditText sectorView = (EditText) findViewById(R.id.sectorName);
+                EditText sectorView = findViewById(R.id.sectorName);
                 Route r = db.addRoute(name, grade, crag, sectorView.getText().toString());
 				if (r != null) {
 					text = "Route added";
 				}
 
-				Spinner ss = (Spinner) findViewById(R.id.stylespinner);
+				Spinner ss = findViewById(R.id.stylespinner);
 				int pos = ss.getSelectedItemPosition();
-				EditText attemptsView = (EditText) findViewById(R.id.attempts);
+				EditText attemptsView = findViewById(R.id.attempts);
 				String string = attemptsView.getText().toString();
 				int attempts = 1;
 				if (string != null) {
@@ -154,16 +154,16 @@ public class AddAscentActivity extends MyActivity {
 					} catch (NumberFormatException e) {
 					}
 				}
-				TextView dateDisplay = (TextView) findViewById(R.id.dateDisplay);
+				TextView dateDisplay = findViewById(R.id.dateDisplay);
 				String dateString = dateDisplay.getText().toString();
 				Date date = new Date();
 				try {
 					date = fmt.parse(dateString);
 				} catch (ParseException e) {
 				}
-				RatingBar starsView = (RatingBar) findViewById(R.id.stars);
+				RatingBar starsView = findViewById(R.id.stars);
 				int stars = (int) starsView.getRating();
-				EditText commentView = (EditText) findViewById(R.id.comment);
+				EditText commentView = findViewById(R.id.comment);
 				String comment = commentView.getText().toString();
 				Ascent ascent = db.addAscent(r, date, attempts, pos + 1,
 						comment, stars, true, null);
@@ -178,7 +178,7 @@ public class AddAscentActivity extends MyActivity {
 				finish();
 			}
 		});
-		TextView dateButton = (TextView) findViewById(R.id.dateDisplay);
+		TextView dateButton = findViewById(R.id.dateDisplay);
 		dateButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				showDialog(DATE_DIALOG_ID);
@@ -214,7 +214,7 @@ public class AddAscentActivity extends MyActivity {
 	}
 
 	private void updateDisplay() {
-		TextView dateDisplay = (TextView) findViewById(R.id.dateDisplay);
+		TextView dateDisplay = findViewById(R.id.dateDisplay);
 		dateDisplay.setText(new StringBuilder()
 				// Month is 0 based so add 1
 				.append(year).append("-").append(month + 1).append("-")

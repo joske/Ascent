@@ -46,7 +46,7 @@ public class AddProjectActivity extends MyActivity {
             cragId = b.getLong("cragId");
         }
         db = new InternalDB(this);
-        Spinner s = (Spinner) findViewById(R.id.cragspinner);
+        Spinner s = findViewById(R.id.cragspinner);
         Cursor cursor = db.getCragsCursor();
         startManagingCursor(cursor);
         CursorAdapter ca = new SimpleCursorAdapter(this, R.layout.cragspinner, cursor, new String[] { "name" }, new int[] { R.id.spinnerRow});
@@ -56,20 +56,20 @@ public class AddProjectActivity extends MyActivity {
         if (cragId != -1) {
             s.setSelection(selection);
         }
-        Spinner gs = (Spinner) findViewById(R.id.gradespinner);
+        Spinner gs = findViewById(R.id.gradespinner);
         ArrayAdapter gadapter = ArrayAdapter.createFromResource(
                 this, R.array.grades, android.R.layout.simple_spinner_item);
         gadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         gs.setAdapter(gadapter);
-        Button button = (Button)findViewById(R.id.ok);
+        Button button = findViewById(R.id.ok);
         button.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 String text = null;
-                EditText routeNameView = (EditText)findViewById(R.id.routename);
+                EditText routeNameView = findViewById(R.id.routename);
                 String name = routeNameView.getText().toString();
-                Spinner gradeView = (Spinner)findViewById(R.id.gradespinner);
+                Spinner gradeView = findViewById(R.id.gradespinner);
                 String grade = gradeView.getSelectedItem().toString();
-                Spinner s = (Spinner) findViewById(R.id.cragspinner);
+                Spinner s = findViewById(R.id.cragspinner);
                 long selectedItemId = s.getSelectedItemId();
                 Crag crag = db.getCrag(selectedItemId);
                 Route r = db.addRoute(name, grade, crag, null);

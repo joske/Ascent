@@ -47,38 +47,38 @@ public class TickProjectActivity extends MyActivity {
         long projectId = b.getLong("projectId");
         db = new InternalDB(this);
         project = db.getProject(projectId);
-        TextView routeView = (TextView) this.findViewById(R.id.route);
+        TextView routeView = this.findViewById(R.id.route);
         routeView.setText(project.getRoute().getName() + " " + project.getRoute().getGrade() + " (" + project.getRoute().getCrag().getName() + ")");
 
-        TextView dateDisplay = (TextView)findViewById(R.id.dateDisplay);
+        TextView dateDisplay = findViewById(R.id.dateDisplay);
         Date date = new Date();
         String dateString = fmt.format(date);
         dateDisplay.setText(dateString);
         cal.setTime(date);
-        Button dateButton = (Button)findViewById(R.id.pickDate);
+        Button dateButton = findViewById(R.id.pickDate);
         dateButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 showDialog(DATE_DIALOG_ID);
             }
         });
 
-        EditText commentsView = (EditText)findViewById(R.id.comment);
-        EditText attemptsView = (EditText)findViewById(R.id.attempts);
+        EditText commentsView = findViewById(R.id.comment);
+        EditText attemptsView = findViewById(R.id.attempts);
         attemptsView.setText("" + project.getAttempts());
-        RatingBar starsView = (RatingBar)findViewById(R.id.stars);
+        RatingBar starsView = findViewById(R.id.stars);
 
-        Button cancel = (Button)findViewById(R.id.cancel);
+        Button cancel = findViewById(R.id.cancel);
         cancel.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 setResult(RESULT_CANCELED);
                 finish();
             }
         });
-        Button button = (Button)findViewById(R.id.ok);
+        Button button = findViewById(R.id.ok);
         button.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 String text = null;
-                EditText attemptsView = (EditText)findViewById(R.id.attempts);
+                EditText attemptsView = findViewById(R.id.attempts);
                 String string = attemptsView.getText().toString();
                 int attempts = 1;
                 if (string != null) {
@@ -87,15 +87,15 @@ public class TickProjectActivity extends MyActivity {
                     } catch (NumberFormatException e) {
                     }
                 }
-                TextView dateDisplay = (TextView)findViewById(R.id.dateDisplay);
+                TextView dateDisplay = findViewById(R.id.dateDisplay);
                 String dateString = dateDisplay.getText().toString();
                 Date date = new Date();
                 try {
                     date = fmt.parse(dateString);
                 } catch (ParseException e) {
                 }
-                RatingBar starsView = (RatingBar)findViewById(R.id.stars);
-                EditText commentView = (EditText)findViewById(R.id.comment);
+                RatingBar starsView = findViewById(R.id.stars);
+                EditText commentView = findViewById(R.id.comment);
                 String comment = commentView.getText().toString();
                 db.addAscent(project, date, attempts, 3, comment, (int)starsView.getRating(), true, null);
                 text = "Ascent added";
@@ -110,7 +110,7 @@ public class TickProjectActivity extends MyActivity {
     }
 
     private void updateDisplay() {
-        TextView dateDisplay = (TextView)findViewById(R.id.dateDisplay);
+        TextView dateDisplay = findViewById(R.id.dateDisplay);
         String dateString = fmt.format(cal.getTime());
         dateDisplay.setText(dateString);
     }

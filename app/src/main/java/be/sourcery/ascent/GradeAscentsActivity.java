@@ -29,13 +29,13 @@ public class GradeAscentsActivity extends MyActivity {
         db = new InternalDB(this);
         cursor = db.getAscentsCursor(grade, allTime);
         setTitle((allTime ? "All" : "Latest") + " Ascents for " + grade);
-        TextView countView = (TextView) this.findViewById(R.id.countView);
+        TextView countView = this.findViewById(R.id.countView);
         countView.setText(cursor.getCount() + " ascents in DB");
         startManagingCursor(cursor);
         adapter = new SimpleCursorAdapter(getApplicationContext(), R.layout.ascent_list_item, cursor,
                 new String[] {"date", "style", "route_grade", "date", "route_name"},
                 new int[] {R.id.dateCell, R.id.styleCell, R.id.gradeCell, R.id.dateCell, R.id.nameCell});
-        listView = (ListView)this.findViewById(R.id.list);
+        listView = this.findViewById(R.id.list);
         listView.setAdapter(adapter);
     }
 

@@ -31,8 +31,8 @@ public class ImportDataActivity extends MyActivity {
         setTitle(R.string.importData);
 
         // Capture our button from layout
-        TextView text = (TextView)findViewById(R.id.importTitle);
-        Button button = (Button)findViewById(R.id.ok);
+        TextView text = findViewById(R.id.importTitle);
+        Button button = findViewById(R.id.ok);
         // Register the onClick listener with the implementation above
         button.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
@@ -91,7 +91,7 @@ public class ImportDataActivity extends MyActivity {
             case REQUEST_CODE:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(ImportDataActivity.this, "SD access granted", Toast.LENGTH_SHORT).show();
-                    Button button = (Button)findViewById(R.id.ok);
+                    Button button = findViewById(R.id.ok);
                     button.setEnabled(true);
                 } else {
                     Toast.makeText(ImportDataActivity.this, "WRITE_CONTACTS Denied", Toast.LENGTH_SHORT).show();

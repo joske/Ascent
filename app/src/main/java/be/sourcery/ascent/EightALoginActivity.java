@@ -29,12 +29,12 @@ public class EightALoginActivity extends MyActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.eighta_login);
         setTitle("Login to 8a.nu");
-        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
 
-        final TextView emailField = (TextView) findViewById(R.id.email);
-        final TextView passwordField = (TextView) findViewById(R.id.password);
-        Button ok = (Button) findViewById(R.id.ok);
+        final TextView emailField = findViewById(R.id.email);
+        final TextView passwordField = findViewById(R.id.password);
+        Button ok = findViewById(R.id.ok);
         ok.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 final String email = emailField.getText().toString();
@@ -43,7 +43,7 @@ public class EightALoginActivity extends MyActivity {
                 new LoginTask().execute(email, password);
             }
         });
-        Button cancel = (Button) findViewById(R.id.cancel);
+        Button cancel = findViewById(R.id.cancel);
         cancel.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 setCancelled();
