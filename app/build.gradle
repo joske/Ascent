@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.3"
+    compileSdkVersion 30
+    buildToolsVersion "30.0.1"
 
     defaultConfig {
         applicationId "be.sourcery.ascent"
         minSdkVersion 16
-        targetSdkVersion 29
+        targetSdkVersion 30
     }
 
     signingConfigs {
@@ -37,10 +37,10 @@ dependencies {
     api files('libs/achartengine-1.0.0.jar')
     api files('libs/jackson-core-2.7.4.jar')
     api files('libs/json_simple-1.1.jar')
-    api "com.android.support:support-v4:25.0.1"
-    api "com.android.support:support-v13:25.0.1"
-    api 'com.android.support:appcompat-v7:25.0.1'
-    api 'com.android.support:design:25.0.1'
+    api 'androidx.legacy:legacy-support-v4:1.0.0'
+    api 'androidx.legacy:legacy-support-v13:1.0.0'
+    api 'androidx.appcompat:appcompat:1.0.0'
+    api 'com.google.android.material:material:1.0.0'
 
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:1.10.19'

@@ -1,13 +1,9 @@
 package be.sourcery.ascent;
 
-import android.annotation.TargetApi;
-import android.app.ActionBar;
-import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 
 public abstract class MyActivity extends AppCompatActivity {
 
