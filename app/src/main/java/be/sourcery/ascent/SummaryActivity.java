@@ -40,11 +40,10 @@ public class SummaryActivity extends MyActivity {
         thisYear = 1900 + new Date().getYear();
         year = thisYear;
         db = new InternalDB(this);
-        crags = new ArrayList<String>();
+        crags = new ArrayList<>();
         List<Crag> allCrags = db.getCrags();
         crags.add("*");
-        for (Iterator iterator = allCrags.iterator(); iterator.hasNext();) {
-            Crag crag = (Crag)iterator.next();
+        for (Crag crag : allCrags) {
             crags.add(crag.getName());
         }
         Spinner cragSpinner = (Spinner) findViewById(R.id.crag_spinner);
@@ -68,12 +67,12 @@ public class SummaryActivity extends MyActivity {
         cragSpinner.setEnabled(true);
         Spinner yearSpinner = (Spinner) findViewById(R.id.year_spinner);
         int firstYear = db.getFirstYear();
-        List<String> years = new ArrayList<String>();
+        List<String> years = new ArrayList<>();
         years.add("*");
         for (int i = year; i >= firstYear; i--) {
             years.add("" + i);
         }
-        ArrayAdapter<String> yearAdapter = new ArrayAdapter<String>(this,
+        ArrayAdapter<String> yearAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, years);
         yearSpinner.setAdapter(yearAdapter);
         yearSpinner.setEnabled(true);
@@ -101,11 +100,10 @@ public class SummaryActivity extends MyActivity {
         ListView listView = (ListView)this.findViewById(R.id.list);
         String[] from = new String[] {"grade", "done", "tried"};
         int[] to = new int[] { R.id.gradeColumn, R.id.doneColumn, R.id.triedColumn};
-        final List<Map<String, String>> data = new ArrayList<Map<String, String>>();
-        for (Iterator<String> iterator = grades.iterator(); iterator.hasNext();) {
-            String grade = iterator.next();
+        final List<Map<String, String>> data = new ArrayList<>();
+        for (String grade : grades) {
             if (summaryDoneForYear.containsKey(grade) || summaryTriedForYear.containsKey(grade)) {
-                Map<String, String> line = new HashMap<String, String>();
+                Map<String, String> line = new HashMap<>();
                 line.put("grade", grade);
                 if (summaryDoneForYear.containsKey(grade)) {
                     line.put("done", "" + summaryDoneForYear.get(grade));
@@ -145,11 +143,10 @@ public class SummaryActivity extends MyActivity {
         ListView listView = (ListView)dialog.findViewById(R.id.detailList);
         String[] from = new String[] {"date", "style", "route_grade", "route_name", "crag_name", "sector", "comment"};
         int[] to = new int[] {R.id.dateCell, R.id.styleCell, R.id.gradeCell, R.id.nameCell, R.id.cragCell, R.id.sectorCell, R.id.commentCell};
-        final List<Map<String, String>> data = new ArrayList<Map<String, String>>();
+        final List<Map<String, String>> data = new ArrayList<>();
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        for (Iterator<Ascent> iterator = ascents.iterator(); iterator.hasNext();) {
-            Ascent ascent = iterator.next();
-            Map<String, String> line = new HashMap<String, String>();
+        for (Ascent ascent : ascents) {
+            Map<String, String> line = new HashMap<>();
             line.put("date", format.format(ascent.getDate()));
             line.put("style", ascent.getStyleString());
             line.put("route_grade", ascent.getRoute().getGrade());

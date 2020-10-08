@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 public class Grades {
 
-    private static HashMap<String, String> frenchTo8a = new HashMap<String, String>();
+    private static HashMap<String, String> frenchTo8a = new HashMap<>();
 
     static {
         frenchTo8a.put("3", "10");

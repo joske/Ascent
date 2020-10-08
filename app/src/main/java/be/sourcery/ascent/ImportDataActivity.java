@@ -3,18 +3,12 @@ package be.sourcery.ascent;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.InputStreamReader;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.nio.charset.StandardCharsets;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -69,7 +63,7 @@ public class ImportDataActivity extends MyActivity {
             File importFile = new File(sdcard, "ascent.csv");
             
             db.clearData();
-            BufferedReader r = new BufferedReader(new InputStreamReader(new FileInputStream(importFile), "ISO-8859-1"));
+            BufferedReader r = new BufferedReader(new InputStreamReader(new FileInputStream(importFile), StandardCharsets.UTF_8));
             int count = 0;
             while (r.ready()) {
                 String line = r.readLine();

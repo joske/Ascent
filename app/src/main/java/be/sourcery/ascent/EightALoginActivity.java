@@ -77,7 +77,7 @@ public class EightALoginActivity extends MyActivity {
         @Override
         protected Boolean doInBackground(String... params) {
             boolean success = login(params[0], params[1]);
-            return Boolean.valueOf(success);
+            return success;
         }
 
         protected void onPostExecute(Boolean success) {

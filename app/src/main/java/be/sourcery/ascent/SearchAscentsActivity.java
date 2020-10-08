@@ -1,7 +1,5 @@
 package be.sourcery.ascent;
 
-import android.annotation.TargetApi;
-import android.app.ActionBar;
 import android.app.ListActivity;
 import android.app.SearchManager;
 import android.content.Context;

@@ -2,7 +2,6 @@ package be.sourcery.ascent.eighta;
 
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -242,8 +241,7 @@ public class EightA {
             route = db.addRoute(ascent.getName(), translateGrade(ascent.getGrade()), crag, ascent.getSector());
         }
         int attempts = ascent != null && ascent.getNote().equals("2") ? 2: 1;
-        Ascent newAscent = db.addAscent(route, ascent.getDate(), attempts, translateStyle(ascent.getObjectClass(), ascent.isRepeat(), ascent.getStyle()), ascent.getComment(), ascent.getRating(), false, ascent.getId());
-        return newAscent;
+        return db.addAscent(route, ascent.getDate(), attempts, translateStyle(ascent.getObjectClass(), ascent.isRepeat(), ascent.getStyle()), ascent.getComment(), ascent.getRating(), false, ascent.getId());
     }
 
     private String translateGrade(String grade) {

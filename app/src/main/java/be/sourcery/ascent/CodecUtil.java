@@ -1,25 +1,10 @@
 package be.sourcery.ascent;
 
 import android.util.Log;
-import android.util.Xml;
 
-import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-
-import java.io.IOException;
-import java.io.StringReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import static java.lang.System.in;
 
 /**
  * Created by jos on 06/02/17.
@@ -30,7 +15,7 @@ public class CodecUtil {
     private static DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
 
     public static String encode(Ascent ascent) {
-        StringBuffer line = new StringBuffer(200);
+        StringBuilder line = new StringBuilder(200);
         line.append(ascent.getRoute().getName()).append("\t");
         line.append(ascent.getRoute().getGrade()).append("\t");
         line.append(ascent.getRoute().getCrag().getName()).append("\t");

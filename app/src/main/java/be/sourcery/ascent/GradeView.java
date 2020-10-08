@@ -50,9 +50,9 @@ public class GradeView extends View {
             int scale = availableWidth / maxSize;
             int rectHeight = 10;
             int count = 0;
-            for (Iterator<GradeInfo> iterator = data.iterator(); iterator.hasNext();) {
+            for (GradeInfo datum : data) {
                 count++;
-                GradeInfo grades = iterator.next();
+                GradeInfo grades = datum;
                 String grade = grades.getGrade();
                 int totalSize = grades.getTotal();
                 int totalWidth = totalSize * scale;
@@ -90,8 +90,7 @@ public class GradeView extends View {
     private int getMax() {
         int max = 1;
         if (data != null) {
-            for (Iterator iterator = data.iterator(); iterator.hasNext();) {
-                GradeInfo grades = (GradeInfo)iterator.next();
+            for (GradeInfo grades : data) {
                 if (grades.getTotal() > max) {
                     max = grades.getTotal();
                 }

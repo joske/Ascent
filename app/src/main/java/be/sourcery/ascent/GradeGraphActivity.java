@@ -31,9 +31,8 @@ public class GradeGraphActivity extends MyActivity {
         int flCount = 0;
         int rpCount = 0;
         int tpCount = 0;
-        List<GradeInfo> lines = new ArrayList<GradeInfo>();
-        for (Iterator iterator = ascents.iterator(); iterator.hasNext();) {
-            Ascent ascent = (Ascent)iterator.next();
+        List<GradeInfo> lines = new ArrayList<>();
+        for (Ascent ascent : ascents) {
             String grade = ascent.getRoute().getGrade();
             if (currentGrade == null || grade.equals(currentGrade)) {
                 switch (ascent.getStyle()) {

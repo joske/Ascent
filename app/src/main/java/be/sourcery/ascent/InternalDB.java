@@ -80,8 +80,7 @@ public class InternalDB {
             insert.bindNull(4);
         }
         long id = insert.executeInsert();
-        Route r = new Route(id, name, grade, crag, getGradeScore(grade), sector);
-        return r;
+        return new Route(id, name, grade, crag, getGradeScore(grade), sector);
     }
 
     public void updateRoute(Route r) {
@@ -207,7 +206,7 @@ public class InternalDB {
     }
 
     public List<String> getGrades() {
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         Cursor cursor = database.query("grades", new String[] { "grade" },
                 null, null, null, null, "score desc");
         if (cursor.moveToFirst()) {
@@ -237,18 +236,16 @@ public class InternalDB {
         insert.bindString(1, name);
         insert.bindString(2, country);
         long id = insert.executeInsert();
-        Crag crag = new Crag(id, name, country);
-        return crag;
+        return new Crag(id, name, country);
     }
 
     public Cursor getCragsCrusor() {
-        Cursor cursor = database.query("crag", new String[] { "_id", "name", "country" },
+        return database.query("crag", new String[] { "_id", "name", "country" },
                 null, null, null, null, "name asc");
-        return cursor;
     }
 
     public List<Crag> getCrags() {
-        List<Crag> list = new ArrayList<Crag>();
+        List<Crag> list = new ArrayList<>();
         Cursor cursor = database.query("crag", new String[] { "_id", "name", "country" },
                 null, null, null, null, "name asc");
         if (cursor.moveToFirst()) {
@@ -267,9 +264,8 @@ public class InternalDB {
     }
 
     public Cursor getCragsCursor() {
-        Cursor cursor = database.query("crag", new String[] { "_id", "name" },
+        return database.query("crag", new String[] { "_id", "name" },
                 null, null, null, null, "name asc");
-        return cursor;
     }
 
     public Crag getCrag(long id) {
@@ -320,7 +316,7 @@ public class InternalDB {
     }
 
     public List<Route> getRoutes() {
-        List<Route> list = new ArrayList<Route>();
+        List<Route> list = new ArrayList<>();
         Cursor cursor = database.query("routes", new String[] { "_id", "name", "grade", "crag_id", "sector" },
                 null, null, null, null, "_id desc");
         if (cursor.moveToFirst()) {
@@ -342,7 +338,7 @@ public class InternalDB {
     }
 
     public List<Route> getRoutes(Crag crag) {
-        List<Route> list = new ArrayList<Route>();
+        List<Route> list = new ArrayList<>();
         Cursor cursor = database.query("routes", new String[] { "_id", "name", "grade", "sector"},
                 "crag_id = ?", new String[] { "" + crag.getId()}, null, null, "_id desc");
         if (cursor.moveToFirst()) {
@@ -426,13 +422,12 @@ public class InternalDB {
     }
 
     public Cursor getProjectsCursor() {
-        Cursor cursor = database.query("project_routes", new String[] { "_id", "route_name", "route_grade", "crag_name", "attempts"},
+        return database.query("project_routes", new String[] { "_id", "route_name", "route_grade", "crag_name", "attempts"},
                 null, null, null, null, "_id desc");
-        return cursor;
     }
 
     public List<Project> getProjects() {
-        List<Project> list = new ArrayList<Project>();
+        List<Project> list = new ArrayList<>();
         Cursor cursor = database.query("projects", new String[] { "_id", "route_id", "attempts", },
                 null, null, null, null, "_id desc");
         if (cursor.moveToFirst()) {
@@ -476,7 +471,7 @@ public class InternalDB {
     }
 
     public List<Ascent> getAscents(String grade, int year, long crag) {
-        List<Ascent> list = new ArrayList<Ascent>();
+        List<Ascent> list = new ArrayList<>();
         String whereClause = "(style_id = 1 or style_id = 2 or style_id = 3 or style_id = 7) and route_grade = ?";
         if (year != -1) {
             whereClause += " and strftime('%Y', date) = ?";
@@ -484,7 +479,7 @@ public class InternalDB {
         if (crag != -1) {
             whereClause += " and crag_id = ?";
         }
-        List<String> selectionList = new ArrayList<String>();
+        List<String> selectionList = new ArrayList<>();
         selectionList.add("" + grade);
         if (year != -1) {
             selectionList.add("" + year);
@@ -535,7 +530,7 @@ public class InternalDB {
     }
 
     public List<Ascent> getAscents(boolean onlyModified) {
-        List<Ascent> list = new ArrayList<Ascent>();
+        List<Ascent> list = new ArrayList<>();
         Cursor cursor = database.query("ascents", new String[] { "_id", "route_id", "attempts", "style_id", "date", "comment", "stars", "score", "modified", "eighta_id" },
                 null, null, null, null, "date desc, _id asc");
         if (cursor.moveToFirst()) {
@@ -579,7 +574,7 @@ public class InternalDB {
     }
 
     public List<Ascent> getSortedAscentsForLast12Months() {
-        List<Ascent> list = new ArrayList<Ascent>();
+        List<Ascent> list = new ArrayList<>();
         Cursor cursor = database.query("ascent_routes", new String[] { "_id", "route_id", "route_grade", "attempts", "style_id", "date", "comment", "stars", "score", "modified", "eighta_id" },
                 "julianday(date('now'))- julianday(date) < 365", null, null, null, "route_grade desc");
         if (cursor.moveToFirst()) {
@@ -621,7 +616,7 @@ public class InternalDB {
     }
 
     public List<Ascent> getSortedAscents() {
-        List<Ascent> list = new ArrayList<Ascent>();
+        List<Ascent> list = new ArrayList<>();
         Cursor cursor = database.query("ascent_routes", new String[] { "_id", "route_id", "route_grade", "attempts", "style_id", "date", "comment", "stars", "score", "modified", "eighta_id" },
                 null, null, null, null, "route_grade desc");
         if (cursor.moveToFirst()) {
@@ -669,18 +664,16 @@ public class InternalDB {
             whereClause = "crag_id = ?";
             selectionArgs = new String[] { "" + cragId};
         }
-        Cursor cursor = database.query("ascent_routes",
+        return database.query("ascent_routes",
                 new String[] { "_id", "route_id", "route_name", "route_grade", "attempts", "style", "date", "stars", "comment", "crag_name", "sector" },
                 whereClause, selectionArgs, null, null, "date desc, _id asc");
-        return cursor;
     }
 
     public Cursor getAscentsCursor(String grade, boolean allTime) {
-        Cursor cursor = database.query("ascent_routes",
+        return database.query("ascent_routes",
                 new String[] { "_id", "route_id", "route_name", "route_grade", "attempts", "style", "date" },
                 "route_grade = ?" + (allTime ? "" : " and julianday(date('now'))- julianday(date) < 365"),
                 new String[] {grade}, null, null, "date desc, _id asc");
-        return cursor;
     }
 
     public int getCount(long cragId, boolean last12Months) {
@@ -713,7 +706,7 @@ public class InternalDB {
         if (cragId != -1) {
             whereClause += " and crag_id = ?";
         }
-        List<String> selectionList = new ArrayList<String>();
+        List<String> selectionList = new ArrayList<>();
         if (year != -1) {
             selectionList.add("" + year);
         }
@@ -774,7 +767,7 @@ public class InternalDB {
     }
 
     protected Cursor getTop10TwelveMonths() {
-        Cursor cursor = database.query("ascent_routes",
+        return database.query("ascent_routes",
                 new String[] { "_id", "date", "style", "route_grade", "route_name", "score" },
                 "julianday(date('now'))- julianday(date) < 365 and style_id <> 7",
                 null,
@@ -782,11 +775,10 @@ public class InternalDB {
                 null,
                 "score desc, date desc",
                 "10");
-        return cursor;
     }
 
     protected Cursor getTop10AllTime() {
-        Cursor cursor = database.query("ascent_routes",
+        return database.query("ascent_routes",
                 new String[] { "_id", "date", "style", "route_grade", "route_name", "score" },
                 "style_id <> 7",
                 null,
@@ -794,11 +786,10 @@ public class InternalDB {
                 null,
                 "score desc, date desc",
                 "10");
-        return cursor;
     }
 
     public Cursor getTop10ForYear(int year) {
-        Cursor cursor = database.query("ascent_routes",
+        return database.query("ascent_routes",
                 new String[] { "_id", "date", "style", "route_grade", "route_name", "score" },
                 "strftime('%Y', date) = ? and style_id <> 7",
                 new String[] { "" + year },
@@ -806,7 +797,6 @@ public class InternalDB {
                 null,
                 "score desc, date desc",
                 "10");
-        return cursor;
     }
 
     public Map<String, Integer> getSummaryDoneForYear(int year, long crag) {
@@ -826,7 +816,7 @@ public class InternalDB {
         if (crag != -1) {
             whereClause += " and crag_id = ?";
         }
-        List<String> selectionList = new ArrayList<String>();
+        List<String> selectionList = new ArrayList<>();
         if (year != -1) {
             selectionList.add("" + year);
         }
@@ -842,12 +832,12 @@ public class InternalDB {
                 null,
                 "route_grade desc",
                 null);
-        Map<String, Integer> list = new HashMap<String, Integer>();
+        Map<String, Integer> list = new HashMap<>();
         if (cursor.moveToFirst()) {
             do {
                 String grade = cursor.getString(0);
                 int count = cursor.getInt(1);
-                list.put(grade, Integer.valueOf(count));
+                list.put(grade, count);
             } while (cursor.moveToNext());
         }
         if (cursor != null && !cursor.isClosed()) {
@@ -905,7 +895,7 @@ public class InternalDB {
             selection += " and crag_id = ?";
             selectionArgs = new String[] { "%" + query + "%", "" + crag_id};
         }
-        Cursor cursor = database.query(
+        return database.query(
                 "ascent_routes",
                 columns,
                 selection,
@@ -914,7 +904,6 @@ public class InternalDB {
                 null,
                 "date desc",
                 null);
-        return cursor;
     }
 
     public Cursor searchAscents(String query, String[] columns) {
@@ -938,7 +927,7 @@ public class InternalDB {
          */
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
         builder.setTables(FTSASCENTS);
-        HashMap<String,String> columnMap = new HashMap<String,String>();
+        HashMap<String,String> columnMap = new HashMap<>();
         builder.setProjectionMap(columnMap);
         columnMap.put(KEY_ROUTE, KEY_ROUTE);
         columnMap.put(BaseColumns._ID, "rowid AS " + BaseColumns._ID);

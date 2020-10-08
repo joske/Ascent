@@ -100,7 +100,7 @@ public class MainActivity extends MyActivity {
         String[] activities = getResources().getStringArray(R.array.activities);
         final DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         final ListView mDrawerList = (ListView) findViewById(R.id.left_drawer);
-        mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, activities));
+        mDrawerList.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_list_item, activities));
         mDrawerList.setOnItemClickListener(new ListView.OnItemClickListener() {
 
             @Override
@@ -164,11 +164,10 @@ public class MainActivity extends MyActivity {
     }
 
     private void populateList() {
-        crags = new ArrayList<String>();
+        crags = new ArrayList<>();
         List<Crag> allCrags = db.getCrags();
         crags.add("*");
-        for (Iterator<Crag> iterator = allCrags.iterator(); iterator.hasNext();) {
-            Crag crag = iterator.next();
+        for (Crag crag : allCrags) {
             crags.add(crag.getName());
         }
         Spinner cragSpinner = (Spinner) findViewById(R.id.crag_spinner);
@@ -370,10 +369,9 @@ public class MainActivity extends MyActivity {
         @Override
         protected Long doInBackground(Void... params) {
             EightA eightA = new EightA(prefs.getString(USER_ID, null), prefs.getString(SESSION_ID, null));
-            long added = eightA.importData(getBaseContext());
-//            List<Ascent> ascents = db.getAscents(true);
+            //            List<Ascent> ascents = db.getAscents(true);
 //            eightA.pushAscents(ascents);
-            return added;
+            return eightA.importData(getBaseContext());
         }
 
         protected void onPostExecute(Long added) {

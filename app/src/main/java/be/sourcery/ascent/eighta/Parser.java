@@ -9,7 +9,6 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -78,113 +77,130 @@ public class Parser {
         while (xmlPullParser.next() != XmlPullParser.END_TAG) {
             if (xmlPullParser.getEventType() == XmlPullParser.START_TAG) {
                 String name = xmlPullParser.getName();
-                if (name.equals("Name")) {
-                    xmlPullParser.require(XmlPullParser.START_TAG, null, "Name");
-                    if (xmlPullParser.next() == XmlPullParser.TEXT) {
-                        ascent.setName(xmlPullParser.getText());
-                        xmlPullParser.nextTag();
-                    }
-                    xmlPullParser.require(XmlPullParser.END_TAG, null, "Name");
-                } else if (name.equals("CragName")) {
-                    xmlPullParser.require(XmlPullParser.START_TAG, null, "CragName");
-                    if (xmlPullParser.next() == XmlPullParser.TEXT) {
-                        ascent.setCrag(xmlPullParser.getText());
-                        xmlPullParser.nextTag();
-                    }
-                    xmlPullParser.require(XmlPullParser.END_TAG, null, "CragName");
-                } else if (name.equals("CragSector")) {
-                    xmlPullParser.require(XmlPullParser.START_TAG, null, "CragSector");
-                    if (xmlPullParser.next() == XmlPullParser.TEXT) {
-                        ascent.setSector(xmlPullParser.getText());
-                        xmlPullParser.nextTag();
-                    }
-                    xmlPullParser.require(XmlPullParser.END_TAG, null, "CragSector");
-                } else if (name.equals("Date")) {
-                    xmlPullParser.require(XmlPullParser.START_TAG, null, "Date");
-                    if (xmlPullParser.next() == XmlPullParser.TEXT) {
-                        ascent.setDate(simpleDateFormat.parse(xmlPullParser.getText()));
-                        xmlPullParser.nextTag();
-                    }
-                    xmlPullParser.require(XmlPullParser.END_TAG, null, "Date");
-                } else if (name.equals("TotalScore")) {
-                    xmlPullParser.require(XmlPullParser.START_TAG, null, "TotalScore");
-                    if (xmlPullParser.next() == XmlPullParser.TEXT) {
-                        ascent.setScore(Integer.valueOf(xmlPullParser.getText()).intValue());
-                        xmlPullParser.nextTag();
-                    }
-                    xmlPullParser.require(XmlPullParser.END_TAG, null, "TotalScore");
-                } else if (name.equals("Rating")) {
-                    xmlPullParser.require(XmlPullParser.START_TAG, null, "Rating");
-                    if (xmlPullParser.next() == XmlPullParser.TEXT) {
-                        ascent.setRating(Integer.valueOf(xmlPullParser.getText()).intValue());
-                        xmlPullParser.nextTag();
-                    }
-                    xmlPullParser.require(XmlPullParser.END_TAG, null, "Rating");
-                } else if (name.equals("Style")) {
-                    xmlPullParser.require(XmlPullParser.START_TAG, null, "Style");
-                    if (xmlPullParser.next() == XmlPullParser.TEXT) {
-                        ascent.setStyle(Integer.valueOf(xmlPullParser.getText()).intValue());
-                        xmlPullParser.nextTag();
-                    }
-                    xmlPullParser.require(XmlPullParser.END_TAG, null, "Style");
-                } else if (name.equals("GradeName")) {
-                    xmlPullParser.require(XmlPullParser.START_TAG, null, "GradeName");
-                    if (xmlPullParser.next() == XmlPullParser.TEXT) {
-                        ascent.setGrade(xmlPullParser.getText());
-                        xmlPullParser.nextTag();
-                    }
-                    xmlPullParser.require(XmlPullParser.END_TAG, null, "GradeName");
-                } else if (name.equals("ObjectClass")) {
-                    xmlPullParser.require(XmlPullParser.START_TAG, null, "ObjectClass");
-                    if (xmlPullParser.next() == XmlPullParser.TEXT) {
-                        ascent.setObjectClass(xmlPullParser.getText());
-                        xmlPullParser.nextTag();
-                    }
-                    xmlPullParser.require(XmlPullParser.END_TAG, null, "ObjectClass");
-                } else if (name.equals("Type")) {
-                    xmlPullParser.require(XmlPullParser.START_TAG, null, "Type");
-                    if (xmlPullParser.next() == XmlPullParser.TEXT) {
-                        ascent.setType(xmlPullParser.getText());
-                        xmlPullParser.nextTag();
-                    }
-                    xmlPullParser.require(XmlPullParser.END_TAG, null, "Type");
-                } else if (name.equals("CountryCode")) {
-                    xmlPullParser.require(XmlPullParser.START_TAG, null, "CountryCode");
-                    if (xmlPullParser.next() == XmlPullParser.TEXT) {
-                        ascent.setCountryCode(xmlPullParser.getText());
-                        xmlPullParser.nextTag();
-                    }
-                    xmlPullParser.require(XmlPullParser.END_TAG, null, "CountryCode");
-                } else if (name.equals("Comment")) {
-                    xmlPullParser.require(XmlPullParser.START_TAG, null, "Comment");
-                    if (xmlPullParser.next() == XmlPullParser.TEXT) {
-                        ascent.setComment(xmlPullParser.getText());
-                        xmlPullParser.nextTag();
-                    }
-                    xmlPullParser.require(XmlPullParser.END_TAG, null, "Comment");
-                } else if (name.equals("Repeat")) {
-                    xmlPullParser.require(XmlPullParser.START_TAG, null, "Repeat");
-                    if (xmlPullParser.next() == XmlPullParser.TEXT) {
-                        ascent.setRepeat(xmlPullParser.getText().equals("1"));
-                        xmlPullParser.nextTag();
-                    }
-                    xmlPullParser.require(XmlPullParser.END_TAG, null, "Repeat");
-                } else if (name.equals("Id")) {
-                    xmlPullParser.require(XmlPullParser.START_TAG, null, "Id");
-                    if (xmlPullParser.next() == XmlPullParser.TEXT) {
-                        ascent.setId(xmlPullParser.getText());
-                        xmlPullParser.nextTag();
-                    }
-                    xmlPullParser.require(XmlPullParser.END_TAG, null, "Id");
-                } else if (name.equals("Note")) {
-                    xmlPullParser.require(XmlPullParser.START_TAG, null, "Note");
-                    if (xmlPullParser.next() == XmlPullParser.TEXT) {
-                        ascent.setNote(xmlPullParser.getText());
-                        xmlPullParser.nextTag();
-                    }
-                    xmlPullParser.require(XmlPullParser.END_TAG, null, "Note");
-                } else {
-                    readUninteresting(xmlPullParser);
+                switch (name) {
+                    case "Name":
+                        xmlPullParser.require(XmlPullParser.START_TAG, null, "Name");
+                        if (xmlPullParser.next() == XmlPullParser.TEXT) {
+                            ascent.setName(xmlPullParser.getText());
+                            xmlPullParser.nextTag();
+                        }
+                        xmlPullParser.require(XmlPullParser.END_TAG, null, "Name");
+                        break;
+                    case "CragName":
+                        xmlPullParser.require(XmlPullParser.START_TAG, null, "CragName");
+                        if (xmlPullParser.next() == XmlPullParser.TEXT) {
+                            ascent.setCrag(xmlPullParser.getText());
+                            xmlPullParser.nextTag();
+                        }
+                        xmlPullParser.require(XmlPullParser.END_TAG, null, "CragName");
+                        break;
+                    case "CragSector":
+                        xmlPullParser.require(XmlPullParser.START_TAG, null, "CragSector");
+                        if (xmlPullParser.next() == XmlPullParser.TEXT) {
+                            ascent.setSector(xmlPullParser.getText());
+                            xmlPullParser.nextTag();
+                        }
+                        xmlPullParser.require(XmlPullParser.END_TAG, null, "CragSector");
+                        break;
+                    case "Date":
+                        xmlPullParser.require(XmlPullParser.START_TAG, null, "Date");
+                        if (xmlPullParser.next() == XmlPullParser.TEXT) {
+                            ascent.setDate(simpleDateFormat.parse(xmlPullParser.getText()));
+                            xmlPullParser.nextTag();
+                        }
+                        xmlPullParser.require(XmlPullParser.END_TAG, null, "Date");
+                        break;
+                    case "TotalScore":
+                        xmlPullParser.require(XmlPullParser.START_TAG, null, "TotalScore");
+                        if (xmlPullParser.next() == XmlPullParser.TEXT) {
+                            ascent.setScore(Integer.valueOf(xmlPullParser.getText()).intValue());
+                            xmlPullParser.nextTag();
+                        }
+                        xmlPullParser.require(XmlPullParser.END_TAG, null, "TotalScore");
+                        break;
+                    case "Rating":
+                        xmlPullParser.require(XmlPullParser.START_TAG, null, "Rating");
+                        if (xmlPullParser.next() == XmlPullParser.TEXT) {
+                            ascent.setRating(Integer.valueOf(xmlPullParser.getText()).intValue());
+                            xmlPullParser.nextTag();
+                        }
+                        xmlPullParser.require(XmlPullParser.END_TAG, null, "Rating");
+                        break;
+                    case "Style":
+                        xmlPullParser.require(XmlPullParser.START_TAG, null, "Style");
+                        if (xmlPullParser.next() == XmlPullParser.TEXT) {
+                            ascent.setStyle(Integer.valueOf(xmlPullParser.getText()).intValue());
+                            xmlPullParser.nextTag();
+                        }
+                        xmlPullParser.require(XmlPullParser.END_TAG, null, "Style");
+                        break;
+                    case "GradeName":
+                        xmlPullParser.require(XmlPullParser.START_TAG, null, "GradeName");
+                        if (xmlPullParser.next() == XmlPullParser.TEXT) {
+                            ascent.setGrade(xmlPullParser.getText());
+                            xmlPullParser.nextTag();
+                        }
+                        xmlPullParser.require(XmlPullParser.END_TAG, null, "GradeName");
+                        break;
+                    case "ObjectClass":
+                        xmlPullParser.require(XmlPullParser.START_TAG, null, "ObjectClass");
+                        if (xmlPullParser.next() == XmlPullParser.TEXT) {
+                            ascent.setObjectClass(xmlPullParser.getText());
+                            xmlPullParser.nextTag();
+                        }
+                        xmlPullParser.require(XmlPullParser.END_TAG, null, "ObjectClass");
+                        break;
+                    case "Type":
+                        xmlPullParser.require(XmlPullParser.START_TAG, null, "Type");
+                        if (xmlPullParser.next() == XmlPullParser.TEXT) {
+                            ascent.setType(xmlPullParser.getText());
+                            xmlPullParser.nextTag();
+                        }
+                        xmlPullParser.require(XmlPullParser.END_TAG, null, "Type");
+                        break;
+                    case "CountryCode":
+                        xmlPullParser.require(XmlPullParser.START_TAG, null, "CountryCode");
+                        if (xmlPullParser.next() == XmlPullParser.TEXT) {
+                            ascent.setCountryCode(xmlPullParser.getText());
+                            xmlPullParser.nextTag();
+                        }
+                        xmlPullParser.require(XmlPullParser.END_TAG, null, "CountryCode");
+                        break;
+                    case "Comment":
+                        xmlPullParser.require(XmlPullParser.START_TAG, null, "Comment");
+                        if (xmlPullParser.next() == XmlPullParser.TEXT) {
+                            ascent.setComment(xmlPullParser.getText());
+                            xmlPullParser.nextTag();
+                        }
+                        xmlPullParser.require(XmlPullParser.END_TAG, null, "Comment");
+                        break;
+                    case "Repeat":
+                        xmlPullParser.require(XmlPullParser.START_TAG, null, "Repeat");
+                        if (xmlPullParser.next() == XmlPullParser.TEXT) {
+                            ascent.setRepeat(xmlPullParser.getText().equals("1"));
+                            xmlPullParser.nextTag();
+                        }
+                        xmlPullParser.require(XmlPullParser.END_TAG, null, "Repeat");
+                        break;
+                    case "Id":
+                        xmlPullParser.require(XmlPullParser.START_TAG, null, "Id");
+                        if (xmlPullParser.next() == XmlPullParser.TEXT) {
+                            ascent.setId(xmlPullParser.getText());
+                            xmlPullParser.nextTag();
+                        }
+                        xmlPullParser.require(XmlPullParser.END_TAG, null, "Id");
+                        break;
+                    case "Note":
+                        xmlPullParser.require(XmlPullParser.START_TAG, null, "Note");
+                        if (xmlPullParser.next() == XmlPullParser.TEXT) {
+                            ascent.setNote(xmlPullParser.getText());
+                            xmlPullParser.nextTag();
+                        }
+                        xmlPullParser.require(XmlPullParser.END_TAG, null, "Note");
+                        break;
+                    default:
+                        readUninteresting(xmlPullParser);
+                        break;
                 }
             }
         }

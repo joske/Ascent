@@ -2,9 +2,9 @@ package be.sourcery.ascent;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Iterator;
@@ -15,7 +15,6 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -85,7 +84,7 @@ public class ExportDataActivity extends MyActivity {
             // structure:
             // routeName;routeGrade;cragName;cragCountry;style;attempts;date;comment;stars
             File importFile = new File(sdcard, "ascent-export.csv");
-            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(importFile), "ISO-8859-1"));
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(importFile), StandardCharsets.UTF_8));
             List<Ascent> ascents = db.getAscents(false);
             for (Iterator<Ascent> iterator = ascents.iterator(); iterator.hasNext(); count++) {
                 Ascent ascent = iterator.next();
