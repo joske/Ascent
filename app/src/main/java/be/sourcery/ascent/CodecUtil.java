@@ -30,7 +30,6 @@ public class CodecUtil {
     }
 
     public static Ascent decode(String line) {
-        Log.d(CodecUtil.class.getName(), "importing " + line);
         String[] strings = line.split("\t");
         if (strings.length == 10) {
             try {
