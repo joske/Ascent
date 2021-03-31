@@ -1,6 +1,7 @@
 package be.sourcery.ascent;
 
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
@@ -26,11 +27,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.content.pm.PackageManager;
 
+import com.google.android.gms.tasks.Task;
+
 public class ExportDataActivity extends MyActivity {
+
+    private static final String TAG = "ExportDataActivity";
 
     private static final int ID_DIALOG_PROGRESS = 1;
     DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
     private static final int REQUEST_CODE = 1;
+
+    private final String name = "ascent.csv";
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,77 +49,54 @@ public class ExportDataActivity extends MyActivity {
         Button button = findViewById(R.id.ok);
         button.setText(R.string.exportButton);
         // Register the onClick listener with the implementation above
+        requestSignIn();
         button.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                // We create a new AuthSession so that we can use the Dropbox API.
-                File sdcard = Environment.getExternalStorageDirectory();
-                File exportFile = new File(sdcard, "ascent-export.csv");
-                if (exportFile.exists()) {
-                    // show confirm dialog
-                    new AlertDialog.Builder(ExportDataActivity.this)
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .setTitle(R.string.overwrite)
-                    .setMessage(R.string.overwriteText)
-                    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            exportProgress();
-                        }
-
-                    })
-                    .setNegativeButton(R.string.no, null)
-                    .show();
-                } else {
-                    exportProgress();
-                }
+                createFile();
             }
         });
-        String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state)) {
-            text.setText(R.string.exportToFile);
-            requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE);
-        } else {
-            text.setText(R.string.notMounted);
-            button.setEnabled(false);
-        }
     }
-    
-    protected void exportData() {
-        InternalDB db = new InternalDB(this);
-        int count = 0;
-        try {
-            File sdcard = Environment.getExternalStorageDirectory();
-            // structure:
-            // routeName;routeGrade;cragName;cragCountry;style;attempts;date;comment;stars
-            File importFile = new File(sdcard, "ascent-export.csv");
-            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(importFile), StandardCharsets.UTF_8));
-            List<Ascent> ascents = db.getAscents(false);
-            for (Iterator<Ascent> iterator = ascents.iterator(); iterator.hasNext(); count++) {
-                Ascent ascent = iterator.next();
-                bw.write(CodecUtil.encode(ascent));
-            }
-            bw.close();
-            
-            Intent intent = this.getIntent();
-            intent.putExtra("count", count);
-            setResult(RESULT_OK, intent);
-        } catch (Exception e) {
-            Log.e(this.getClass().getName(), e.getMessage());
-            setResult(RESULT_CANCELED);
-        } finally {
-            db.close();
+
+    /**
+     * Creates a new file via the Drive REST API.
+     */
+    private void createFile() {
+        if (mDriveServiceHelper != null) {
+            Log.d(TAG, "Creating a file.");
+
+            mDriveServiceHelper.createFile(name)
+                    .addOnSuccessListener(fileId -> exportData(fileId))
+                    .addOnFailureListener(exception -> Log.e(TAG, "Couldn't create file.", exception));
         }
     }
 
-    @Override
-    protected Dialog onCreateDialog(int id) {
-        if (id == ID_DIALOG_PROGRESS) {
-            ProgressDialog loadingDialog = new ProgressDialog(this);
-            loadingDialog.setMessage(getString(R.string.exportingData));
-            loadingDialog.setIndeterminate(true);
-            loadingDialog.setCancelable(false);
-            return loadingDialog;
+    protected void exportData(String fileId) {
+        if (mDriveServiceHelper != null) {
+            InternalDB db = new InternalDB(this);
+            int count = 0;
+            try {
+                // structure:
+                // routeName;routeGrade;cragName;cragCountry;style;attempts;date;comment;stars
+                StringBuilder buf = new StringBuilder(8192);
+                List<Ascent> ascents = db.getAscents(false);
+                for (Iterator<Ascent> iterator = ascents.iterator(); iterator.hasNext(); count++) {
+                    Ascent ascent = iterator.next();
+                    buf.append(CodecUtil.encode(ascent));
+                }
+
+                mDriveServiceHelper.saveFile(fileId, name, buf.toString())
+                        .addOnFailureListener(exception ->
+                                Log.e(TAG, "Unable to save file to Drive.", exception));
+                Intent intent = this.getIntent();
+                intent.putExtra("count", count);
+                setResult(RESULT_OK, intent);
+            } catch (Exception e) {
+                Log.e(this.getClass().getName(), e.getMessage());
+                setResult(RESULT_CANCELED);
+            } finally {
+                db.close();
+            }
         }
-        return super.onCreateDialog(id);
     }
 
     @Override
@@ -126,34 +110,6 @@ public class ExportDataActivity extends MyActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
-        }
-    }
-
-    private void exportProgress() {
-        showDialog(ID_DIALOG_PROGRESS);
-        new Thread(new Runnable(){
-            public void run() {
-                exportData();
-                dismissDialog(ID_DIALOG_PROGRESS);
-                finish();
-            }
-        }).start();
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_CODE:
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(ExportDataActivity.this, "SD access granted", Toast.LENGTH_SHORT).show();
-                    Button button = findViewById(R.id.ok);
-                    button.setEnabled(true);
-                } else {
-                    Toast.makeText(ExportDataActivity.this, "SD access granted", Toast.LENGTH_SHORT).show();
-                }
-                break;
-            default:
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
 

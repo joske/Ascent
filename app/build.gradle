@@ -4,6 +4,18 @@ android {
     compileSdkVersion 30
     buildToolsVersion "30.0.1"
 
+        packagingOptions {
+            exclude 'META-INF/DEPENDENCIES'
+            exclude 'META-INF/LICENSE'
+            exclude 'META-INF/LICENSE.txt'
+            exclude 'META-INF/license.txt'
+            exclude 'META-INF/NOTICE'
+            exclude 'META-INF/NOTICE.txt'
+            exclude 'META-INF/notice.txt'
+            exclude 'META-INF/ASL2.0'
+            exclude("META-INF/*.kotlin_module")
+        }
+
     defaultConfig {
         applicationId "be.sourcery.ascent"
         minSdkVersion 23
@@ -31,16 +43,27 @@ android {
             signingConfig signingConfigs.release
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
     api files('libs/achartengine-1.0.0.jar')
-    api files('libs/jackson-core-2.7.4.jar')
     api files('libs/json_simple-1.1.jar')
     api 'androidx.legacy:legacy-support-v4:1.0.0'
     api 'androidx.legacy:legacy-support-v13:1.0.0'
     api 'androidx.appcompat:appcompat:1.2.0'
     api 'com.google.android.material:material:1.2.1'
+    implementation 'com.google.android.gms:play-services:12.0.1'
+    implementation 'com.google.http-client:google-http-client-gson:1.26.0'
+    implementation('com.google.api-client:google-api-client-android:1.26.0') {
+        exclude group: 'org.apache.httpcomponents'
+    }
+    implementation('com.google.apis:google-api-services-drive:v3-rev136-1.25.0') {
+        exclude group: 'org.apache.httpcomponents'
+    }
 
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:1.10.19'

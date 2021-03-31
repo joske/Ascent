@@ -7,9 +7,12 @@ local.properties
 app/build/
 *.iml
 /local.properties
+/gradle.properties
 /.idea/workspace.xml
 /.idea/libraries
 .DS_Store
 /build
 /captures
 .externalNativeBuild
+api-keys.xml
+keystore.properties
