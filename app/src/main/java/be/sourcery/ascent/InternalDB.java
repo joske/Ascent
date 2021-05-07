@@ -89,8 +89,8 @@ public class InternalDB {
         update.bindString(1, r.getName());
         update.bindString(2, r.getGrade());
         update.bindLong(3, r.getCrag().getId());
-        update.bindLong(4, r.getId());
-        update.bindString(5, r.getSector());
+        update.bindString(4, r.getSector());
+        update.bindLong(5, r.getId());
         r.setGradeScore(getGradeScore(r.getGrade()));
         update.execute();
     }
@@ -192,8 +192,8 @@ public class InternalDB {
         int styleScore = getStyleScore(style);
         int totalScore = calculateScore(attempts, style, gradeScore, styleScore);
         update.bindLong(6, totalScore);
-        update.bindLong(7, ascent.getId());
-        update.bindLong(8, ascent.isModified() ? 1 : 0);
+        update.bindLong(7, ascent.isModified() ? 1 : 0);
+        update.bindLong(8, ascent.getId());
         update.execute();
     }
 
